@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        section h2:hover::after {
+            width: 100px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            justify-content: space-between;
+
+        }
+        .item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            height: 325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #333333;
+            flex-grow: 1;
+        }
+
+        .item a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .item a:hover {
+            color: #666666;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #000000;
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-section {
+            padding: 40px 0;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            opacity: 1;
+            border: 2px solid #000000;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom dropdown styling */
+        .quiz-topics {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quiz-topic-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 2px solid #000000;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-topics::after {
+            content: '⌄';
+            font-size: 1.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .quiz-topics:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .quiz-topic-select:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-topic-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-topic-select option {
+            padding: 20px;
+            font-size: 1.1rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Update the topics selection HTML */
+        .quiz-topics {
+            margin-bottom: 40px;
+        }
+
+        .quiz-topic-select {
+            background-image: linear-gradient(45deg, transparent 50%, #000000 50%),
+                            linear-gradient(135deg, #000000 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 10px),
+                               calc(100% - 15px) calc(1em + 10px);
+            background-size: 5px 5px,
+                           5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        .quiz-topic-select:hover {
+            background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                            linear-gradient(135deg, #ffffff 50%, transparent 50%);
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .quiz-question:hover {
+            transform: translateX(5px) scale(1.01);
+            border-color: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-options label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .quiz-options label:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+            border-color: #000000;
+        }
+
+        .quiz-options label:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .quiz-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .quiz-navigation button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-navigation button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: #ffffff;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .quiz-navigation button:hover {
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-navigation button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+        }
+
+        .quiz-navigation button:disabled {
+            background: #cccccc;
+            border-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+            border: 2px solid #000000;
+        }
+
+        .quiz-result h3 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .quiz-result p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        #retake-quiz {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        #retake-quiz:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .js-hub-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .js-hub-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .js-hub-header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Timer styles */
+        .quiz-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            margin-left: 20px;
+        }
+
+        .quiz-timer.warning {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        #quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2rem;
+            margin: 20px 0 40px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quiz-options.disabled label {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .quiz-options.disabled input[type="radio"] {
+            pointer-events: none;
+        }
+
+        /* Question Grid styles */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            max-width: 900px;
+        }
+
+        .grid-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.current {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .grid-item.answered {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .grid-item.incorrect {
+            background: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+        }
+
+        .grid-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the chat interface */
+        .chat-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            outline: none;
+        }
+                /* General Styles */
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            /* Dark text for readability */
+            background-color: #ffffff;
+            /* White background */
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001; /* Ensure it's above other content */
+        }
+
+        .back-button:hover {
+            background-color: #333333;
+        }
+
+        /* Sections */
+        section {
+            padding: 40px 0;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #000000;
+            /* Black headings */
+        }
+
+        /* Flexbox Layout for Items */
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            /* Space between items */
+            justify-content: space-between;
+            /* Distribute items evenly */
+        }
+
+        /* Item Styling */
+        .item {
+            background: #f9f9f9;
+            /* Light gray background for items */
+            border: 1px solid #cccccc;
+            /* Gray border */
+            border-radius: 5px;
+            padding: 15px;
+            width: calc(33.33% - 20px);
+            /* Three items per row */
+            height: 325px;
+            /* Fixed height */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* Distribute content evenly */
+        }
+
+        @media (max-width: 1024px) {
+            .item {
+                width: calc(50% - 20px);
+                /* Two items per row on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .item {
+                width: 100%;
+                /* One item per row on small screens */
+            }
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            /* Black title */
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #666666;
+            /* Dark gray description */
+            flex-grow: 1;
+            /* Allow description to take up remaining space */
+        }
+
+        .item a {
+            color: #000000;
+            /* Black links */
+            text-decoration: none;
+        }
+
+        .item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Video Thumbnail */
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            /* Height of the thumbnail */
+            background: #cccccc;
+            /* Gray background for thumbnails */
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(0, 0, 0, 0.8);
+            /* Semi-transparent black play icon */
+        }
+
+        /* Modal for Video */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            /* Dark modal background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <button class="connect-button" onclick="toggleChatPanel()" style="position: fixed; top: 30px; right: 30px; background: #000000; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1001;">Connect</button>
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="js-hub-header">
+    <h1>Welcome to Web Development Hub</h1>
+    <p>Your go-to platform to test and improve your Web Development skills.</p>
+</header>
+
+     <!-- Back Button -->
+     <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+
+     <!-- Main Content -->
+     <main class="content">
+        <!-- Tutorials Section -->
+        <section id="tutorials" class="tutorials">
+            <div class="container">
+                <h2>Tutorials</h2>
+                <div class="item-container">
+                    <!-- HTML & CSS Basics -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/UB1O30fR-EE')">
+                            <img src="https://i.ytimg.com/vi/UB1O30fR-EE/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">HTML & CSS Basics</a></h3>
+                        <p>Learn the fundamentals of HTML and CSS for building web pages.</p>
+                    </div>
+
+                    <!-- CSS Crash Course for Beginners -->
+                    <div class="item">
+                        <div class="video-thumbnail"
+                            onclick="openModal('https://www.youtube.com/embed/videoseries?list=PLhQjrBD2T380xvFSUmToMMzERZ3qB5Ueu')">
+                            <img src="https://i.ytimg.com/vi/Nn7EX3zkGUo/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">CSS Crash Course for Beginners</a></h3>
+                        <p>A comprehensive playlist covering CSS fundamentals and advanced topics.</p>
+                    </div>
+
+                    <!-- JavaScript for Web Development -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/PkZNo7MFNFg')">
+                            <img src="https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">JavaScript for Web Development</a></h3>
+                        <p>Learn how to add interactivity to your websites using JavaScript.</p>
+                    </div>
+
+                    <!-- Introduction to React.js -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/bMknfKXIFA8')">
+                            <img src="https://i.ytimg.com/vi/bMknfKXIFA8/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Introduction to React.js</a></h3>
+                        <p>Get started with React.js, a popular JavaScript library for building user interfaces.</p>
+                    </div>
+
+                    <!-- Building REST APIs with Node.js -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/gnsO8-xJ8rs')">
+                            <img src="https://i.ytimg.com/vi/gnsO8-xJ8rs/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Building REST APIs with Node.js</a></h3>
+                        <p>Learn how to build RESTful APIs using Node.js and Express.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://www.theodinproject.com/"target="_blank">
+                            
+                        <img src="https://cdn.dribbble.com/users/553013/screenshots/11118619/media/427d7a21a1b15a2e49ac3f09d588d80c.png" alt="theodinproject" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        theodinproject</a></h3>
+                        <p>The Odin Project provides a free, hands-on full-stack web development curriculum..</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://codepen.io/" target="_blank">
+                            <img src="https://th.bing.com/th/id/R.9a1f6a68f258df916184771cf7275a48?rik=2SHrlJu1OupoqQ&riu=http%3a%2f%2fwww.getmecoding.com%2fwp-content%2fuploads%2f2021%2f10%2fBLOG-Codepen-Part-1.png&ehk=5IUgsA2GBSL3ToMEfNcRqscvv5B4p%2bL9H%2baKJ2QIGwM%3d&risl=&pid=ImgRaw&r=0" alt="codepen" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            codepen
+                                Bootstrap</a></h3>
+                        <p>CodePen is an online platform for creating, sharing, and testing front-end code snippets and projects.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://github.com/topics/web-development" target="_blank">
+                            <img src="https://logos-world.net/wp-content/uploads/2020/11/GitHub-Logo.png" alt="github" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            github</a></h3>
+                        <p>GitHub hosts web development projects, tools, and resources.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="resources">
+            <div class="container">
+                <h2>Resources</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank">
+                            <img src="https://i.pinimg.com/originals/1d/3e/26/1d3e2664eb3ae218f0499750be7722c9.jpg" alt="developer.mozilla" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            developer.mozilla</a></h3>
+                        <p>MDN Web Docs offers detailed web development guides for HTML, CSS, and JavaScript.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://css-tricks.com/" target="_blank">
+                            <img src="https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2022/01/css-tips-and-tricks.jpg" alt="Chatbot Project" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            CSS-Tricks</a></h3>
+                        <p>CSS-Tricks offers tips, tutorials, and guides for mastering CSS and front-end web development.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.w3schools.com/sql/default.asp" target="_blank">
+                            <img src="https://cdn.knoji.com/images/logo/w3schools1.jpg?fit=contain&trim=true&flatten=true&extend=25&width=1200&height=630" alt="w3schools" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            w3schools</a></h3>
+                        <p>W3Schools offers easy SQL tutorials and examples for learning database querying.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.geeksforgeeks.org/web-development/" target="_blank">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210702175749/20210702175652.gif" alt="geeksforgeeks" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            geeksforgeeks</a></h3>
+                        <p>GeeksforGeeks provides web development tutorials on HTML, CSS, JavaScript, and frameworks.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+       
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="container">
+                <h2 class="quiz-title">Test Your Web Development Knowledge</h2>
+
+                <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                            <p style="color: #333333;">Select from various Web Development concepts to test your knowledge</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                            <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                            <p style="color: #333333;">From basics to advanced concepts</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                            <p style="color: #333333;">10 questions per quiz session</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                            <p style="color: #333333;">Get immediate feedback on your performance</p>
+                        </div>
+                    </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                    </div>
+                </div>
+
+                <!-- Topics Selection -->
+                <div class="quiz-topics">
+                    <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                        <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="html">📚 HTML</option>
+                        <option value="css">🎨 CSS</option>
+                        <option value="javascript">⚡ JavaScript</option>
+                        <option value="responsive">📱 Responsive Design</option>
+                        <option value="accessibility">♿ Accessibility</option>
+                        <option value="seo">🔍 SEO</option>
+                        <option value="security">🔒 Security</option>
+                        <option value="browser">🌐 Browser APIs</option>
+                        <option value="tools">🛠️ Development Tools</option>
+                    </select>
+                </div>
+        
+                <div class="quiz-container">
+                    <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                    <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                    <div class="question-grid" id="question-grid"></div>
+                    <div id="quiz-questions"></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                        <button id="next-question" onclick="nextQuestion()">Next</button>
+                        <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                    </div>
+                    <div id="quiz-result" class="quiz-result"></div>
+                    <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    
+    <script>
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+const topicQuestions = {
+    html: [
+                { question: "What is HTML?", options: ["HyperText Markup Language", "High Text Markup Language", "Hyperlink and Text Markup Language", "None"], answer: "HyperText Markup Language" },
+                { question: "Which HTML5 element is used for navigation?", options: ["<nav>", "<navigation>", "<menu>", "<navigate>"], answer: "<nav>" },
+                { question: "What is the correct HTML5 doctype declaration?", options: ["<!DOCTYPE html>", "<!DOCTYPE HTML5>", "<!DOCTYPE html5>", "<!DOCTYPE>"], answer: "<!DOCTYPE html>" },
+                { question: "Which HTML element is used to define an unordered list?", options: ["<ul>", "<ol>", "<li>", "<list>"], answer: "<ul>" },
+                { question: "What is the purpose of the <meta> tag?", options: ["Provide metadata about the document", "Create a new section", "Define a paragraph", "None"], answer: "Provide metadata about the document" },
+                { question: "Which HTML5 element is used for playing video files?", options: ["<video>", "<movie>", "<media>", "<play>"], answer: "<video>" },
+                { question: "What is the correct way to create a hyperlink in HTML?", options: ["<a href='url'>", "<link href='url'>", "<hyperlink href='url'>", "<url>"], answer: "<a href='url'>" },
+                { question: "Which HTML element is used to define a table?", options: ["<table>", "<grid>", "<matrix>", "<spreadsheet>"], answer: "<table>" },
+                { question: "What is the purpose of the <header> element?", options: ["Define a header for a document or section", "Create a title", "Define a navigation menu", "None"], answer: "Define a header for a document or section" },
+                { question: "Which HTML5 element is used for playing audio files?", options: ["<audio>", "<sound>", "<music>", "<play>"], answer: "<audio>" },
+                { question: "What is the purpose of the <footer> element?", options: ["Define a footer for a document or section", "Create a bottom border", "Define a closing tag", "None"], answer: "Define a footer for a document or section" },
+                { question: "Which HTML element is used to define a form?", options: ["<form>", "<input>", "<submit>", "<data>"], answer: "<form>" },
+                { question: "What is the purpose of the <article> element?", options: ["Define independent, self-contained content", "Create a new section", "Define a paragraph", "None"], answer: "Define independent, self-contained content" },
+                { question: "Which HTML5 element is used for creating a canvas?", options: ["<canvas>", "<draw>", "<paint>", "<graphics>"], answer: "<canvas>" },
+                { question: "What is the purpose of the <section> element?", options: ["Define a section in a document", "Create a new page", "Define a paragraph", "None"], answer: "Define a section in a document" },
+                { question: "Which HTML element is used for input fields?", options: ["<input>", "<text>", "<field>", "<data>"], answer: "<input>" },
+                { question: "What is the purpose of the <aside> element?", options: ["Define content aside from main content", "Create a sidebar", "Define a paragraph", "None"], answer: "Define content aside from main content" },
+                { question: "Which HTML element is used for defining a button?", options: ["<button>", "<click>", "<press>", "<action>"], answer: "<button>" },
+                { question: "What is the purpose of the <figure> element?", options: ["Define self-contained content with caption", "Create an image", "Define a paragraph", "None"], answer: "Define self-contained content with caption" },
+                { question: "Which HTML element is used for defining a paragraph?", options: ["<p>", "<text>", "<paragraph>", "<content>"], answer: "<p>" },
+                { question: "What is the purpose of the <mark> element?", options: ["Highlight text", "Create a bookmark", "Define a margin", "None"], answer: "Highlight text" },
+                { question: "Which HTML element is used for defining a table row?", options: ["<tr>", "<row>", "<table-row>", "<line>"], answer: "<tr>" },
+                { question: "What is the purpose of the <time> element?", options: ["Define date/time", "Create a timer", "Style time", "None"], answer: "Define date/time" },
+                { question: "Which HTML element is used for defining a table cell?", options: ["<td>", "<cell>", "<table-cell>", "<data>"], answer: "<td>" },
+                { question: "What is the purpose of the <wbr> element?", options: ["Define word break opportunity", "Create a line break", "Style text", "None"], answer: "Define word break opportunity" },
+                { question: "Which HTML element is used for defining a table header cell?", options: ["<th>", "<header>", "<table-header>", "<head>"], answer: "<th>" },
+                { question: "What is the purpose of the <ruby> element?", options: ["Define ruby annotations", "Create a gem", "Style text", "None"], answer: "Define ruby annotations" },
+                { question: "What is the purpose of the <details> element?", options: ["Create expandable content", "Style content", "Create animations", "None"], answer: "Create expandable content" },
+                { question: "Which HTML element is used for defining a definition list?", options: ["<dl>", "<def>", "<definition>", "<list>"], answer: "<dl>" },
+                { question: "What is the purpose of the <meter> element?", options: ["Display scalar measurements", "Style content", "Create animations", "None"], answer: "Display scalar measurements" },
+                { question: "Which HTML element is used for defining a definition term?", options: ["<dt>", "<term>", "<definition>", "<item>"], answer: "<dt>" },
+                { question: "What is the purpose of the <progress> element?", options: ["Display progress of a task", "Style content", "Create animations", "None"], answer: "Display progress of a task" }
+            ],
+            css: [
+                { question: "What is CSS?", options: ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style Sheets", "None"], answer: "Cascading Style Sheets" },
+                { question: "Which CSS property is used to change the text color?", options: ["color", "text-color", "font-color", "text-style"], answer: "color" },
+                { question: "What is the correct way to refer to an external CSS file?", options: ["<link rel='stylesheet' href='styles.css'>", "<style src='styles.css'>", "<css src='styles.css'>", "<stylesheet href='styles.css'>"], answer: "<link rel='stylesheet' href='styles.css'>" },
+                { question: "Which CSS property is used to change the background color?", options: ["background-color", "bgcolor", "background", "bg"], answer: "background-color" },
+                { question: "What is the purpose of CSS media queries?", options: ["Apply different styles for different devices", "Create animations", "Define variables", "None"], answer: "Apply different styles for different devices" },
+                { question: "Which CSS property is used to change the font size?", options: ["font-size", "text-size", "size", "font"], answer: "font-size" },
+                { question: "What is the purpose of CSS flexbox?", options: ["Create flexible layouts", "Style text", "Create animations", "None"], answer: "Create flexible layouts" },
+                { question: "Which CSS property is used to add rounded corners?", options: ["border-radius", "corner-radius", "round", "border-style"], answer: "border-radius" },
+                { question: "What is the purpose of CSS grid?", options: ["Create two-dimensional layouts", "Style text", "Create animations", "None"], answer: "Create two-dimensional layouts" },
+                { question: "Which CSS property is used to add shadows?", options: ["box-shadow", "shadow", "element-shadow", "border-shadow"], answer: "box-shadow" },
+                { question: "What is the purpose of CSS variables?", options: ["Store reusable values", "Create animations", "Style text", "None"], answer: "Store reusable values" },
+                { question: "Which CSS property is used to change the display type?", options: ["display", "show", "visibility", "type"], answer: "display" },
+                { question: "What is the purpose of CSS animations?", options: ["Create animated effects", "Style text", "Create layouts", "None"], answer: "Create animated effects" },
+                { question: "Which CSS property is used to change the position?", options: ["position", "location", "place", "align"], answer: "position" },
+                { question: "What is the purpose of CSS transitions?", options: ["Create smooth changes", "Style text", "Create layouts", "None"], answer: "Create smooth changes" },
+                { question: "Which CSS property is used for text alignment?", options: ["text-align", "align", "text-position", "alignment"], answer: "text-align" },
+                { question: "What is the purpose of CSS pseudo-classes?", options: ["Style elements in specific states", "Create animations", "Define variables", "None"], answer: "Style elements in specific states" },
+                { question: "Which CSS property is used for text decoration?", options: ["text-decoration", "decoration", "text-style", "underline"], answer: "text-decoration" },
+                { question: "What is the purpose of CSS specificity?", options: ["Determine which styles are applied", "Create animations", "Define variables", "None"], answer: "Determine which styles are applied" },
+                { question: "Which CSS property is used for margin?", options: ["margin", "spacing", "gap", "padding"], answer: "margin" },
+                { question: "What is the purpose of CSS inheritance?", options: ["Pass properties to child elements", "Create animations", "Define variables", "None"], answer: "Pass properties to child elements" },
+                { question: "Which CSS property is used for padding?", options: ["padding", "spacing", "gap", "margin"], answer: "padding" },
+                { question: "Which CSS property is used for margin?", options: ["margin", "spacing", "gap", "padding"], answer: "margin" },
+                { question: "What is the purpose of CSS custom properties?", options: ["Define reusable values", "Style content", "Create animations", "None"], answer: "Define reusable values" },
+                { question: "Which CSS property is used for text overflow?", options: ["text-overflow", "overflow-text", "text-clip", "clip-text"], answer: "text-overflow" },
+                { question: "What is the purpose of CSS Grid areas?", options: ["Define layout regions", "Style content", "Create animations", "None"], answer: "Define layout regions" },
+                { question: "Which CSS property is used for column layout?", options: ["column-count", "columns", "column-layout", "layout-columns"], answer: "column-count" },
+                { question: "What is the purpose of CSS containment?", options: ["Optimize rendering", "Style content", "Create animations", "None"], answer: "Optimize rendering" }
+            ],
+            responsive: [
+                { question: "What is responsive design?", options: ["Design that adapts to different screen sizes", "Design for mobile only", "Design for desktop only", "None"], answer: "Design that adapts to different screen sizes" },
+                { question: "Which meta tag is used for responsive design?", options: ["<meta name='viewport'>", "<meta name='responsive'>", "<meta name='screen'>", "<meta name='device'>"], answer: "<meta name='viewport'>" },
+                { question: "What is a media query?", options: ["A technique to apply different styles for different devices", "A way to create animations", "A way to define variables", "None"], answer: "A technique to apply different styles for different devices" },
+                { question: "Which CSS unit is best for responsive design?", options: ["rem", "px", "pt", "cm"], answer: "rem" },
+                { question: "What is the purpose of breakpoints?", options: ["Define when to change layouts", "Create animations", "Style text", "None"], answer: "Define when to change layouts" },
+                { question: "Which CSS property is used for responsive images?", options: ["max-width", "width", "size", "dimension"], answer: "max-width" },
+                { question: "What is mobile-first design?", options: ["Design starting from mobile devices", "Design for mobile only", "Design for desktop only", "None"], answer: "Design starting from mobile devices" },
+                { question: "Which CSS property is used for fluid typography?", options: ["clamp()", "size()", "font()", "text()"], answer: "clamp()" },
+                { question: "What is the purpose of CSS Grid in responsive design?", options: ["Create flexible layouts", "Style text", "Create animations", "None"], answer: "Create flexible layouts" },
+                { question: "Which CSS property is used for responsive tables?", options: ["overflow-x", "table-layout", "display", "width"], answer: "overflow-x" },
+                { question: "What is the purpose of CSS Flexbox in responsive design?", options: ["Create flexible layouts", "Style text", "Create animations", "None"], answer: "Create flexible layouts" },
+                { question: "Which CSS property is used for responsive navigation?", options: ["display: flex", "position: fixed", "float: left", "clear: both"], answer: "display: flex" },
+                { question: "What is the purpose of CSS variables in responsive design?", options: ["Store reusable values", "Create animations", "Style text", "None"], answer: "Store reusable values" },
+                { question: "Which CSS property is used for responsive images?", options: ["object-fit", "image-fit", "img-fit", "fit"], answer: "object-fit" },
+                { question: "What is the purpose of CSS Grid areas in responsive design?", options: ["Define layout regions", "Style text", "Create animations", "None"], answer: "Define layout regions" },
+                { question: "Which CSS property is used for responsive margins?", options: ["margin", "spacing", "gap", "padding"], answer: "margin" },
+                { question: "What is the purpose of responsive images?", options: ["Optimize images for different devices", "Style content", "Create animations", "None"], answer: "Optimize images for different devices" },
+                { question: "Which CSS property is used for responsive padding?", options: ["padding", "spacing", "gap", "margin"], answer: "padding" },
+                { question: "What is the purpose of responsive typography?", options: ["Scale text for different devices", "Style content", "Create animations", "None"], answer: "Scale text for different devices" },
+                { question: "Which CSS property is used for responsive borders?", options: ["border", "outline", "frame", "border-style"], answer: "border" },
+                { question: "What is the purpose of responsive tables?", options: ["Handle data on small screens", "Style content", "Create animations", "None"], answer: "Handle data on small screens" },
+                { question: "Which CSS property is used for responsive forms?", options: ["max-width", "form-width", "input-width", "field-width"], answer: "max-width" },
+                { question: "What is the purpose of responsive navigation?", options: ["Adapt menu for mobile", "Style content", "Create animations", "None"], answer: "Adapt menu for mobile" }
+            ],
+            accessibility: [
+                { question: "What is web accessibility?", options: ["Making websites usable for everyone", "Making websites look good", "Making websites fast", "None"], answer: "Making websites usable for everyone" },
+                { question: "Which HTML attribute is used for accessibility?", options: ["aria-label", "access-label", "label", "title"], answer: "aria-label" },
+                { question: "What is the purpose of alt text?", options: ["Describe images for screen readers", "Style images", "Create animations", "None"], answer: "Describe images for screen readers" },
+                { question: "Which HTML element is used for accessibility?", options: ["<main>", "<content>", "<body>", "<div>"], answer: "<main>" },
+                { question: "What is the purpose of ARIA roles?", options: ["Define element roles for screen readers", "Style elements", "Create animations", "None"], answer: "Define element roles for screen readers" },
+                { question: "Which CSS property is used for accessibility?", options: ["outline", "border", "shadow", "background"], answer: "outline" },
+                { question: "What is the purpose of keyboard navigation?", options: ["Allow navigation without mouse", "Style elements", "Create animations", "None"], answer: "Allow navigation without mouse" },
+                { question: "Which HTML attribute is used for form accessibility?", options: ["for", "label", "title", "name"], answer: "for" },
+                { question: "What is the purpose of color contrast?", options: ["Ensure text is readable", "Style elements", "Create animations", "None"], answer: "Ensure text is readable" },
+                { question: "Which HTML element is used for accessibility?", options: ["<header>", "<top>", "<head>", "<title>"], answer: "<header>" },
+                { question: "What is the purpose of skip links?", options: ["Allow keyboard users to skip content", "Style elements", "Create animations", "None"], answer: "Allow keyboard users to skip content" },
+                { question: "Which HTML attribute is used for accessibility?", options: ["aria-hidden", "hidden", "display: none", "visibility: hidden"], answer: "aria-hidden" },
+                { question: "What is the purpose of semantic HTML?", options: ["Provide meaning to content", "Style elements", "Create animations", "None"], answer: "Provide meaning to content" },
+                { question: "Which HTML element is used for accessibility?", options: ["<nav>", "<menu>", "<list>", "<ul>"], answer: "<nav>" },
+                { question: "What is the purpose of focus management?", options: ["Control keyboard focus", "Style elements", "Create animations", "None"], answer: "Control keyboard focus" },
+                { question: "Which CSS property is used for focus styles?", options: [":focus", "focus", "focus-style", "focus-visibility"], answer: ":focus" },
+                { question: "What is the purpose of ARIA landmarks?", options: ["Define page structure for screen readers", "Style elements", "Create animations", "None"], answer: "Define page structure for screen readers" },
+                { question: "Which HTML attribute is used for form validation?", options: ["required", "validate", "mandatory", "needed"], answer: "required" },
+                { question: "What is the purpose of error messages?", options: ["Inform users of problems", "Style elements", "Create animations", "None"], answer: "Inform users of problems" },
+                { question: "Which HTML element is used for error messages?", options: ["<div role='alert'>", "<error>", "<message>", "<alert>"], answer: "<div role='alert'>" }
+            ],
+            seo: [
+                { question: "What is SEO?", options: ["Search Engine Optimization", "Search Engine Order", "Search Engine Output", "None"], answer: "Search Engine Optimization" },
+                { question: "Which HTML element is important for SEO?", options: ["<title>", "<head>", "<meta>", "<header>"], answer: "<title>" },
+                { question: "What is the purpose of meta descriptions?", options: ["Describe page content for search engines", "Style pages", "Create animations", "None"], answer: "Describe page content for search engines" },
+                { question: "Which HTML element is important for SEO?", options: ["<h1>", "<header>", "<title>", "<head>"], answer: "<h1>" },
+                { question: "What is the purpose of canonical URLs?", options: ["Prevent duplicate content issues", "Style pages", "Create animations", "None"], answer: "Prevent duplicate content issues" },
+                { question: "Which HTML element is important for SEO?", options: ["<img>", "<picture>", "<figure>", "<image>"], answer: "<img>" },
+                { question: "What is the purpose of robots.txt?", options: ["Control search engine crawling", "Style pages", "Create animations", "None"], answer: "Control search engine crawling" },
+                { question: "Which HTML element is important for SEO?", options: ["<meta name='description'>", "<meta name='keywords'>", "<meta name='author'>", "<meta name='title'>"], answer: "<meta name='description'>" },
+                { question: "What is the purpose of sitemaps?", options: ["Help search engines find pages", "Style pages", "Create animations", "None"], answer: "Help search engines find pages" },
+                { question: "Which HTML element is important for SEO?", options: ["<link rel='canonical'>", "<link rel='stylesheet'>", "<link rel='icon'>", "<link rel='bookmark'>"], answer: "<link rel='canonical'>" },
+                { question: "What is the purpose of structured data?", options: ["Provide context to search engines", "Style pages", "Create animations", "None"], answer: "Provide context to search engines" },
+                { question: "Which HTML element is important for SEO?", options: ["<article>", "<section>", "<div>", "<span>"], answer: "<article>" },
+                { question: "What is the purpose of page speed optimization?", options: ["Improve user experience", "Style pages", "Create animations", "None"], answer: "Improve user experience" },
+                { question: "Which HTML element is important for SEO?", options: ["<main>", "<content>", "<body>", "<div>"], answer: "<main>" },
+                { question: "What is the purpose of mobile optimization?", options: ["Improve mobile experience", "Style pages", "Create animations", "None"], answer: "Improve mobile experience" },
+                { question: "Which meta tag is used for mobile optimization?", options: ["<meta name='viewport'>", "<meta name='mobile'>", "<meta name='screen'>", "<meta name='device'>"], answer: "<meta name='viewport'>" },
+                { question: "What is the purpose of internal linking?", options: ["Improve site structure", "Style pages", "Create animations", "None"], answer: "Improve site structure" },
+                { question: "Which HTML attribute is important for SEO?", options: ["alt", "title", "name", "id"], answer: "alt" },
+                { question: "What is the purpose of URL structure?", options: ["Improve site organization", "Style pages", "Create animations", "None"], answer: "Improve site organization" },
+                { question: "Which HTML element is used for breadcrumbs?", options: ["<nav aria-label='breadcrumb'>", "<breadcrumb>", "<path>", "<trail>"], answer: "<nav aria-label='breadcrumb'>" },
+                { question: "What is the purpose of JSON-LD?", options: ["Structured data markup", "Style pages", "Handle events", "None"], answer: "Structured data markup" },
+                { question: "Which meta tag is used for social sharing?", options: ["Open Graph tags", "Social tags", "Share tags", "None"], answer: "Open Graph tags" },
+                { question: "What is the purpose of XML sitemaps?", options: ["Help search engines crawl", "Style pages", "Handle events", "None"], answer: "Help search engines crawl" },
+                { question: "Which HTML element is important for SEO?", options: ["<article>", "<section>", "<div>", "<span>"], answer: "<article>" },
+                { question: "What is the purpose of canonical URLs?", options: ["Prevent duplicate content", "Style pages", "Handle events", "None"], answer: "Prevent duplicate content" },
+                { question: "Which meta tag is used for mobile optimization?", options: ["<meta name='viewport'>", "<meta name='mobile'>", "<meta name='screen'>", "<meta name='device'>"], answer: "<meta name='viewport'>" },
+                { question: "What is the purpose of robots.txt?", options: ["Control search engine crawling", "Style pages", "Handle events", "None"], answer: "Control search engine crawling" },
+                { question: "Which HTML attribute is important for SEO?", options: ["alt", "title", "name", "id"], answer: "alt" },
+                { question: "What is the purpose of breadcrumbs?", options: ["Improve site navigation", "Style pages", "Handle events", "None"], answer: "Improve site navigation" },
+                { question: "Which meta tag is used for language?", options: ["<html lang='en'>", "<meta lang='en'>", "<language>", "<meta language='en'>"], answer: "<html lang='en'>" }    
+            ],
+            security: [
+                { question: "What is XSS?", options: ["Cross-Site Scripting", "Cross-Site Security", "Cross-Site Service", "None"], answer: "Cross-Site Scripting" },
+                { question: "Which security header prevents XSS?", options: ["Content-Security-Policy", "Security-Policy", "XSS-Policy", "None"], answer: "Content-Security-Policy" },
+                { question: "What is CSRF?", options: ["Cross-Site Request Forgery", "Cross-Site Request Form", "Cross-Site Request File", "None"], answer: "Cross-Site Request Forgery" },
+                { question: "Which security header prevents CSRF?", options: ["X-CSRF-Token", "CSRF-Token", "Security-Token", "None"], answer: "X-CSRF-Token" },
+                { question: "What is the purpose of HTTPS?", options: ["Secure data transmission", "Style pages", "Create animations", "None"], answer: "Secure data transmission" },
+                { question: "Which security header enforces HTTPS?", options: ["Strict-Transport-Security", "HTTPS-Security", "SSL-Security", "None"], answer: "Strict-Transport-Security" },
+                { question: "What is SQL injection?", options: ["Database attack technique", "Style technique", "Animation technique", "None"], answer: "Database attack technique" },
+                { question: "Which security practice prevents SQL injection?", options: ["Parameterized queries", "SQL queries", "Database queries", "None"], answer: "Parameterized queries" },
+                { question: "What is the purpose of input validation?", options: ["Prevent malicious input", "Style forms", "Create animations", "None"], answer: "Prevent malicious input" },
+                { question: "Which security header prevents clickjacking?", options: ["X-Frame-Options", "Frame-Options", "Security-Options", "None"], answer: "X-Frame-Options" },
+                { question: "What is the purpose of password hashing?", options: ["Secure password storage", "Style passwords", "Create animations", "None"], answer: "Secure password storage" },
+                { question: "Which security practice prevents session hijacking?", options: ["Secure session management", "Session storage", "Session cookies", "None"], answer: "Secure session management" },
+                { question: "What is the purpose of rate limiting?", options: ["Prevent abuse", "Style requests", "Create animations", "None"], answer: "Prevent abuse" },
+                { question: "Which security header prevents MIME type sniffing?", options: ["X-Content-Type-Options", "Content-Type-Options", "MIME-Options", "None"], answer: "X-Content-Type-Options" },
+                { question: "What is the purpose of security headers?", options: ["Enhance security", "Style pages", "Create animations", "None"], answer: "Enhance security" },
+                { question: "Which security practice prevents XSS?", options: ["Input sanitization", "Output encoding", "Style sanitization", "None"], answer: "Input sanitization" },
+                { question: "What is the purpose of CSP?", options: ["Control resource loading", "Style pages", "Create animations", "None"], answer: "Control resource loading" },
+                { question: "Which security practice prevents CSRF?", options: ["Token validation", "Form validation", "Style validation", "None"], answer: "Token validation" },
+                { question: "What is the purpose of CORS?", options: ["Control cross-origin requests", "Style pages", "Create animations", "None"], answer: "Control cross-origin requests" },
+                { question: "Which security header controls CORS?", options: ["Access-Control-Allow-Origin", "CORS-Origin", "Cross-Origin", "None"], answer: "Access-Control-Allow-Origin" },
+                { question: "What is the purpose of Subresource Integrity?", options: ["Verify resource integrity", "Style pages", "Handle events", "None"], answer: "Verify resource integrity" },
+                { question: "Which security header prevents MIME type sniffing?", options: ["X-Content-Type-Options", "Content-Type-Options", "MIME-Options", "None"], answer: "X-Content-Type-Options" },
+                { question: "What is the purpose of HTTP Public Key Pinning?", options: ["Prevent certificate attacks", "Style pages", "Handle events", "None"], answer: "Prevent certificate attacks" },
+                { question: "Which security practice prevents timing attacks?", options: ["Constant-time comparison", "Time comparison", "Attack prevention", "None"], answer: "Constant-time comparison" },
+                { question: "What is the purpose of Content Security Policy?", options: ["Control resource loading", "Style pages", "Handle events", "None"], answer: "Control resource loading" },
+                { question: "Which security header prevents clickjacking?", options: ["X-Frame-Options", "Frame-Options", "Security-Options", "None"], answer: "X-Frame-Options" },
+                { question: "What is the purpose of SameSite cookies?", options: ["Prevent CSRF attacks", "Style pages", "Handle events", "None"], answer: "Prevent CSRF attacks" },
+                { question: "Which security practice prevents SQL injection?", options: ["Parameterized queries", "SQL queries", "Database queries", "None"], answer: "Parameterized queries" },
+                { question: "What is the purpose of HTTP Strict Transport Security?", options: ["Enforce HTTPS", "Style pages", "Handle events", "None"], answer: "Enforce HTTPS" },
+                { question: "Which security header controls CORS?", options: ["Access-Control-Allow-Origin", "CORS-Origin", "Cross-Origin", "None"], answer: "Access-Control-Allow-Origin" }
+            ],
+            browser: [
+                { question: "What is the Document Object Model?", options: ["Tree structure of HTML", "Style structure", "Animation structure", "None"], answer: "Tree structure of HTML" },
+                { question: "Which browser API is used for storage?", options: ["localStorage", "storage", "save", "None"], answer: "localStorage" },
+                { question: "What is the purpose of the Fetch API?", options: ["Make HTTP requests", "Style pages", "Create animations", "None"], answer: "Make HTTP requests" },
+                { question: "Which browser API is used for geolocation?", options: ["Geolocation API", "Location API", "Position API", "None"], answer: "Geolocation API" },
+                { question: "What is the purpose of the WebSocket API?", options: ["Real-time communication", "Style pages", "Create animations", "None"], answer: "Real-time communication" },
+                { question: "Which browser API is used for notifications?", options: ["Notifications API", "Alert API", "Message API", "None"], answer: "Notifications API" },
+                { question: "What is the purpose of the History API?", options: ["Manage browser history", "Style pages", "Create animations", "None"], answer: "Manage browser history" },
+                { question: "Which browser API is used for audio?", options: ["Web Audio API", "Sound API", "Music API", "None"], answer: "Web Audio API" },
+                { question: "What is the purpose of the Canvas API?", options: ["Draw graphics", "Style pages", "Create animations", "None"], answer: "Draw graphics" },
+                { question: "Which browser API is used for video?", options: ["Media API", "Video API", "Stream API", "None"], answer: "Media API" },
+                { question: "What is the purpose of the Web Workers API?", options: ["Run scripts in background", "Style pages", "Create animations", "None"], answer: "Run scripts in background" },
+                { question: "Which browser API is used for drag and drop?", options: ["Drag and Drop API", "Move API", "Transfer API", "None"], answer: "Drag and Drop API" },
+                { question: "What is the purpose of the WebRTC API?", options: ["Real-time communication", "Style pages", "Create animations", "None"], answer: "Real-time communication" },
+                { question: "Which browser API is used for service workers?", options: ["Service Workers API", "Worker API", "Background API", "None"], answer: "Service Workers API" },
+                { question: "What is the purpose of the Web Storage API?", options: ["Store data locally", "Style pages", "Create animations", "None"], answer: "Store data locally" },
+                { question: "Which browser API is used for payment processing?", options: ["Payment Request API", "Pay API", "Transaction API", "None"], answer: "Payment Request API" },
+                { question: "What is the purpose of the Intersection Observer API?", options: ["Track element visibility", "Style pages", "Create animations", "None"], answer: "Track element visibility" },
+                { question: "Which browser API is used for device orientation?", options: ["Device Orientation API", "Orientation API", "Device API", "None"], answer: "Device Orientation API" },
+                { question: "What is the purpose of the Battery Status API?", options: ["Monitor battery status", "Style pages", "Create animations", "None"], answer: "Monitor battery status" },
+                { question: "Which browser API is used for file system access?", options: ["File System API", "Files API", "Storage API", "None"], answer: "File System API" },
+                { question: "What is the purpose of the Web Animations API?", options: ["Create complex animations", "Style pages", "Handle events", "None"], answer: "Create complex animations" },
+                { question: "Which browser API is used for background sync?", options: ["Background Sync API", "Sync API", "Background API", "None"], answer: "Background Sync API" },
+                { question: "What is the purpose of the Web Share API?", options: ["Share content with other apps", "Style pages", "Handle events", "None"], answer: "Share content with other apps" },
+                { question: "Which browser API is used for screen capture?", options: ["Screen Capture API", "Capture API", "Screen API", "None"], answer: "Screen Capture API" },
+                { question: "What is the purpose of the Web Speech API?", options: ["Speech recognition and synthesis", "Style pages", "Handle events", "None"], answer: "Speech recognition and synthesis" },
+                { question: "Which browser API is used for gamepad input?", options: ["Gamepad API", "Input API", "Controller API", "None"], answer: "Gamepad API" },
+                { question: "What is the purpose of the Web Bluetooth API?", options: ["Connect to Bluetooth devices", "Style pages", "Handle events", "None"], answer: "Connect to Bluetooth devices" },
+                { question: "Which browser API is used for virtual keyboard?", options: ["Virtual Keyboard API", "Keyboard API", "Input API", "None"], answer: "Virtual Keyboard API" },
+                { question: "What is the purpose of the Web MIDI API?", options: ["Connect to MIDI devices", "Style pages", "Handle events", "None"], answer: "Connect to MIDI devices" },
+                { question: "Which browser API is used for screen wake lock?", options: ["Wake Lock API", "Screen API", "Lock API", "None"], answer: "Wake Lock API" }
+            ],
+            tools: [
+                { question: "What is Git?", options: ["Version control system", "Code editor", "Web server", "None"], answer: "Version control system" },
+                { question: "Which tool is used for package management?", options: ["npm", "git", "node", "None"], answer: "npm" },
+                { question: "What is the purpose of webpack?", options: ["Bundle modules", "Style pages", "Create animations", "None"], answer: "Bundle modules" },
+                { question: "Which tool is used for testing?", options: ["Jest", "Test", "Check", "None"], answer: "Jest" },
+                { question: "What is the purpose of ESLint?", options: ["Code linting", "Style pages", "Create animations", "None"], answer: "Code linting" },
+                { question: "Which tool is used for CSS preprocessing?", options: ["Sass", "CSS", "Style", "None"], answer: "Sass" },
+                { question: "What is the purpose of Babel?", options: ["JavaScript transpiler", "Style pages", "Create animations", "None"], answer: "JavaScript transpiler" },
+                { question: "Which tool is used for task running?", options: ["Gulp", "Task", "Run", "None"], answer: "Gulp" },
+                { question: "What is the purpose of PostCSS?", options: ["CSS processing", "Style pages", "Create animations", "None"], answer: "CSS processing" },
+                { question: "Which tool is used for code formatting?", options: ["Prettier", "Format", "Style", "None"], answer: "Prettier" },
+                { question: "What is the purpose of TypeScript?", options: ["Add types to JavaScript", "Style pages", "Create animations", "None"], answer: "Add types to JavaScript" },
+                { question: "Which tool is used for API testing?", options: ["Postman", "Test", "Check", "None"], answer: "Postman" },
+                { question: "What is the purpose of Docker?", options: ["Containerization", "Style pages", "Create animations", "None"], answer: "Containerization" },
+                { question: "Which tool is used for continuous integration?", options: ["Jenkins", "CI", "Build", "None"], answer: "Jenkins" },
+                { question: "What is the purpose of VS Code?", options: ["Code editor", "Style pages", "Create animations", "None"], answer: "Code editor" },
+                { question: "Which tool is used for browser testing?", options: ["Selenium", "Browser", "Test", "None"], answer: "Selenium" },
+                { question: "What is the purpose of Chrome DevTools?", options: ["Debug and profile web applications", "Style pages", "Create animations", "None"], answer: "Debug and profile web applications" },
+                { question: "Which tool is used for performance monitoring?", options: ["Lighthouse", "Monitor", "Check", "None"], answer: "Lighthouse" },
+                { question: "What is the purpose of Git Flow?", options: ["Manage Git workflow", "Style pages", "Create animations", "None"], answer: "Manage Git workflow" },
+                { question: "Which tool is used for dependency management?", options: ["Yarn", "Dependencies", "Packages", "None"], answer: "Yarn" },
+                { question: "Which tool is used for code coverage reporting?", options: ["Istanbul", "Coverage", "Report", "None"], answer: "Istanbul" },
+                { question: "What is the purpose of Husky?", options: ["Git hooks management", "Style pages", "Create animations", "None"], answer: "Git hooks management" },
+                { question: "Which tool is used for API documentation?", options: ["Swagger", "Docs", "API", "None"], answer: "Swagger" },
+                { question: "What is the purpose of Storybook?", options: ["UI component development", "Style pages", "Create animations", "None"], answer: "UI component development" },
+                { question: "Which tool is used for code splitting?", options: ["Dynamic imports", "Split", "Divide", "None"], answer: "Dynamic imports" },
+                { question: "What is the purpose of Cypress?", options: ["End-to-end testing", "Style pages", "Create animations", "None"], answer: "End-to-end testing" },
+                { question: "Which tool is used for performance profiling?", options: ["Chrome DevTools Profiler", "Profile", "Measure", "None"], answer: "Chrome DevTools Profiler" },
+                { question: "What is the purpose of ESLint plugins?", options: ["Extend linting rules", "Style pages", "Create animations", "None"], answer: "Extend linting rules" },
+                { question: "Which tool is used for dependency updates?", options: ["npm-check-updates", "Update", "Check", "None"], answer: "npm-check-updates" }
+            ]
+
+};
+
+let quizData = []; // Stores selected topic questions
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let timerInterval;
+let timeLeft;
+
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Function to start timer
+function startTimer() {
+    const timerDisplay = document.querySelector('.quiz-timer');
+    const timerSpan = document.getElementById('timer');
+    timeLeft = 20; // 10 minutes in seconds
+    
+    timerDisplay.style.display = 'block';
+    
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerSpan.textContent = formatTime(timeLeft);
+        
+        // Warning when 1 minute remaining
+        if (timeLeft <= 60) {
+            timerDisplay.classList.add('warning');
+        }
+        
+        // Auto-submit when time's up
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpMessage();
+            disableQuizOptions();
+            updateQuestionGrid();
+        }
+    }, 1000);
+}
+
+// Add new function to show Time's Up message
+function showTimeUpMessage() {
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    const timeUpMessage = document.createElement('div');
+    timeUpMessage.style.textAlign = 'center';
+    timeUpMessage.style.padding = '20px';
+    timeUpMessage.style.marginTop = '20px';
+    timeUpMessage.style.backgroundColor = '#ff4444';
+    timeUpMessage.style.color = 'white';
+    timeUpMessage.style.borderRadius = '10px';
+    timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+    timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+    quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+    
+    // Show submit button
+    document.getElementById('submit-quiz').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'none';
+}
+
+// Function to disable quiz options
+function disableQuizOptions() {
+    const optionsDiv = document.querySelector('.quiz-options');
+    if (optionsDiv) {
+        optionsDiv.classList.add('disabled');
+        const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+
+// Function to stop timer
+function stopTimer() {
+    clearInterval(timerInterval);
+    document.querySelector('.quiz-timer').style.display = 'none';
+}
+
+// Function to start quiz with selected topic
+function startQuiz(topic, isRestore = false) {
+    currentTopic = topic;
+    const quizIntro = document.querySelector('.quiz-intro');
+    const quizContainer = document.querySelector('.quiz-container');
+    const topicSelect = document.querySelector('.quiz-topics');
+
+    if (!topic) {
+        // Show intro, hide quiz container when no topic selected
+        quizIntro.style.display = 'block';
+        quizContainer.style.display = 'none';
+        stopTimer();
+        return;
+    }
+
+    // Hide intro and topic select with fade out effect
+    quizIntro.style.opacity = '0';
+    topicSelect.style.opacity = '0';
+    setTimeout(() => {
+        quizIntro.style.display = 'none';
+        topicSelect.style.display = 'none';
+    }, 300);
+
+    let allQuestions = topicQuestions[topic];
+    if (!allQuestions) {
+        console.error('No questions found for topic:', topic);
+        return;
+    }
+
+    // After setting quizData:
+    if (!isRestore) {
+        quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+        currentQuestionIndex = 0;
+        userAnswers = new Array(quizData.length).fill(null);
+    }
+
+    // Reset quiz UI
+    document.getElementById('quiz-questions').style.display = 'block';
+    document.getElementById('quiz-questions').innerHTML = '';
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('retake-quiz').style.display = 'none';
+
+    // Update quiz heading
+    document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+    // Show quiz container with fade in effect
+    quizContainer.style.opacity = '0';
+    quizContainer.style.display = 'block';
+    setTimeout(() => {
+        quizContainer.style.opacity = '1';
+    }, 50);
+
+    // Reset navigation buttons
+    document.getElementById('prev-question').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'inline-block';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    // Start the timer
+    startTimer();
+
+    displayQuestion();
+    updateQuestionGrid();
+}
+
+// Function to format topic names (e.g., "file_handling" → "File Handling")
+function formatTopic(topic) {
+    return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+// Function to display questions
+function displayQuestion() {
+    if (!quizData || quizData.length === 0) return;
+
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    quizQuestionsDiv.innerHTML = '';
+
+    const question = quizData[currentQuestionIndex];
+    if (!question) return;
+
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('quiz-question');
+
+    const questionText = document.createElement('p');
+    questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+    questionDiv.appendChild(questionText);
+
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('quiz-options');
+    
+    if (timeLeft <= 0) {
+        optionsDiv.classList.add('disabled');
+    }
+
+    question.options.forEach(option => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `question${currentQuestionIndex}`;
+        input.value = option;
+        input.checked = userAnswers[currentQuestionIndex] === option;
+        
+        if (timeLeft <= 0) {
+            input.disabled = true;
+        }
+
+        input.onchange = () => {
+            if (timeLeft > 0) {
+                userAnswers[currentQuestionIndex] = option;
+                // Immediate grid update when answer is selected
+                setTimeout(() => {
+                    updateQuestionGrid();
+                }, 50);
+            }
+        };
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(option));
+        optionsDiv.appendChild(label);
+    });
+
+    questionDiv.appendChild(optionsDiv);
+    quizQuestionsDiv.appendChild(questionDiv);
+
+    document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+    document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+    document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+    
+    updateQuestionGrid();
+}
+
+// Function to navigate questions
+function nextQuestion() {
+    if (currentQuestionIndex < quizData.length - 1) {
+        // Mark current question as skipped if no answer selected
+        if (userAnswers[currentQuestionIndex] === null) {
+            userAnswers[currentQuestionIndex] = "skipped";
+        }
+        
+        currentQuestionIndex++;
+        displayQuestion();
+        updateQuestionGrid();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+}
+
+// Function to submit quiz
+function submitQuiz() {
+    stopTimer();
+    
+    // Mark all unanswered questions as incorrect
+    userAnswers.forEach((answer, index) => {
+        if (answer === null) {
+            userAnswers[index] = "skipped";
+        }
+    });
+    updateQuestionGrid();
+    
+    let score = 0;
+    userAnswers.forEach((answer, index) => {
+        if (answer === quizData[index].answer) {
+            score++;
+        }
+    });
+
+    document.getElementById('quiz-questions').style.display = 'none';
+    document.getElementById('prev-question').style.display = 'none';
+    document.getElementById('next-question').style.display = 'none';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    const quizResultDiv = document.getElementById('quiz-result');
+    const percentage = Math.round((score / quizData.length) * 100);
+    
+    let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+    message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+    
+    if (percentage === 100) {
+        message += `<p>Perfect score! Excellent work! 🌟</p>`;
+    } else if (percentage >= 80) {
+        message += `<p>Great job! Keep up the good work! 👍</p>`;
+    } else if (percentage >= 60) {
+        message += `<p>Not bad! Keep practicing! 💪</p>`;
+    } else {
+        message += `<p>Keep practicing! You can do better! 📚</p>`;
+    }
+
+    // Add detailed summary in a scrollable container
+    message += `
+        <div class="quiz-summary" style="
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f8f8;
+        ">
+            <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+    `;
+
+    quizData.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.answer;
+        const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+        const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+        message += `
+            <div style="
+                margin-bottom: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: left;
+            ">
+                <p style="font-weight: 600; margin-bottom: 10px;">
+                    Question ${index + 1}: ${question.question}
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Your Answer:</span> 
+                    <span style="color: ${statusColor}; font-weight: 500;">
+                        ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                    </span>
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Correct Answer:</span> 
+                    <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                </p>
+                <p style="
+                    margin-top: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    border-radius: 4px;
+                    background: ${statusColor};
+                    color: white;
+                    font-size: 0.9rem;
+                ">${answerStatus}</p>
+            </div>
+        `;
+    });
+
+    message += `</div>`;
+    
+    quizResultDiv.innerHTML = message;
+    quizResultDiv.style.display = 'block';
+    quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+    document.getElementById('retake-quiz').style.display = 'inline-block';
+    document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+    // Scroll to top of the results
+    quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Function to retake quiz
+function retakeQuiz() {
+    stopTimer();
+    
+    // Show intro and topic select again
+    const quizIntro = document.querySelector('.quiz-intro');
+    const topicSelect = document.querySelector('.quiz-topics');
+    const quizContainer = document.querySelector('.quiz-container');
+
+    // Hide quiz container
+    quizContainer.style.opacity = '0';
+    setTimeout(() => {
+        quizContainer.style.display = 'none';
+        
+        // Show intro and topic select with fade in
+        quizIntro.style.display = 'block';
+        topicSelect.style.display = 'block';
+        setTimeout(() => {
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+        }, 50);
+    }, 300);
+
+    // Reset all states
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    quizData = [];
+    
+    // Reset topic select
+    document.querySelector('.quiz-topic-select').value = '';
+}
+
+// Add these functions before the startQuiz function:
+function updateQuestionGrid() {
+    const grid = document.getElementById('question-grid');
+    grid.innerHTML = '';
+    
+    for (let i = 0; i < quizData.length; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.textContent = (i + 1).toString();
+        
+        // Check if question has been attempted (any answer selected)
+        if (userAnswers[i] && userAnswers[i] !== "skipped") {
+            // Question attempted - Blue
+            gridItem.style.backgroundColor = '#2196F3';
+            gridItem.style.borderColor = '#2196F3';
+            gridItem.style.color = '#ffffff';
+        } else if (userAnswers[i] === "skipped") {
+            // Question skipped or not attempted - Red
+            gridItem.style.backgroundColor = '#ff4444';
+            gridItem.style.borderColor = '#ff4444';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Current question - Black
+        if (i === currentQuestionIndex) {
+            gridItem.style.backgroundColor = '#000000';
+            gridItem.style.borderColor = '#000000';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Disabled state when time's up
+        if (timeLeft <= 0) {
+            gridItem.classList.add('disabled');
+        } else {
+            gridItem.onclick = () => {
+                currentQuestionIndex = i;
+                displayQuestion();
+                updateQuestionGrid();
+            };
+        }
+        
+        grid.appendChild(gridItem);
+    }
+    
+    saveQuizState();
+}
+
+function saveQuizState() {
+    const quizState = {
+        topic: currentTopic,
+        answers: userAnswers,
+        timeLeft: timeLeft,
+        currentIndex: currentQuestionIndex,
+        quizData: quizData
+    };
+    localStorage.setItem('quizState', JSON.stringify(quizState));
+}
+
+function loadQuizState() {
+    const savedState = localStorage.getItem('quizState');
+    if (savedState) {
+        if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+            const state = JSON.parse(savedState);
+            currentTopic = state.topic;
+            userAnswers = state.answers;
+            timeLeft = state.timeLeft;
+            currentQuestionIndex = state.currentIndex;
+            quizData = state.quizData;
+            
+            if (currentTopic) {
+                startQuiz(currentTopic, true);
+            }
+        } else {
+            // Clear saved state and show the starting page
+            localStorage.removeItem('quizState');
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+            
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+            currentTopic = '';
+            
+            // Show intro and topic select
+            quizContainer.style.display = 'none';
+            quizIntro.style.display = 'block';
+            topicSelect.style.display = 'block';
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+            
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+    }
+}
+
+// Modify the startQuiz function:
+let currentTopic = '';
+
+// Add to the end of the script:
+// Load saved state when page loads
+window.addEventListener('load', loadQuizState);
+        // JavaScript to handle modal functionality
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+        // JavaScript to handle redirection to home.html
+        function redirectToHome() {
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - StudyHive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4d4d4d;
+            --accent-color: #2c2c2c;
+            --border-color: #d9d9d9;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #444444;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 10px var(--shadow-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--accent-color);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .profile-card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #2c2c2c, #404040);
+            height: 200px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid var(--bg-secondary);
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar i {
+            font-size: 50px;
+            color: var(--text-secondary);
+        }
+
+        .profile-info {
+            padding: 90px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .profile-bio {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .profile-bio .bio-text {
+            margin-bottom: 10px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 60px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .profile-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #404040;
+        }
+
+        .secondary-btn {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .secondary-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .profile-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                top: 140px;
+            }
+            
+            .profile-info {
+                padding-top: 80px;
+            }
+            
+            .profile-stats {
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+        <h1>My Profile</h1>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header"></div>
+            <div class="profile-avatar">
+                <img id="profile-page-avatar" style="display: none;" alt="User Avatar">
+                <i id="profile-page-icon" class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h2 class="profile-name">User Name</h2>
+                <p class="profile-email">user@example.com</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                </div>
+                <div class="profile-bio">
+                    <div class="bio-text">
+                        <p>Welcome to your profile page! This is where you can view and manage your personal information.</p>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <a href="{{ url_for('profile_settings_new') }}" class="profile-btn primary-btn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <label for="avatar-input-profile" class="profile-btn secondary-btn">
+                        <i class="fas fa-camera"></i> Change Avatar
+                    </label>
+                    <input type="file" id="avatar-input-profile" accept="image/*" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/avatar-manager.js') }}"></script>
+    <script>
+        // Load user data from server
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/get_profile_data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update profile information
+                        updateProfileInfo(data.data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching profile data:', error);
+                });
+            
+            // Check if dark mode is enabled
+            const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.dark-mode-toggle i').classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+        
+        // Update profile information with server data
+        function updateProfileInfo(userData) {
+            // Update name and email
+            const nameElement = document.querySelector('.profile-name');
+            const emailElement = document.querySelector('.profile-email');
+            
+            if (nameElement) {
+                nameElement.textContent = userData.full_name || userData.username;
+            }
+            
+            if (emailElement) {
+                emailElement.textContent = userData.email || '';
+            }
+            
+            // Update bio if available
+            const bioElement = document.querySelector('.bio-text p');
+            if (bioElement && userData.bio) {
+                bioElement.textContent = userData.bio;
+            }
+            
+            // Update stats
+            const followersElement = document.querySelector('.stat-item:nth-child(1) .stat-value');
+            const followingElement = document.querySelector('.stat-item:nth-child(2) .stat-value');
+            
+            if (followersElement) {
+                followersElement.textContent = userData.followers_count || '0';
+            }
+            
+            if (followingElement) {
+                followingElement.textContent = userData.following_count || '0';
+            }
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            
+            if (isDarkMode) {
+                body.classList.remove('dark-mode');
+                toggleIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('dark-mode', 'false');
+            } else {
+                body.classList.add('dark-mode');
+                toggleIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('dark-mode', 'true');
+            }
+        }
+    </script>
+</body>
+</html>

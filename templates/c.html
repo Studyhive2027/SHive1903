@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Coding Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        section h2:hover::after {
+            width: 100px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            justify-content: space-between;
+
+        }
+        .item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            height: 325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #333333;
+            flex-grow: 1;
+        }
+
+        .item a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .item a:hover {
+            color: #666666;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #000000;
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-section {
+            padding: 40px 0;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            opacity: 1;
+            border: 2px solid #000000;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom dropdown styling */
+        .quiz-topics {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quiz-topic-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 2px solid #000000;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-topics::after {
+            content: '⌄';
+            font-size: 1.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .quiz-topics:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .quiz-topic-select:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-topic-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-topic-select option {
+            padding: 20px;
+            font-size: 1.1rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Update the topics selection HTML */
+        .quiz-topics {
+            margin-bottom: 40px;
+        }
+
+        .quiz-topic-select {
+            background-image: linear-gradient(45deg, transparent 50%, #000000 50%),
+                            linear-gradient(135deg, #000000 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 10px),
+                               calc(100% - 15px) calc(1em + 10px);
+            background-size: 5px 5px,
+                           5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        .quiz-topic-select:hover {
+            background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                            linear-gradient(135deg, #ffffff 50%, transparent 50%);
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .quiz-question:hover {
+            transform: translateX(5px) scale(1.01);
+            border-color: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-options label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .quiz-options label:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+            border-color: #000000;
+        }
+
+        .quiz-options label:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .quiz-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .quiz-navigation button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-navigation button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: #ffffff;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .quiz-navigation button:hover {
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-navigation button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+        }
+
+        .quiz-navigation button:disabled {
+            background: #cccccc;
+            border-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+            border: 2px solid #000000;
+        }
+
+        .quiz-result h3 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .quiz-result p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        #retake-quiz {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        #retake-quiz:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .c-hub-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .c-hub-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .c-hub-header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Timer styles */
+        .quiz-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            margin-left: 20px;
+        }
+
+        .quiz-timer.warning {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        #quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2rem;
+            margin: 20px 0 40px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quiz-options.disabled label {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .quiz-options.disabled input[type="radio"] {
+            pointer-events: none;
+        }
+
+        /* Question Grid styles */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            max-width: 900px;
+        }
+
+        .grid-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.current {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .grid-item.answered {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .grid-item.incorrect {
+            background: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+        }
+
+        .grid-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the chat interface */
+        .chat-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <button class="connect-button" onclick="toggleChatPanel()" style="position: fixed; top: 30px; right: 30px; background: #000000; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1001;">Connect</button>
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="c-hub-header">
+    <h1>Welcome to C Hub</h1>
+    <p>Your go-to platform to test and improve your C programming skills.</p>
+</header>
+
+    <main class="content">
+        
+        
+        <section id="tutorials" class="tutorials">
+            <div class="container">
+                <h2>Tutorials</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/irqbmMNs2Bo')">
+                            <img src="https://i.ytimg.com/vi/irqbmMNs2Bo/hq720.jpg" alt="Video Thumbnail">
+
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">C Language Tutorial for Beginners by Apna College</a></h3>
+                        <p>Learn C basics: variables, loops, and functions.</p>
+                    </div>
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/KJgsSFOSQv0')">
+                            <img src="https://i.ytimg.com/vi/KJgsSFOSQv0/hq720.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">C Programming Tutorial for Beginners</a></h3>
+                        <p>Intro to core C programming concepts.</p>
+                    </div>
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/87SH2Cn0s9A')">
+                            <img src="https://i.ytimg.com/vi/87SH2Cn0s9A/hq720.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Programming with C </a></h3>
+                        <p>A brief and beginner-friendly C course!</p>
+                    </div>
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/aZb0iu4uGwA')">
+                            <img src="https://i.ytimg.com/vi/aZb0iu4uGwA/hq720.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">C for Beginners</a></h3>
+                        <p>A beginner-friendly tutorial covering C basics and practical examples.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://www.hackerrank.com/domains/c" target="_blank">
+                                <img src="https://th.bing.com/th/id/OIP.2QTcbQJp-Jkfyx8JXOpZ9QHaEO?rs=1&pid=ImgDetMain"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                hackerrank C practice</a></h3>
+                        <p>HackerRank offers C programming challenges to practice and improve coding skills.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.codechef.com/roadmap/c-dsa" target="_blank">
+                                <img src="https://theindianwire.com/wp-content/uploads/2018/06/codechef-logo-1.jpg"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                codechef</a></h3>
+                        <p>CodeChef offers C and DSA challenges with a structured learning roadmap.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://leetcode.com/" target="_blank">
+                                <img src="https://miro.medium.com/v2/resize:fit:1118/1*xwh3VrV-PAG89ROdLj6oXg.png"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                leetcode</a></h3>
+                        <p>LeetCode offers C programming challenges and DSA problems for practice and interview prep.
+                        </p>
+                    </div>
+
+                </div>
+        </section>
+
+        <section id="resources" class="resources">
+            <div class="container">
+                <h2>Resources</h2>
+                <div class="item-container">
+                    <div class="item">
+
+                        <h3><a href="https://www.geeksforgeeks.org/c-programming-language/" target="_blank">
+                                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210702175749/20210702175652.gif"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                Geek for geeks</a></h3>
+                        <p>GeeksforGeeks offers C programming tutorials and examples for all skill levels.</p>
+                    </div>
+
+                    <div class="item">
+                        <h3><a href="https://www.w3schools.com/c/index.php" target="_blank">
+                                <img src="https://cdn.knoji.com/images/logo/w3schools1.jpg?fit=contain&trim=true&flatten=true&extend=25&width=1200&height=630"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                www.w3school</a></h3>
+                        <p>W3Schools offers beginner-friendly C programming tutorials and examples.</p>
+                    </div>
+
+                    <div class="item">
+
+                        <h3><a href="https://devdocs.io/c/" target="_blank">
+                                <img src="https://th.bing.com/th/id/OIP.ePTCMK1xS2R_ob8R98xcjwHaD3?rs=1&pid=ImgDetMain"
+                                    alt="owasp"
+                                    style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                devdocs</a></h3>
+                        <p>DevDocs offers quick C programming documentation for reference.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="container">
+                <h2 class="quiz-title">Test Your C Knowledge</h2>
+
+                <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                            <p style="color: #333333;">Select from various C programming concepts to test your knowledge</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                            <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                            <p style="color: #333333;">From basics to advanced concepts</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                            <p style="color: #333333;">10 questions per quiz session</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                            <p style="color: #333333;">Get immediate feedback on your performance</p>
+                        </div>
+                    </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                    </div>
+                </div>
+
+                <!-- Topics Selection -->
+                <div class="quiz-topics">
+                    <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                        <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="basics">📚 C Basics</option>
+                        <option value="pointers">🔍 Pointers</option>
+                        <option value="arrays">📊 Arrays</option>
+                        <option value="functions">⚙️ Functions</option>
+                        <option value="structures">🏗️ Structures</option>
+                        <option value="file_handling">📁 File Handling</option>
+                    </select>
+                </div>
+        
+                <div class="quiz-container">
+                    <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                    <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                    <div class="question-grid" id="question-grid"></div>
+                    <div id="quiz-questions"></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                        <button id="next-question" onclick="nextQuestion()">Next</button>
+                        <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                    </div>
+                    <div id="quiz-result" class="quiz-result"></div>
+                    <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    
+    <script>
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; modal.style.display = 'none';
+        }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+const topicQuestions = {
+    basics: [
+    { question: "What is the correct syntax to declare a variable in C?", options: ["int x;", "var x;", "x = int;", "x int;"], answer: "int x;" },
+    { question: "Which of the following is NOT a valid C data type?", options: ["int", "float", "string", "double"], answer: "string" },
+    { question: "Which function is used to display output in C?", options: ["print()", "output()", "printf()", "display()"], answer: "printf()" },
+    { question: "What is the correct syntax to take input in C?", options: ["input(x);", "scanf(\"%d\", &x);", "get(x);", "cin >> x;"], answer: "scanf(\"%d\", &x);" },
+    { question: "Which keyword is used to define a constant in C?", options: ["constant", "final", "const", "#define"], answer: "#define" },
+    { question: "Which of these is NOT a valid identifier in C?", options: ["_var", "2ndVar", "myVar", "VAR_123"], answer: "2ndVar" },
+    { question: "What is the size of an int in a 32-bit system?", options: ["2 bytes", "4 bytes", "8 bytes", "Depends on the compiler"], answer: "4 bytes" },
+    { question: "Which symbol is used to indicate a single-line comment in C?", options: ["//", "/*", "#", "--"], answer: "//" },
+    { question: "What will be the output of printf(\"%d\", 3 + 4 * 2);?", options: ["14", "11", "10", "8"], answer: "11" },
+    { question: "Which data type is used to store a single character?", options: ["char", "string", "character", "byte"], answer: "char" },
+    { question: "Which operator is used for modulus operation?", options: ["%", "/", "*", "&"], answer: "%" },
+    { question: "Which loop runs at least once even if the condition is false?", options: ["for", "while", "do-while", "if"], answer: "do-while" },
+    { question: "Which keyword is used to exit a loop in C?", options: ["exit", "stop", "break", "return"], answer: "break" },
+    { question: "Which operator is used to compare two values in C?", options: ["=", "==", "===", "!="], answer: "==" },
+    { question: "Which function is used to find the length of a string?", options: ["strlen()", "size()", "length()", "count()"], answer: "strlen()" },
+    { question: "What is the return type of the main() function in C?", options: ["void", "int", "char", "float"], answer: "int" },
+    { question: "Which format specifier is used for floating-point numbers?", options: ["%d", "%c", "%s", "%f"], answer: "%f" },
+    { question: "Which escape sequence is used for a new line?", options: ["\\n", "\\t", "\\r", "\\a"], answer: "\\n" },
+    { question: "Which operator is used for logical AND in C?", options: ["&", "&&", "|", "||"], answer: "&&" },
+    { question: "Which operator is used for bitwise OR?", options: ["|", "||", "&", "&&"], answer: "|" },
+    { question: "Which function is used to read a string in C?", options: ["scanf()", "gets()", "read()", "fgets()"], answer: "gets()" },
+    { question: "Which loop structure is used when the number of iterations is known?", options: ["for", "while", "do-while", "switch"], answer: "for" },
+    { question: "What is the value of x after this operation: x = 5; x += 3;", options: ["5", "3", "8", "2"], answer: "8" },
+    { question: "Which keyword is used to return a value from a function?", options: ["break", "return", "goto", "switch"], answer: "return" },
+    { question: "Which function is used to dynamically allocate memory?", options: ["malloc()", "alloc()", "calloc()", "free()"], answer: "malloc()" },
+    { question: "Which header file is required for using printf() and scanf()?", options: ["stdio.h", "stdlib.h", "math.h", "string.h"], answer: "stdio.h" },
+    { question: "What will be the output of: printf(\"%d\", sizeof(char));", options: ["1", "2", "4", "8"], answer: "1" },
+    { question: "Which keyword is used to define a structure?", options: ["struct", "class", "define", "record"], answer: "struct" },
+    { question: "Which operator is used to access the address of a variable?", options: ["*", "&", "#", "@"], answer: "&" },
+    { question: "What is the ASCII value of 'A'?", options: ["65", "66", "97", "98"], answer: "65" },
+    { question: "Which of the following is NOT a valid storage class in C?", options: ["auto", "register", "private", "static"], answer: "private" },
+    { question: "Which function is used to copy a string?", options: ["strcpy()", "copy()", "strcopy()", "strncpy()"], answer: "strcpy()" },
+    { question: "Which statement is used to jump to a specific label in C?", options: ["goto", "jump", "continue", "return"], answer: "goto" },
+    { question: "Which operator is used for pointer dereferencing?", options: ["*", "&", "@", "->"], answer: "*" },
+    { question: "Which function is used to open a file?", options: ["open()", "fopen()", "fileopen()", "readfile()"], answer: "fopen()" },
+    { question: "Which of these is a valid boolean expression in C?", options: ["1 && 0", "True", "False", "bool = yes"], answer: "1 && 0" },
+    { question: "Which function is used to find the power of a number?", options: ["pow()", "power()", "exp()", "sqrt()"], answer: "pow()" },
+    { question: "What is the value of (5 & 3)?", options: ["0", "1", "2", "3"], answer: "1" },
+    { question: "Which function is used to terminate a program?", options: ["end()", "terminate()", "exit()", "return()"], answer: "exit()" },
+    { question: "Which function is used to read a character from input?", options: ["getchar()", "scanf()", "readchar()", "input()"], answer: "getchar()" },
+    { question: "Which function is used to set the position of a file pointer?", options: ["fseek()", "seek()", "move()", "rewind()"], answer: "fseek()" },
+    { question: "Which operator has the highest precedence?", options: ["*", "+", "&&", "="], answer: "*" },
+    { question: "Which of the following is NOT a keyword in C?", options: ["extern", "register", "new", "static"], answer: "new" },
+    { question: "Which function is used to allocate memory for an array?", options: ["malloc()", "calloc()", "alloc()", "realloc()"], answer: "calloc()" }
+]
+,
+pointers: [
+    { question: "Which operator is used to access the value at a memory address?", options: ["&", "*", "#", "@"], answer: "*" },
+    { question: "What does NULL represent in pointers?", options: ["0", "Garbage value", "Memory leak", "None"], answer: "0" },
+    { question: "Which symbol is used to declare a pointer variable?", options: ["*", "&", "#", "%"], answer: "*" },
+    { question: "What is the output of `sizeof(int*)` on a 64-bit system?", options: ["4", "8", "2", "Depends on compiler"], answer: "8" },
+    { question: "Which of the following is a correct declaration of a pointer?", options: ["int ptr;", "int *ptr;", "*int ptr;", "ptr int;"], answer: "int *ptr;" },
+    { question: "What will happen if a pointer is not initialized before use?", options: ["It will cause an error", "It may cause a segmentation fault", "It will work fine", "None"], answer: "It may cause a segmentation fault" },
+    { question: "Which of the following is used to get the address of a variable?", options: ["*", "&", "#", "@"], answer: "&" },
+    { question: "What does `ptr++` do when ptr is a pointer?", options: ["Moves to next memory location", "Adds 1 to value at ptr", "Multiplies by 2", "None"], answer: "Moves to next memory location" },
+    { question: "Which pointer type is used when we do not know what type it will store?", options: ["void *", "int *", "float *", "char *"], answer: "void *" },
+    { question: "Which function is used to allocate memory dynamically?", options: ["malloc()", "alloc()", "free()", "allocate()"], answer: "malloc()" },
+    { question: "Which function is used to release dynamically allocated memory?", options: ["remove()", "free()", "delete()", "dealloc()"], answer: "free()" },
+    { question: "Which pointer contains the memory address of another pointer?", options: ["Double pointer", "Wild pointer", "Void pointer", "Dangling pointer"], answer: "Double pointer" },
+    { question: "What will be the output of `sizeof(int*)` on a 32-bit system?", options: ["2", "4", "8", "Depends on compiler"], answer: "4" },
+    { question: "What is a dangling pointer?", options: ["Pointer that has been freed but still used", "Null pointer", "Wild pointer", "Pointer to integer"], answer: "Pointer that has been freed but still used" },
+    { question: "What is a wild pointer?", options: ["Pointer not initialized", "Pointer to wild memory", "Pointer that has been freed", "None"], answer: "Pointer not initialized" },
+    { question: "What does the statement `int *p = NULL;` do?", options: ["Creates a pointer with no valid address", "Creates a pointer to 0", "Creates an int variable", "None"], answer: "Creates a pointer with no valid address" },
+    { question: "Which of the following is a valid statement?", options: ["int ptr = &x;", "int *ptr = &x;", "*ptr = &x;", "ptr = &x;"], answer: "int *ptr = &x;" },
+    { question: "What is the output of `printf(\"%p\", ptr);`?", options: ["Address stored in ptr", "Value stored in ptr", "Garbage value", "None"], answer: "Address stored in ptr" },
+    { question: "Which operator is used to dereference a pointer?", options: ["&", "*", "#", "$"], answer: "*" },
+    { question: "What does `ptr = malloc(sizeof(int));` do?", options: ["Allocates memory", "Initializes pointer", "Frees memory", "None"], answer: "Allocates memory" },
+    { question: "Which of the following is NOT a valid pointer type?", options: ["int *", "char *", "float *", "struct"], answer: "struct" },
+    { question: "What happens if a pointer is not freed after dynamic allocation?", options: ["Memory leak", "Segmentation fault", "Garbage collection", "None"], answer: "Memory leak" },
+    { question: "What is pointer arithmetic?", options: ["Performing operations on pointers", "Using pointers in loops", "Comparing pointers", "None"], answer: "Performing operations on pointers" },
+    { question: "What is the result of subtracting two pointers?", options: ["Difference in addresses", "Addition of values", "Multiplication", "None"], answer: "Difference in addresses" },
+    { question: "Which function reallocates memory in C?", options: ["realloc()", "malloc()", "calloc()", "free()"], answer: "realloc()" },
+    { question: "What happens when a pointer is assigned to NULL?", options: ["It points to no valid memory", "It points to 0", "It causes an error", "None"], answer: "It points to no valid memory" },
+    { question: "What does `ptr += 1;` do for an integer pointer?", options: ["Moves to next int memory location", "Adds 1 to value", "Multiplies value", "None"], answer: "Moves to next int memory location" },
+    { question: "Which of the following is NOT a valid pointer operation?", options: ["Pointer addition", "Pointer subtraction", "Pointer multiplication", "Pointer comparison"], answer: "Pointer multiplication" },
+    { question: "What does `int **p;` mean?", options: ["Pointer to pointer", "Double integer pointer", "Pointer to integer", "None"], answer: "Pointer to pointer" },
+    { question: "Which of the following will NOT cause segmentation fault?", options: ["Using NULL pointer", "Dereferencing uninitialized pointer", "Using an allocated pointer", "Accessing freed memory"], answer: "Using an allocated pointer" },
+    { question: "What does `free(ptr);` do?", options: ["Deallocates memory", "Deletes ptr", "Clears ptr value", "None"], answer: "Deallocates memory" },
+    { question: "How to declare a function pointer?", options: ["int (*ptr)();", "int ptr();", "ptr = int();", "None"], answer: "int (*ptr)();" },
+    { question: "Which pointer stores the address of another pointer?", options: ["Double pointer", "Void pointer", "Null pointer", "Dangling pointer"], answer: "Double pointer" },
+    { question: "What will `int *ptr = NULL; printf(\"%d\", *ptr);` do?", options: ["Segmentation fault", "Print 0", "Print garbage value", "None"], answer: "Segmentation fault" },
+    { question: "Which function initializes memory to zero?", options: ["malloc()", "calloc()", "realloc()", "free()"], answer: "calloc()" },
+    { question: "What does `ptr == NULL` check?", options: ["If pointer is null", "If pointer is zero", "If pointer has an address", "None"], answer: "If pointer is null" },
+    { question: "Which operator is used to access structure members using pointers?", options: ["->", ".", "&", "*"], answer: "->" },
+    { question: "What is the difference between `malloc()` and `calloc()`?", options: ["calloc initializes memory", "malloc allocates less", "calloc is faster", "None"], answer: "calloc initializes memory" }
+],
+arrays: [
+    { question: "What is the correct way to initialize an array?", options: ["int arr[] = {1, 2, 3};", "int arr[3] = {1, 2, 3};", "int arr = {1, 2, 3};", "Both A and B"], answer: "Both A and B" },
+    { question: "What is the default value of an uninitialized array in C?", options: ["0", "Garbage value", "NULL", "None"], answer: "Garbage value" },
+    { question: "Which index does an array start from in C?", options: ["0", "1", "-1", "Depends on compiler"], answer: "0" },
+    { question: "How do you access the first element of an array named arr?", options: ["arr[0]", "arr[1]", "*arr", "Both A and C"], answer: "Both A and C" },
+    { question: "What happens if you access an index out of bounds in C?", options: ["Error", "Segmentation fault", "Returns 0", "Nothing"], answer: "Segmentation fault" },
+    { question: "Which data type can be stored in an array?", options: ["Only int", "Only char", "Only float", "Any data type"], answer: "Any data type" },
+    { question: "Which of these is a valid declaration of a 2D array?", options: ["int arr[2][3];", "int arr[2,3];", "int arr = {{1,2,3},{4,5,6}};", "None"], answer: "int arr[2][3];" },
+    { question: "What does `sizeof(arr)` return for `int arr[5];` on a 32-bit system?", options: ["5", "10", "20", "Depends on values"], answer: "20" },
+    { question: "Which function is used to find the length of a string?", options: ["strlen()", "size()", "length()", "count()"], answer: "strlen()" },
+    { question: "What is the last index of an array declared as `int arr[10];`?", options: ["10", "9", "11", "Depends on system"], answer: "9" },
+    { question: "Which function is used to copy an array in C?", options: ["copy()", "memcpy()", "arrcpy()", "copyArray()"], answer: "memcpy()" },
+    { question: "How do you free dynamically allocated memory for an array?", options: ["free(arr);", "delete arr;", "dealloc(arr);", "None"], answer: "free(arr);" },
+    { question: "Which of the following correctly declares an array?", options: ["int arr();", "int arr[];", "int arr[5];", "Both B and C"], answer: "Both B and C" },
+    { question: "Which statement is used to iterate through an array?", options: ["if", "switch", "for loop", "goto"], answer: "for loop" },
+    { question: "How do you pass an array to a function?", options: ["By value", "By reference", "Both", "None"], answer: "By reference" },
+    { question: "Which of the following is the correct way to declare a character array?", options: ["char arr[10];", "char arr[];", "char arr[10] = \"Hello\";", "All of the above"], answer: "All of the above" },
+    { question: "What is a multi-dimensional array?", options: ["Array of arrays", "Array with extra features", "Only for 2D data", "None"], answer: "Array of arrays" },
+    { question: "How do you dynamically allocate an array?", options: ["malloc()", "calloc()", "Both A and B", "None"], answer: "Both A and B" },
+    { question: "Which loop is best suited for iterating through an array?", options: ["for", "while", "do-while", "All are valid"], answer: "for" },
+    { question: "What is the advantage of using arrays?", options: ["Stores multiple values", "Uses less memory", "Faster access", "All of the above"], answer: "All of the above" },
+    { question: "Which function is used to sort an array?", options: ["sort()", "qsort()", "array_sort()", "None"], answer: "qsort()" },
+    { question: "How do you reverse an array?", options: ["Using loop", "Using swap", "Using built-in function", "All"], answer: "All" },
+    { question: "How do you search for an element in an array?", options: ["Binary search", "Linear search", "Both", "None"], answer: "Both" },
+    { question: "How do you merge two arrays?", options: ["Using loops", "Using memcpy()", "Using built-in function", "All"], answer: "All" },
+    { question: "Which operator is used to access an element in an array?", options: ["()", "[]", "{}", "."], answer: "[]" },
+    { question: "What will `sizeof(arr) / sizeof(arr[0])` return?", options: ["Number of elements", "Size of one element", "Total size of array", "None"], answer: "Number of elements" },
+    { question: "What is a sparse array?", options: ["Array with most elements as zero", "Array with no zeroes", "Array with mixed data", "None"], answer: "Array with most elements as zero" },
+    { question: "How do you find the maximum element in an array?", options: ["Sort then take last", "Iterate and compare", "Use built-in max()", "All"], answer: "All" },
+    { question: "How do you swap two elements in an array?", options: ["Using temp variable", "Using XOR swap", "Using swap()", "All"], answer: "All" },
+    { question: "What will `int arr[5] = {1, 2};` do?", options: ["Fill rest with 0", "Throw error", "Garbage values", "None"], answer: "Fill rest with 0" },
+    { question: "How do you find the sum of all elements in an array?", options: ["Loop through elements", "Use sum() function", "Both", "None"], answer: "Loop through elements" },
+    { question: "Which of the following is a valid 2D array declaration?", options: ["int arr[3][3];", "int arr(3,3);", "int arr{3,3};", "None"], answer: "int arr[3][3];" },
+    { question: "What does `int *ptr = arr;` do?", options: ["Creates a pointer to the first element", "Creates a copy of the array", "Creates a new array", "None"], answer: "Creates a pointer to the first element" },
+    { question: "How do you access the last element of an array?", options: ["arr[last]", "arr[length-1]", "arr[end]", "None"], answer: "arr[length-1]" },
+    { question: "How do you check if an array is empty?", options: ["Check length == 0", "Use isEmpty()", "Check NULL", "None"], answer: "Check length == 0" }
+],
+functions: [
+    { question: "Which keyword is used to return a value in a function?", options: ["break", "return", "goto", "switch"], answer: "return" },
+    { question: "What is the correct syntax for defining a function?", options: ["returnType functionName(parameters) {}", "function functionName(parameters) {}", "def functionName(parameters):", "None"], answer: "returnType functionName(parameters) {}" },
+    { question: "Which keyword is used for a function that does not return a value?", options: ["null", "void", "empty", "None"], answer: "void" },
+    { question: "What is a function prototype in C?", options: ["Declaration of a function", "Function definition", "Calling a function", "None"], answer: "Declaration of a function" },
+    { question: "How do you pass an array to a function?", options: ["By value", "By reference", "Both", "None"], answer: "By reference" },
+    { question: "Which header file is needed for printf() and scanf()?", options: ["math.h", "stdlib.h", "stdio.h", "string.h"], answer: "stdio.h" },
+    { question: "Which function is used to find the square root of a number?", options: ["sqrt()", "power()", "root()", "sq()"], answer: "sqrt()" },
+    { question: "What is recursion?", options: ["A function calling itself", "Looping", "Function overloading", "None"], answer: "A function calling itself" },
+    { question: "How many times can a recursive function call itself?", options: ["1", "10", "Infinite until stack overflows", "Depends on system"], answer: "Infinite until stack overflows" },
+    { question: "Which function can change global variables inside it?", options: ["Only void functions", "Only return functions", "All functions", "None"], answer: "All functions" },
+    { question: "What is the default return type of a function in C?", options: ["void", "int", "float", "char"], answer: "int" },
+    { question: "Which operator is used for function pointers?", options: ["->", "*", "&", "@@"], answer: "*" },
+    { question: "What is function overloading?", options: ["Same function name, different parameters", "Two functions with same logic", "A function inside another function", "None"], answer: "Same function name, different parameters" },
+    { question: "Which function is used to convert a string to an integer?", options: ["strtoi()", "atoi()", "stringToInt()", "None"], answer: "atoi()" },
+    { question: "Which function is used to convert an integer to a string?", options: ["itoa()", "integerToString()", "strToInt()", "None"], answer: "itoa()" },
+    { question: "Which function is used to find the length of a string?", options: ["strlen()", "size()", "length()", "count()"], answer: "strlen()" },
+    { question: "Which of the following is a built-in function in C?", options: ["myFunction()", "printf()", "printData()", "None"], answer: "printf()" },
+    { question: "Which of the following is a valid function declaration?", options: ["void func(int);", "int func();", "float func(float a, float b);", "All of the above"], answer: "All of the above" },
+    { question: "Which function is used to allocate memory dynamically?", options: ["malloc()", "alloc()", "new()", "None"], answer: "malloc()" },
+    { question: "How many return statements can a function have?", options: ["1", "2", "Unlimited", "Depends on logic"], answer: "Unlimited" },
+    { question: "What will happen if a function does not have a return statement?", options: ["Error", "Returns garbage value", "Depends on return type", "None"], answer: "Depends on return type" },
+    { question: "What is a function pointer?", options: ["Pointer that points to a function", "Pointer that returns a function", "A pointer variable inside a function", "None"], answer: "Pointer that points to a function" },
+    { question: "Which function is used to compare two strings?", options: ["strcmp()", "strcomp()", "compareStr()", "None"], answer: "strcmp()" },
+    { question: "What is the output of `printf(\"%d\", 10 % 3);`?", options: ["1", "3", "10", "None"], answer: "1" },
+    { question: "Which function can change a character to uppercase?", options: ["toupper()", "tolower()", "charUpper()", "None"], answer: "toupper()" },
+    { question: "Which function can change a character to lowercase?", options: ["tolower()", "toupper()", "charLower()", "None"], answer: "tolower()" },
+    { question: "What is the return type of malloc()?", options: ["void *", "int", "char *", "None"], answer: "void *" },
+    { question: "Which function is used to reallocate memory?", options: ["realloc()", "remalloc()", "resize()", "None"], answer: "realloc()" },
+    { question: "What is the purpose of free() function?", options: ["Deallocates memory", "Deletes a variable", "Removes a function", "None"], answer: "Deallocates memory" },
+    { question: "Which function is used to read a line of text from a file?", options: ["fgets()", "gets()", "readline()", "None"], answer: "fgets()" },
+    { question: "What is an inline function?", options: ["Function that is replaced in place of call", "Function that executes first", "Function with no return type", "None"], answer: "Function that is replaced in place of call" },
+    { question: "Which function is used to swap two numbers?", options: ["swap()", "interchange()", "switch()", "None"], answer: "swap()" },
+    { question: "Which function is used to get the absolute value of a number?", options: ["abs()", "absolute()", "fabs()", "None"], answer: "abs()" },
+    { question: "Which function is used to round a number?", options: ["round()", "ceil()", "floor()", "None"], answer: "round()" },
+    { question: "Which function is used to find the largest number?", options: ["max()", "largest()", "fmax()", "None"], answer: "fmax()" },
+    { question: "Which function is used to find the smallest number?", options: ["min()", "smallest()", "fmin()", "None"], answer: "fmin()" },
+    { question: "Which function is used to find the logarithm of a number?", options: ["log()", "logarithm()", "ln()", "None"], answer: "log()" },
+    { question: "What is the difference between `return` and `exit()`?", options: ["return exits function, exit() exits program", "Both exit program", "Both return values", "None"], answer: "return exits function, exit() exits program" },
+    { question: "Which function terminates the program immediately?", options: ["exit()", "return", "end()", "None"], answer: "exit()" },
+    { question: "Which function generates a random number?", options: ["rand()", "random()", "genRand()", "None"], answer: "rand()" }
+],structures: [
+    { question: "Which keyword is used to define a structure?", options: ["struct", "class", "define", "record"], answer: "struct" },
+    { question: "How do you access a structure member?", options: [".", "->", "&", "*"], answer: "." },
+    { question: "Which symbol is used to access structure members using a pointer?", options: [".", "->", "&", "*"], answer: "->" },
+    { question: "What is the size of an empty structure in C?", options: ["0 bytes", "1 byte", "Depends on compiler", "None"], answer: "1 byte" },
+    { question: "Can a structure contain a pointer to itself?", options: ["Yes", "No", "Only in C++", "None"], answer: "Yes" },
+    { question: "What is a nested structure?", options: ["A structure inside another structure", "A linked list", "A class inside a structure", "None"], answer: "A structure inside another structure" },
+    { question: "What is a typedef in C?", options: ["Creates an alias for a data type", "Declares a variable", "Defines a structure", "None"], answer: "Creates an alias for a data type" },
+    { question: "Which function is used to copy structure data?", options: ["memcpy()", "strcpy()", "copy()", "None"], answer: "memcpy()" },
+    { question: "Which of the following is true about structures?", options: ["They store data of different types", "They allow function pointers", "They can be nested", "All"], answer: "All" },
+    { question: "How do you initialize a structure?", options: ["struct var = {values};", "struct var(values);", "init struct var;", "None"], answer: "struct var = {values};" },
+    { question: "Which of the following can be inside a structure?", options: ["Arrays", "Pointers", "Functions", "All"], answer: "All" },
+    { question: "Which storage class is used for global structures?", options: ["auto", "extern", "register", "static"], answer: "extern" },
+    { question: "What will happen if a structure is not initialized?", options: ["Compiler error", "Garbage values", "Zero values", "None"], answer: "Garbage values" },
+    { question: "How do you pass a structure to a function?", options: ["By value", "By reference", "Both", "None"], answer: "Both" },
+    { question: "Can a structure have a structure inside it?", options: ["Yes", "No", "Only in C++", "None"], answer: "Yes" }
+]
+,
+file_handling: [
+    { question: "Which function is used to open a file in C?", options: ["fopen()", "file()", "openfile()", "readfile()"], answer: "fopen()" },
+    { question: "Which mode is used to open a file for reading?", options: ["r", "w", "a", "rw"], answer: "r" },
+    { question: "Which function is used to write data into a file?", options: ["fprintf()", "fwrite()", "fputs()", "All"], answer: "All" },
+    { question: "Which function is used to close a file?", options: ["close()", "fclose()", "exit()", "stop()"], answer: "fclose()" },
+    { question: "What happens if fopen() fails to open a file?", options: ["Returns NULL", "Throws error", "Creates a new file", "None"], answer: "Returns NULL" },
+    { question: "Which function is used to move the file pointer?", options: ["fseek()", "seek()", "move()", "rewind()"], answer: "fseek()" },
+    { question: "Which function is used to delete a file?", options: ["delete()", "remove()", "unlink()", "erase()"], answer: "remove()" },
+    { question: "What is the difference between 'w' and 'a' mode in fopen()?", options: ["w overwrites, a appends", "Both append", "Both overwrite", "None"], answer: "w overwrites, a appends" },
+    { question: "Which function is used to get the current file position?", options: ["ftell()", "fseek()", "fpos()", "None"], answer: "ftell()" },
+    { question: "What does 'rb' mode do in fopen()?", options: ["Opens file in binary read mode", "Opens file in text mode", "Opens file in write mode", "None"], answer: "Opens file in binary read mode" },
+    { question: "Which function is used to read a single character from a file?", options: ["getc()", "fgetc()", "readChar()", "Both A and B"], answer: "Both A and B" },
+    { question: "Which function is used to read an entire line from a file?", options: ["fgets()", "gets()", "readline()", "None"], answer: "fgets()" },
+    { question: "Which function is used to check for the end of a file?", options: ["feof()", "endfile()", "isEOF()", "None"], answer: "feof()" },
+    { question: "Which function is used to flush file buffers?", options: ["fflush()", "flushFile()", "clearBuffer()", "None"], answer: "fflush()" },
+    { question: "What happens if a file opened in 'r' mode does not exist?", options: ["Error", "Returns NULL", "Creates a new file", "None"], answer: "Returns NULL" }
+]
+
+};
+
+let quizData = []; // Stores selected topic questions
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let timerInterval;
+let timeLeft;
+
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Function to start timer
+function startTimer() {
+    const timerDisplay = document.querySelector('.quiz-timer');
+    const timerSpan = document.getElementById('timer');
+    timeLeft = 20; // 10 minutes in seconds
+    
+    timerDisplay.style.display = 'block';
+    
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerSpan.textContent = formatTime(timeLeft);
+        
+        // Warning when 1 minute remaining
+        if (timeLeft <= 60) {
+            timerDisplay.classList.add('warning');
+        }
+        
+        // Auto-submit when time's up
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpMessage();
+            disableQuizOptions();
+            updateQuestionGrid();
+        }
+    }, 1000);
+}
+
+// Add new function to show Time's Up message
+function showTimeUpMessage() {
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    const timeUpMessage = document.createElement('div');
+    timeUpMessage.style.textAlign = 'center';
+    timeUpMessage.style.padding = '20px';
+    timeUpMessage.style.marginTop = '20px';
+    timeUpMessage.style.backgroundColor = '#ff4444';
+    timeUpMessage.style.color = 'white';
+    timeUpMessage.style.borderRadius = '10px';
+    timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+    timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+    quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+    
+    // Show submit button
+    document.getElementById('submit-quiz').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'none';
+}
+
+// Function to disable quiz options
+function disableQuizOptions() {
+    const optionsDiv = document.querySelector('.quiz-options');
+    if (optionsDiv) {
+        optionsDiv.classList.add('disabled');
+        const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+
+// Function to stop timer
+function stopTimer() {
+    clearInterval(timerInterval);
+    document.querySelector('.quiz-timer').style.display = 'none';
+}
+
+// Function to start quiz with selected topic
+function startQuiz(topic, isRestore = false) {
+    currentTopic = topic;
+    const quizIntro = document.querySelector('.quiz-intro');
+    const quizContainer = document.querySelector('.quiz-container');
+    const topicSelect = document.querySelector('.quiz-topics');
+
+    if (!topic) {
+        // Show intro, hide quiz container when no topic selected
+        quizIntro.style.display = 'block';
+        quizContainer.style.display = 'none';
+        stopTimer();
+        return;
+    }
+
+    // Hide intro and topic select with fade out effect
+    quizIntro.style.opacity = '0';
+    topicSelect.style.opacity = '0';
+    setTimeout(() => {
+        quizIntro.style.display = 'none';
+        topicSelect.style.display = 'none';
+    }, 300);
+
+    let allQuestions = topicQuestions[topic];
+    if (!allQuestions) {
+        console.error('No questions found for topic:', topic);
+        return;
+    }
+
+    // After setting quizData:
+    if (!isRestore) {
+        quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+        currentQuestionIndex = 0;
+        userAnswers = new Array(quizData.length).fill(null);
+    }
+
+    // Reset quiz UI
+    document.getElementById('quiz-questions').style.display = 'block';
+    document.getElementById('quiz-questions').innerHTML = '';
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('retake-quiz').style.display = 'none';
+
+    // Update quiz heading
+    document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+    // Show quiz container with fade in effect
+    quizContainer.style.opacity = '0';
+    quizContainer.style.display = 'block';
+    setTimeout(() => {
+        quizContainer.style.opacity = '1';
+    }, 50);
+
+    // Reset navigation buttons
+    document.getElementById('prev-question').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'inline-block';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    // Start the timer
+    startTimer();
+
+    displayQuestion();
+    updateQuestionGrid();
+}
+
+// Function to format topic names (e.g., "file_handling" → "File Handling")
+function formatTopic(topic) {
+    return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+// Function to display questions
+function displayQuestion() {
+    if (!quizData || quizData.length === 0) return;
+
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    quizQuestionsDiv.innerHTML = '';
+
+    const question = quizData[currentQuestionIndex];
+    if (!question) return;
+
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('quiz-question');
+
+    const questionText = document.createElement('p');
+    questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+    questionDiv.appendChild(questionText);
+
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('quiz-options');
+    
+    if (timeLeft <= 0) {
+        optionsDiv.classList.add('disabled');
+    }
+
+    question.options.forEach(option => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `question${currentQuestionIndex}`;
+        input.value = option;
+        input.checked = userAnswers[currentQuestionIndex] === option;
+        
+        if (timeLeft <= 0) {
+            input.disabled = true;
+        }
+
+        input.onchange = () => {
+            if (timeLeft > 0) {
+                userAnswers[currentQuestionIndex] = option;
+                // Immediate grid update when answer is selected
+                setTimeout(() => {
+                    updateQuestionGrid();
+                }, 50);
+            }
+        };
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(option));
+        optionsDiv.appendChild(label);
+    });
+
+    questionDiv.appendChild(optionsDiv);
+    quizQuestionsDiv.appendChild(questionDiv);
+
+    document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+    document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+    document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+    
+    updateQuestionGrid();
+}
+
+// Function to navigate questions
+function nextQuestion() {
+    if (currentQuestionIndex < quizData.length - 1) {
+        // Mark current question as skipped if no answer selected
+        if (userAnswers[currentQuestionIndex] === null) {
+            userAnswers[currentQuestionIndex] = "skipped";
+        }
+        
+        currentQuestionIndex++;
+        displayQuestion();
+        updateQuestionGrid();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+}
+
+// Function to submit quiz
+function submitQuiz() {
+    stopTimer();
+    
+    // Mark all unanswered questions as incorrect
+    userAnswers.forEach((answer, index) => {
+        if (answer === null) {
+            userAnswers[index] = "skipped";
+        }
+    });
+    updateQuestionGrid();
+    
+    let score = 0;
+    userAnswers.forEach((answer, index) => {
+        if (answer === quizData[index].answer) {
+            score++;
+        }
+    });
+
+    document.getElementById('quiz-questions').style.display = 'none';
+    document.getElementById('prev-question').style.display = 'none';
+    document.getElementById('next-question').style.display = 'none';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    const quizResultDiv = document.getElementById('quiz-result');
+    const percentage = Math.round((score / quizData.length) * 100);
+    
+    let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+    message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+    
+    if (percentage === 100) {
+        message += `<p>Perfect score! Excellent work! 🌟</p>`;
+    } else if (percentage >= 80) {
+        message += `<p>Great job! Keep up the good work! 👍</p>`;
+    } else if (percentage >= 60) {
+        message += `<p>Not bad! Keep practicing! 💪</p>`;
+    } else {
+        message += `<p>Keep practicing! You can do better! 📚</p>`;
+    }
+
+    // Add detailed summary in a scrollable container
+    message += `
+        <div class="quiz-summary" style="
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f8f8;
+        ">
+            <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+    `;
+
+    quizData.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.answer;
+        const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+        const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+        message += `
+            <div style="
+                margin-bottom: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: left;
+            ">
+                <p style="font-weight: 600; margin-bottom: 10px;">
+                    Question ${index + 1}: ${question.question}
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Your Answer:</span> 
+                    <span style="color: ${statusColor}; font-weight: 500;">
+                        ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                    </span>
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Correct Answer:</span> 
+                    <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                </p>
+                <p style="
+                    margin-top: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    border-radius: 4px;
+                    background: ${statusColor};
+                    color: white;
+                    font-size: 0.9rem;
+                ">${answerStatus}</p>
+            </div>
+        `;
+    });
+
+    message += `</div>`;
+    
+    quizResultDiv.innerHTML = message;
+    quizResultDiv.style.display = 'block';
+    quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+    document.getElementById('retake-quiz').style.display = 'inline-block';
+    document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+    // Scroll to top of the results
+    quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Function to retake quiz
+function retakeQuiz() {
+    stopTimer();
+    
+    // Show intro and topic select again
+    const quizIntro = document.querySelector('.quiz-intro');
+    const topicSelect = document.querySelector('.quiz-topics');
+    const quizContainer = document.querySelector('.quiz-container');
+
+    // Hide quiz container
+    quizContainer.style.opacity = '0';
+    setTimeout(() => {
+        quizContainer.style.display = 'none';
+        
+        // Show intro and topic select with fade in
+        quizIntro.style.display = 'block';
+        topicSelect.style.display = 'block';
+        setTimeout(() => {
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+        }, 50);
+    }, 300);
+
+    // Reset all states
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    quizData = [];
+    
+    // Reset topic select
+    document.querySelector('.quiz-topic-select').value = '';
+}
+
+// Add these functions before the startQuiz function:
+function updateQuestionGrid() {
+    const grid = document.getElementById('question-grid');
+    grid.innerHTML = '';
+    
+    for (let i = 0; i < quizData.length; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.textContent = (i + 1).toString();
+        
+        // Check if question has been attempted (any answer selected)
+        if (userAnswers[i] && userAnswers[i] !== "skipped") {
+            // Question attempted - Green
+            gridItem.style.backgroundColor = '#4CAF50';
+            gridItem.style.borderColor = '#4CAF50';
+            gridItem.style.color = '#ffffff';
+        } else if (userAnswers[i] === "skipped") {
+            // Question skipped or not attempted - Red
+            gridItem.style.backgroundColor = '#ff4444';
+            gridItem.style.borderColor = '#ff4444';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Current question - Black
+        if (i === currentQuestionIndex) {
+            gridItem.style.backgroundColor = '#000000';
+            gridItem.style.borderColor = '#000000';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Disabled state when time's up
+        if (timeLeft <= 0) {
+            gridItem.classList.add('disabled');
+        } else {
+            gridItem.onclick = () => {
+                currentQuestionIndex = i;
+                displayQuestion();
+                updateQuestionGrid();
+            };
+        }
+        
+        grid.appendChild(gridItem);
+    }
+    
+    saveQuizState();
+}
+
+function saveQuizState() {
+    const quizState = {
+        topic: currentTopic,
+        answers: userAnswers,
+        timeLeft: timeLeft,
+        currentIndex: currentQuestionIndex,
+        quizData: quizData
+    };
+    localStorage.setItem('quizState', JSON.stringify(quizState));
+}
+
+function loadQuizState() {
+    const savedState = localStorage.getItem('quizState');
+    if (savedState) {
+        if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+            const state = JSON.parse(savedState);
+            currentTopic = state.topic;
+            userAnswers = state.answers;
+            timeLeft = state.timeLeft;
+            currentQuestionIndex = state.currentIndex;
+            quizData = state.quizData;
+            
+            if (currentTopic) {
+                startQuiz(currentTopic, true);
+            }
+        } else {
+            // Clear saved state and show the starting page
+            localStorage.removeItem('quizState');
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+            
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+            currentTopic = '';
+            
+            // Show intro and topic select
+            quizContainer.style.display = 'none';
+            quizIntro.style.display = 'block';
+            topicSelect.style.display = 'block';
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+            
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+    }
+}
+
+// Modify the startQuiz function:
+let currentTopic = '';
+
+// Add to the end of the script:
+// Load saved state when page loads
+window.addEventListener('load', loadQuizState);
+    </script>
+</body>
+
+</html>

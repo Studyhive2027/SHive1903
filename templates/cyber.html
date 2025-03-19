@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Coding Hub</title>
+    <style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        line-height: 1.6;
+        color: #ffffff; /* White text for better readability on dark background */
+        background: #1a1a1a; /* Dark background */
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 90%;
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 20px;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    section {
+        padding: 40px 0;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    section h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.2rem;
+        color: #bb86fc; /* Purple accent color */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #bb86fc; /* Purple accent color */
+        transition: width 0.3s ease;
+    }
+
+    section h2:hover::after {
+        width: 100px;
+    }
+
+    .item-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+    }
+
+    .item {
+        background: #2c2c2c; /* Darker background for items */
+        border: 2px solid #bb86fc; /* Purple border */
+        border-radius: 10px;
+        padding: 20px;
+        width: calc(33.33% - 20px);
+        height: 325px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    .item:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(187, 134, 252, 0.2); /* Purple shadow */
+    }
+
+    .item h3 {
+        font-size: 1.2rem;
+        color: #bb86fc; /* Purple accent color */
+        margin-bottom: 10px;
+    }
+
+    .item p {
+        font-size: 0.9rem;
+        color: #cccccc; /* Light gray text */
+        flex-grow: 1;
+    }
+
+    .item a {
+        color: #bb86fc; /* Purple accent color */
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .item a:hover {
+        color: #9a67ea; /* Lighter purple on hover */
+    }
+
+    .video-thumbnail {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        background: #2c2c2c; /* Darker background */
+        border-radius: 5px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid #bb86fc; /* Purple border */
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .video-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .play-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        color: #bb86fc; /* Purple accent color */
+        opacity: 0.8;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .video-thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    .video-thumbnail:hover .play-icon {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal iframe {
+        width: 80%;
+        max-width: 800px;
+        height: 500px;
+        border: none;
+        border-radius: 10px;
+    }
+
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff;
+        border: 2px solid #bb86fc; /* Purple border */
+        padding: 12px 25px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        z-index: 1001;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+    }
+
+    .back-button:hover {
+        background: #9a67ea; /* Lighter purple on hover */
+        color: #ffffff;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    .quiz-section {
+        padding: 40px 0;
+        min-height: 100vh;
+        background: #2c2c2c; /* Darker background */
+    }
+
+    .quiz-container {
+        background: #2c2c2c; /* Darker background */
+        border-radius: 15px;
+        padding: 40px;
+        margin: 20px auto;
+        box-shadow: 0 15px 30px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        max-width: 800px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: none;
+        opacity: 1;
+        border: 2px solid #bb86fc; /* Purple border */
+        transform-origin: center;
+        position: relative;
+    }
+
+    .quiz-container:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 20px 40px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    .quiz-title {
+        text-align: center;
+        color: #bb86fc; /* Purple accent color */
+        font-size: 2.4rem;
+        margin-bottom: 40px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .quiz-topics {
+        position: relative;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .quiz-topic-select {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 100%;
+        padding: 20px 30px;
+        font-size: 1.2rem;
+        font-weight: 500;
+        border: 2px solid #bb86fc; /* Purple border */
+        border-radius: 15px;
+        background-color: #2c2c2c; /* Darker background */
+        color: #ffffff; /* White text */
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        position: relative;
+        z-index: 1;
+    }
+
+    .quiz-topics::after {
+        content: '⌄';
+        font-size: 1.5rem;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: all 0.3s ease;
+        color: #bb86fc; /* Purple accent color */
+        font-weight: bold;
+    }
+
+    .quiz-topics:hover::after {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .quiz-topic-select:hover {
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    .quiz-topic-select:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2); /* Purple shadow */
+    }
+
+    .quiz-topic-select option {
+        padding: 20px;
+        font-size: 1.1rem;
+        background: #2c2c2c; /* Darker background */
+        color: #ffffff; /* White text */
+    }
+
+    .quiz-question {
+        background: #2c2c2c; /* Darker background */
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #bb86fc; /* Purple border */
+        animation: slideIn 0.5s ease-out;
+    }
+
+    .quiz-question:hover {
+        transform: translateX(5px) scale(1.01);
+        border-color: #bb86fc; /* Purple border */
+        box-shadow: 0 8px 25px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    .quiz-question p {
+        font-size: 1.3rem;
+        color: #ffffff; /* White text */
+        margin-bottom: 25px;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .quiz-options label {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: #3c3c3c; /* Slightly lighter background */
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #bb86fc; /* Purple border */
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quiz-options label::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: #bb86fc; /* Purple accent color */
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        z-index: -1;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 10px;
+    }
+
+    .quiz-options label:hover {
+        color: #ffffff; /* White text */
+        transform: translateX(5px);
+        border-color: #bb86fc; /* Purple border */
+    }
+
+    .quiz-options label:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    .quiz-options input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #bb86fc; /* Purple accent color */
+    }
+
+    .quiz-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        gap: 20px;
+    }
+
+    .quiz-navigation button {
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+        border: 2px solid #bb86fc; /* Purple border */
+        padding: 15px 30px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        flex: 1;
+        max-width: 200px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quiz-navigation button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: #ffffff; /* White background */
+        transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+
+    .quiz-navigation button:hover {
+        color: #bb86fc; /* Purple accent color */
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    .quiz-navigation button:hover::before {
+        transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+    }
+
+    .quiz-navigation button:disabled {
+        background: #cccccc;
+        border-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .quiz-result {
+        text-align: center;
+        padding: 40px;
+        background: #2c2c2c; /* Darker background */
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        animation: fadeIn 0.5s ease;
+        border: 2px solid #bb86fc; /* Purple border */
+    }
+
+    .quiz-result h3 {
+        color: #bb86fc; /* Purple accent color */
+        font-size: 2.2rem;
+        margin-bottom: 25px;
+        font-weight: 700;
+    }
+
+    .quiz-result p {
+        font-size: 1.3rem;
+        color: #ffffff; /* White text */
+        margin: 15px 0;
+        line-height: 1.6;
+    }
+
+    #retake-quiz {
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+        border: 2px solid #bb86fc; /* Purple border */
+        padding: 15px 40px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        margin: 30px auto 0;
+    }
+
+    #retake-quiz:hover {
+        background: #9a67ea; /* Lighter purple on hover */
+        color: #ffffff; /* White text */
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(187, 134, 252, 0.3); /* Purple shadow */
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .c-hub-header {
+        text-align: center;
+        padding: 40px 20px;
+        background: #2c2c2c; /* Darker background */
+        color: #ffffff; /* White text */
+        border-radius: 15px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(187, 134, 252, 0.2); /* Purple shadow */
+    }
+
+    .c-hub-header h1 {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .c-hub-header p {
+        font-size: 1.4rem;
+        opacity: 0.9;
+    }
+
+    .quiz-timer {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        transition: all 0.3s ease;
+        display: none;
+        animation: fadeIn 0.5s ease;
+        margin-left: 20px;
+    }
+
+    .quiz-timer.warning {
+        background: #ff4444;
+        animation: pulse 1s infinite;
+    }
+
+    #quiz-title {
+        text-align: center;
+        color: #bb86fc; /* Purple accent color */
+        font-size: 2rem;
+        margin: 20px 0 40px 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 15px 30px;
+        background: #3c3c3c; /* Slightly lighter background */
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        display: inline-block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .quiz-options.disabled label {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .quiz-options.disabled input[type="radio"] {
+        pointer-events: none;
+    }
+
+    .question-grid {
+        display: grid;
+        grid-template-columns: repeat(15, 1fr);
+        gap: 8px;
+        margin: 20px auto;
+        padding: 12px;
+        background: #3c3c3c; /* Slightly lighter background */
+        border-radius: 10px;
+        border: 1px solid #bb86fc; /* Purple border */
+        max-width: 900px;
+    }
+
+    .grid-item {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #2c2c2c; /* Darker background */
+        border: 1px solid #bb86fc; /* Purple border */
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .grid-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(187, 134, 252, 0.2); /* Purple shadow */
+    }
+
+    .grid-item.current {
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+    }
+
+    .grid-item.answered {
+        background: #4CAF50;
+        color: #ffffff; /* White text */
+        border-color: #4CAF50;
+    }
+
+    .grid-item.incorrect {
+        background: #ff4444;
+        color: #ffffff; /* White text */
+        border-color: #ff4444;
+    }
+
+    .grid-item.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .chat-panel {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 300px;
+        height: 400px;
+        background: #2c2c2c; /* Darker background */
+        border: 1px solid #bb86fc; /* Purple border */
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 0 10px rgba(187, 134, 252, 0.2); /* Purple shadow */
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .chat-header {
+        background: #bb86fc; /* Purple accent color */
+        color: #ffffff; /* White text */
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .chat-body {
+        padding: 10px;
+        height: calc(100% - 40px);
+        overflow-y: auto;
+    }
+
+    .chat-input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-top: 1px solid #bb86fc; /* Purple border */
+        outline: none;
+        background: #2c2c2c; /* Darker background */
+        color: #ffffff; /* White text */
+    }
+
+    </style>
+</head>
+
+<body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <button class="connect-button" onclick="toggleChatPanel()" style="position: fixed; top: 30px; right: 30px; background: #000000; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1001;">Connect</button>
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="c-hub-header">
+    <h1>Welcome to C Hub</h1>
+    <p>Your go-to platform to test and improve your C programming skills.</p>
+</header>
+
+    <main class="content">
+                <!-- Tutorials Section -->
+                <section id="tutorials" class="tutorials">
+                    <div class="container">
+                        <h2>Tutorials</h2>
+                        <div class="item-container">
+                            <div class="item">
+                                <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/lpa8uy4DyMo&t=793s')">
+                                    <img src="https://i.ytimg.com/vi/lpa8uy4DyMo/hqdefault.jpg?sqp=-oaymwEnCOADEI4CSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLB-XX6jXZsJjTzTCmlJ9_gg7u16dQ" alt="Video Thumbnail">
+                                    <span class="play-icon">▶</span>
+                                </div>
+                                <h3><a href="#">Cyber Security full course</a></h3>
+                                <p>11 Hours | Cyber Security Training For Beginners | Edureka</p>
+                            </div>
+                            <div class="item">
+                                <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/ykrE849Yq68&t=125s')">
+                                    <img src="https://i.ytimg.com/vi/ykrE849Yq68/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC4z_JHYNviOJd-XhiYGpqO-Dg3hg" alt="Video Thumbnail">
+                                    <span class="play-icon">▶</span>
+                                </div>
+                                <h3><a href="#">🔥 Learn Networking For Cyber Security</a></h3>
+                                <p> Cybersecurity Networking Course | Simplilearn</p>
+                            </div>
+                            <div class="item">
+                                <div class="video-thumbnail"
+                                    onclick="openModal('https://www.youtube.com/watch?v=JzWutg8YzRI')">
+                                    <img src="https://i.ytimg.com/vi/JzWutg8YzRI/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDcvMfuQhLf4xvj9AL4-01ZcoJdzg" alt="Video Thumbnail">
+                                    <span class="play-icon">▶</span>
+                                </div>
+                                <h3><a href="#">Linux For Ethical Hackers</a></h3>
+                                <p> Full Course 2025 | Linux Ethical Hacking Course | Simplilearn</p>
+                            </div>
+                            <div class="item">
+                                <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/hXSFdwIOfnE')">
+                                    <img src="https://i.ytimg.com/vi/hXSFdwIOfnE/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLD3V8arjhOfjHpQBv3LyR3Pu7QUvQ" alt="Video Thumbnail">
+                                    <span class="play-icon">▶</span>
+                                </div>
+                                <h3><a href="#">Cyber Security Full Course 2024</a></h3>
+                                <p>Cyber Security Course Training For Beginners 2024 | Simplilearn</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        
+                <!-- Projects Section -->
+                <section id="projects" class="projects">
+                    <div class="container">
+                        <h2>Projects</h2>
+                        <div class="item-container">
+                            <!-- Build a Chatbot -->
+                            <div class="item">
+                                <a href="https://owasp.org/projects/" target="_blank">
+                                    <img src="https://th.bing.com/th/id/OIP.GluxYRpHjs2g3bWr5nM49AHaEK?rs=1&pid=ImgDetMain" alt="owasp" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://realpython.com/" target="_blank">owasp</a></h3>
+                                <p>OWASP offers open-source projects for software security and cybersecurity.</p>
+                            </div>
+        
+                            <!-- Create a Web Scraper -->
+                            <div class="item">
+                                <a href="https://www.codewars.com/" target="_blank">
+                                    <img src="https://assets-global.website-files.com/62e3ee10882dc50bcae8d07a/634816d46fc4a32b2a583416_codewars-og-image.png" alt="codewars" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://www.codewars.com/" target="_blank">codewars</a></h3>
+                                <p>Codewars offers coding challenges to improve programming skills through problem-solving.</p>
+                            </div>
+        
+                            <!-- Develop a REST API -->
+                            <div class="item">
+                                <a href="https://pentesterlab.com/" target="_blank">
+                                    <img src="https://th.bing.com/th/id/OIP.BZ7BiimFdr9EWXELE8TBDQHaDW?rs=1&pid=ImgDetMain" alt="pentesterlab" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://leetcode.com/problemset/" target="_blank">pentesterlab</a></h3>
+                                <p>PentesterLab offers hands-on exercises for penetration testing and cybersecurity.p>
+                            </div>
+        
+                            <!-- Automate Daily Tasks -->
+                            <div class="item">
+                                <a href="https://www.virtualhackinglabs.com/" target="_blank">
+                                    <img src="https://www.virtualhackinglabs.com/wp-content/uploads/2016/11/twitter_card.jpg" alt="virtualhackinglabs" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://projecteuler.net/archives  1" target="_blank">virtualhackinglabs</a></h3>
+                                <p>Virtual Hacking Labs provides realistic environments for penetration testing practice.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        
+                <!-- Resources Section -->
+                <section id="resources" class="resources">
+                    <div class="container">
+                        <h2>Resources</h2>
+                        <div class="item-container">
+                            <!-- Python Crash Course -->
+                            <div class="item">
+                                <a href="https://www.hackthebox.com/" target="_blank">
+                                    <img src="https://th.bing.com/th/id/OIP.YnkId_EayXrCS0O7CCngJgHaDm?rs=1&pid=ImgDetMain" alt="pythonspot" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://pythonspot.com/beginner/" target="_blank">hackthebox</a></h3>
+                                <p>Hack The Box provides platforms for practicing penetration testing and cybersecurity.</p>
+                            </div>
+        
+                            <!-- Automate the Boring Stuff with Python -->
+                            <div class="item">
+                                <a href="https://tryhackme.com/" target="_blank">
+                                    <img src="https://denise.matehackers.org/bahackers/images/tryhackme/tryhackme-logo.png" alt="w3schools" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://www.w3schools.com/python/" target="_blank">tryhackme</a></h3>
+                                <p>TryHackMe offers interactive cybersecurity training with guided paths and hands-on challenges.</p>
+                            </div>
+        
+                            <!-- Fluent Python -->
+                            <div class="item">
+                                <a href="https://academy.tcm-sec.com/" target="_blank">
+                                    <img src="https://th.bing.com/th/id/OIP.gDwLx85MbJiHIxA7ZjqwNAHaDt?rs=1&pid=ImgDetMain" alt="academy.tcm" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://www.learnpython.org/" target="_blank">tcm-sec</a></h3>
+                                <p>The Cyber Mentor Academy offers hands-on cybersecurity and ethical hacking courses.</p>
+                            </div>
+        
+                            <!-- Think Python -->
+                            <div class="item">
+                                <a href="https://www.cybrary.it/" target="_blank">
+                                    <img src="https://th.bing.com/th/id/OIP.MvGf6c-29dvO8x4Ade23TwAAAA?rs=1&pid=ImgDetMain" alt="Think Python" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                </a>
+                                <h3><a href="https://realpython.com/" target="_blank">cybrary</a></h3>
+                                <p>Cybrary offers free and paid cybersecurity courses, hands-on labs, and career development resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        
+            <!-- Modal for Video -->
+            <div id="videoModal" class="modal">
+                <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+                <button onclick="closeModal()"
+                    style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="quiz-section">
+        <div class="container">
+            <h2 class="quiz-title">Test Your C Knowledge</h2>
+
+            <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                        <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                        <p style="color: #333333;">Select from various C programming concepts to test your knowledge</p>
+                    </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                        <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                    </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                        <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                        <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                    </div>
+                </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                        <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                        <p style="color: #333333;">From basics to advanced concepts</p>
+                    </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                        <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                        <p style="color: #333333;">10 questions per quiz session</p>
+                    </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                        <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                        <p style="color: #333333;">Get immediate feedback on your performance</p>
+                    </div>
+                </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                </div>
+            </div>
+
+            <!-- Topics Selection -->
+            <div class="quiz-topics">
+                <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                    <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="network">🌐 Network Security</option>
+                        <option value="cryptography">🔒 Cryptography</option>
+                        <option value="malware">🦠 Malware</option>
+                        <option value="access">🔑 Access Control</option>
+                        <option value="incident">🚨 Incident Response</option>
+                        <option value="compliance">📋 Compliance</option>
+                </select>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                <div class="question-grid" id="question-grid"></div>
+                <div id="quiz-questions"></div>
+                <div class="quiz-navigation">
+                    <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                    <button id="next-question" onclick="nextQuestion()">Next</button>
+                    <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                </div>
+                <div id="quiz-result" class="quiz-result"></div>
+                <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    
+    <script>
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+        const topicQuestions = {
+    network: [
+                { question: "What is a firewall?", options: ["A network security device that monitors and controls traffic", "A type of computer virus", "A network protocol", "A type of encryption"], answer: "A network security device that monitors and controls traffic" },
+                { question: "What is a DDoS attack?", options: ["Distributed Denial of Service attack", "Data Deletion of Service", "Direct Denial of Service", "Distributed Data of Service"], answer: "Distributed Denial of Service attack" },
+                { question: "What is port scanning?", options: ["A technique to identify open ports on a system", "A type of encryption", "A network protocol", "A type of firewall"], answer: "A technique to identify open ports on a system" },
+                { question: "What is a VPN?", options: ["Virtual Private Network", "Virtual Public Network", "Visual Private Network", "Virtual Protocol Network"], answer: "Virtual Private Network" },
+                { question: "What is network segmentation?", options: ["Dividing a network into smaller parts", "Creating a new network", "Deleting a network", "None"], answer: "Dividing a network into smaller parts" },
+                { question: "What is a proxy server?", options: ["An intermediary server between client and destination", "A type of firewall", "A network protocol", "A type of encryption"], answer: "An intermediary server between client and destination" },
+                { question: "What is network monitoring?", options: ["Observing network traffic and activity", "Creating a network", "Deleting a network", "None"], answer: "Observing network traffic and activity" },
+                { question: "What is a honeypot?", options: ["A decoy system to attract attackers", "A type of firewall", "A network protocol", "A type of encryption"], answer: "A decoy system to attract attackers" },
+                { question: "What is network encryption?", options: ["Protecting data in transit", "Creating a network", "Deleting a network", "None"], answer: "Protecting data in transit" },
+                { question: "What is a network protocol?", options: ["A set of rules for communication", "A type of firewall", "A type of encryption", "A type of virus"], answer: "A set of rules for communication" },
+                { question: "What is network authentication?", options: ["Verifying user identity", "Creating a network", "Deleting a network", "None"], answer: "Verifying user identity" },
+                { question: "What is network authorization?", options: ["Controlling access to resources", "Creating a network", "Deleting a network", "None"], answer: "Controlling access to resources" },
+                { question: "What is network auditing?", options: ["Examining network security", "Creating a network", "Deleting a network", "None"], answer: "Examining network security" },
+                { question: "What is network hardening?", options: ["Strengthening network security", "Creating a network", "Deleting a network", "None"], answer: "Strengthening network security" },
+                { question: "What is network redundancy?", options: ["Backup systems for reliability", "Creating a network", "Deleting a network", "None"], answer: "Backup systems for reliability" },
+                { question: "What is a network intrusion detection system?", options: ["System to detect unauthorized access", "A type of firewall", "A network protocol", "A type of encryption"], answer: "System to detect unauthorized access" },
+                { question: "What is network forensics?", options: ["Investigating network security incidents", "Creating a network", "Deleting a network", "None"], answer: "Investigating network security incidents" },
+                { question: "What is network security policy?", options: ["Rules for network security", "Creating a network", "Deleting a network", "None"], answer: "Rules for network security" },
+                { question: "What is network security assessment?", options: ["Evaluating network security", "Creating a network", "Deleting a network", "None"], answer: "Evaluating network security" },
+                { question: "What is network security training?", options: ["Educating users about security", "Creating a network", "Deleting a network", "None"], answer: "Educating users about security" },
+                { question: "What is network security monitoring?", options: ["Continuous security observation", "Creating a network", "Deleting a network", "None"], answer: "Continuous security observation" },
+                { question: "What is network security incident response?", options: ["Handling security incidents", "Creating a network", "Deleting a network", "None"], answer: "Handling security incidents" },
+                { question: "What is network security compliance?", options: ["Meeting security standards", "Creating a network", "Deleting a network", "None"], answer: "Meeting security standards" },
+                { question: "What is network security risk assessment?", options: ["Evaluating security risks", "Creating a network", "Deleting a network", "None"], answer: "Evaluating security risks" },
+                { question: "What is network security architecture?", options: ["Designing secure networks", "Creating a network", "Deleting a network", "None"], answer: "Designing secure networks" },
+                { question: "What is network security testing?", options: ["Testing security measures", "Creating a network", "Deleting a network", "None"], answer: "Testing security measures" },
+                { question: "What is network security documentation?", options: ["Recording security procedures", "Creating a network", "Deleting a network", "None"], answer: "Recording security procedures" },
+                { question: "What is network security maintenance?", options: ["Maintaining security measures", "Creating a network", "Deleting a network", "None"], answer: "Maintaining security measures" },
+                { question: "What is network security recovery?", options: ["Restoring after incidents", "Creating a network", "Deleting a network", "None"], answer: "Restoring after incidents" }
+            ],
+            cryptography: [
+                { question: "What is encryption?", options: ["Converting data into unreadable format", "Deleting data", "Creating data", "None"], answer: "Converting data into unreadable format" },
+                { question: "What is decryption?", options: ["Converting encrypted data back to readable format", "Deleting data", "Creating data", "None"], answer: "Converting encrypted data back to readable format" },
+                { question: "What is a key in cryptography?", options: ["A value used to encrypt/decrypt data", "A type of encryption", "A type of decryption", "None"], answer: "A value used to encrypt/decrypt data" },
+                { question: "What is symmetric encryption?", options: ["Using same key for encryption and decryption", "Using different keys", "No keys used", "None"], answer: "Using same key for encryption and decryption" },
+                { question: "What is asymmetric encryption?", options: ["Using different keys for encryption and decryption", "Using same key", "No keys used", "None"], answer: "Using different keys for encryption and decryption" },
+                { question: "What is a hash function?", options: ["One-way function to create fixed-size output", "Two-way function", "No function", "None"], answer: "One-way function to create fixed-size output" },
+                { question: "What is a digital signature?", options: ["Electronic signature for authenticity", "Paper signature", "No signature", "None"], answer: "Electronic signature for authenticity" },
+                { question: "What is a certificate authority?", options: ["Entity that issues digital certificates", "Type of encryption", "Type of decryption", "None"], answer: "Entity that issues digital certificates" },
+                { question: "What is public key infrastructure?", options: ["System for managing digital certificates", "Type of encryption", "Type of decryption", "None"], answer: "System for managing digital certificates" },
+                { question: "What is a cryptographic algorithm?", options: ["Mathematical function for encryption", "Type of key", "Type of certificate", "None"], answer: "Mathematical function for encryption" },
+                { question: "What is key exchange?", options: ["Secure sharing of encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Secure sharing of encryption keys" },
+                { question: "What is key management?", options: ["Handling encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Handling encryption keys" },
+                { question: "What is key storage?", options: ["Safely storing encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Safely storing encryption keys" },
+                { question: "What is key backup?", options: ["Creating copies of encryption keys", "Deleting keys", "Creating new keys", "None"], answer: "Creating copies of encryption keys" },
+                { question: "What is key recovery?", options: ["Retrieving lost encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Retrieving lost encryption keys" },
+                { question: "What is key rotation?", options: ["Regularly changing encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Regularly changing encryption keys" },
+                { question: "What is key escrow?", options: ["Storing keys with trusted third party", "Deleting keys", "Creating keys", "None"], answer: "Storing keys with trusted third party" },
+                { question: "What is key destruction?", options: ["Securely deleting encryption keys", "Creating keys", "Storing keys", "None"], answer: "Securely deleting encryption keys" },
+                { question: "What is key generation?", options: ["Creating new encryption keys", "Deleting keys", "Storing keys", "None"], answer: "Creating new encryption keys" },
+                { question: "What is key validation?", options: ["Verifying encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Verifying encryption keys" },
+                { question: "What is key distribution?", options: ["Sharing encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Sharing encryption keys" },
+                { question: "What is key agreement?", options: ["Mutual key establishment", "Deleting keys", "Creating keys", "None"], answer: "Mutual key establishment" },
+                { question: "What is key derivation?", options: ["Creating keys from other keys", "Deleting keys", "Creating new keys", "None"], answer: "Creating keys from other keys" },
+                { question: "What is key stretching?", options: ["Making keys more secure", "Deleting keys", "Creating keys", "None"], answer: "Making keys more secure" },
+                { question: "What is key wrapping?", options: ["Protecting encryption keys", "Deleting keys", "Creating keys", "None"], answer: "Protecting encryption keys" },
+                { question: "What is key splitting?", options: ["Dividing keys into parts", "Deleting keys", "Creating keys", "None"], answer: "Dividing keys into parts" },
+                { question: "What is key sharing?", options: ["Distributing keys to multiple parties", "Deleting keys", "Creating keys", "None"], answer: "Distributing keys to multiple parties" },
+                { question: "What is key backup?", options: ["Creating copies of keys", "Deleting keys", "Creating new keys", "None"], answer: "Creating copies of keys" },
+                { question: "What is key recovery?", options: ["Retrieving lost keys", "Deleting keys", "Creating keys", "None"], answer: "Retrieving lost keys" }
+            ],
+            malware: [
+                { question: "What is malware?", options: ["Malicious software", "Good software", "System software", "None"], answer: "Malicious software" },
+                { question: "What is a virus?", options: ["Self-replicating malware", "Good software", "System software", "None"], answer: "Self-replicating malware" },
+                { question: "What is a worm?", options: ["Self-replicating network malware", "Good software", "System software", "None"], answer: "Self-replicating network malware" },
+                { question: "What is a trojan?", options: ["Malware disguised as legitimate software", "Good software", "System software", "None"], answer: "Malware disguised as legitimate software" },
+                { question: "What is ransomware?", options: ["Malware that encrypts data for ransom", "Good software", "System software", "None"], answer: "Malware that encrypts data for ransom" },
+                { question: "What is spyware?", options: ["Malware that collects information", "Good software", "System software", "None"], answer: "Malware that collects information" },
+                { question: "What is adware?", options: ["Malware that displays advertisements", "Good software", "System software", "None"], answer: "Malware that displays advertisements" },
+                { question: "What is a rootkit?", options: ["Malware that hides its presence", "Good software", "System software", "None"], answer: "Malware that hides its presence" },
+                { question: "What is a botnet?", options: ["Network of infected computers", "Good software", "System software", "None"], answer: "Network of infected computers" },
+                { question: "What is a keylogger?", options: ["Malware that records keystrokes", "Good software", "System software", "None"], answer: "Malware that records keystrokes" },
+                { question: "What is malware analysis?", options: ["Studying malware behavior", "Creating malware", "Deleting malware", "None"], answer: "Studying malware behavior" },
+                { question: "What is malware detection?", options: ["Identifying malware", "Creating malware", "Deleting malware", "None"], answer: "Identifying malware" },
+                { question: "What is malware prevention?", options: ["Stopping malware infection", "Creating malware", "Deleting malware", "None"], answer: "Stopping malware infection" },
+                { question: "What is malware removal?", options: ["Eliminating malware", "Creating malware", "Installing malware", "None"], answer: "Eliminating malware" },
+                { question: "What is malware protection?", options: ["Defending against malware", "Creating malware", "Deleting malware", "None"], answer: "Defending against malware" },
+                { question: "What is malware scanning?", options: ["Searching for malware", "Creating malware", "Deleting malware", "None"], answer: "Searching for malware" },
+                { question: "What is malware quarantine?", options: ["Isolating malware", "Creating malware", "Deleting malware", "None"], answer: "Isolating malware" },
+                { question: "What is malware signature?", options: ["Unique identifier for malware", "Creating malware", "Deleting malware", "None"], answer: "Unique identifier for malware" },
+                { question: "What is malware behavior analysis?", options: ["Studying malware actions", "Creating malware", "Deleting malware", "None"], answer: "Studying malware actions" },
+                { question: "What is malware reverse engineering?", options: ["Analyzing malware code", "Creating malware", "Deleting malware", "None"], answer: "Analyzing malware code" },
+                { question: "What is malware sandboxing?", options: ["Testing malware in isolation", "Creating malware", "Deleting malware", "None"], answer: "Testing malware in isolation" },
+                { question: "What is malware heuristics?", options: ["Pattern-based malware detection", "Creating malware", "Deleting malware", "None"], answer: "Pattern-based malware detection" },
+                { question: "What is malware signature update?", options: ["Updating malware definitions", "Creating malware", "Deleting malware", "None"], answer: "Updating malware definitions" },
+                { question: "What is malware monitoring?", options: ["Watching for malware activity", "Creating malware", "Deleting malware", "None"], answer: "Watching for malware activity" },
+                { question: "What is malware reporting?", options: ["Documenting malware incidents", "Creating malware", "Deleting malware", "None"], answer: "Documenting malware incidents" },
+                { question: "What is malware response?", options: ["Handling malware incidents", "Creating malware", "Deleting malware", "None"], answer: "Handling malware incidents" },
+                { question: "What is malware recovery?", options: ["Restoring after malware attack", "Creating malware", "Deleting malware", "None"], answer: "Restoring after malware attack" },
+                { question: "What is malware prevention?", options: ["Stopping malware infection", "Creating malware", "Deleting malware", "None"], answer: "Stopping malware infection" },
+                { question: "What is malware education?", options: ["Teaching about malware threats", "Creating malware", "Deleting malware", "None"], answer: "Teaching about malware threats" }
+            ],
+            access: [
+                { question: "What is access control?", options: ["Managing system access", "Creating access", "Deleting access", "None"], answer: "Managing system access" },
+                { question: "What is authentication?", options: ["Verifying user identity", "Creating identity", "Deleting identity", "None"], answer: "Verifying user identity" },
+                { question: "What is authorization?", options: ["Controlling resource access", "Creating access", "Deleting access", "None"], answer: "Controlling resource access" },
+                { question: "What is a password?", options: ["Secret authentication key", "Public key", "System key", "None"], answer: "Secret authentication key" },
+                { question: "What is biometric authentication?", options: ["Using physical characteristics", "Using passwords", "Using keys", "None"], answer: "Using physical characteristics" },
+                { question: "What is two-factor authentication?", options: ["Using two verification methods", "Using one method", "Using no methods", "None"], answer: "Using two verification methods" },
+                { question: "What is multi-factor authentication?", options: ["Using multiple verification methods", "Using one method", "Using no methods", "None"], answer: "Using multiple verification methods" },
+                { question: "What is role-based access control?", options: ["Access based on user roles", "Access based on passwords", "Access based on keys", "None"], answer: "Access based on user roles" },
+                { question: "What is discretionary access control?", options: ["Owner-controlled access", "System-controlled access", "No access control", "None"], answer: "Owner-controlled access" },
+                { question: "What is mandatory access control?", options: ["System-enforced access control", "User-enforced control", "No control", "None"], answer: "System-enforced access control" },
+                { question: "What is access control list?", options: ["List of access permissions", "List of users", "List of systems", "None"], answer: "List of access permissions" },
+                { question: "What is access control matrix?", options: ["Table of access rights", "Table of users", "Table of systems", "None"], answer: "Table of access rights" },
+                { question: "What is access control policy?", options: ["Rules for access control", "Rules for users", "Rules for systems", "None"], answer: "Rules for access control" },
+                { question: "What is access control model?", options: ["Framework for access control", "Framework for users", "Framework for systems", "None"], answer: "Framework for access control" },
+                { question: "What is access control mechanism?", options: ["Method of implementing access control", "Method of creating users", "Method of deleting users", "None"], answer: "Method of implementing access control" },
+                { question: "What is access control enforcement?", options: ["Implementing access control", "Creating access", "Deleting access", "None"], answer: "Implementing access control" },
+                { question: "What is access control audit?", options: ["Reviewing access control", "Creating access", "Deleting access", "None"], answer: "Reviewing access control" },
+                { question: "What is access control monitoring?", options: ["Watching access control", "Creating access", "Deleting access", "None"], answer: "Watching access control" },
+                { question: "What is access control reporting?", options: ["Documenting access control", "Creating access", "Deleting access", "None"], answer: "Documenting access control" },
+                { question: "What is access control testing?", options: ["Testing access control", "Creating access", "Deleting access", "None"], answer: "Testing access control" },
+                { question: "What is access control maintenance?", options: ["Maintaining access control", "Creating access", "Deleting access", "None"], answer: "Maintaining access control" },
+                { question: "What is access control review?", options: ["Reviewing access control", "Creating access", "Deleting access", "None"], answer: "Reviewing access control" },
+                { question: "What is access control update?", options: ["Updating access control", "Creating access", "Deleting access", "None"], answer: "Updating access control" },
+                { question: "What is access control documentation?", options: ["Documenting access control", "Creating access", "Deleting access", "None"], answer: "Documenting access control" },
+                { question: "What is access control training?", options: ["Training on access control", "Creating access", "Deleting access", "None"], answer: "Training on access control" },
+                { question: "What is access control compliance?", options: ["Meeting access control standards", "Creating access", "Deleting access", "None"], answer: "Meeting access control standards" },
+                { question: "What is access control risk assessment?", options: ["Evaluating access control risks", "Creating access", "Deleting access", "None"], answer: "Evaluating access control risks" },
+                { question: "What is access control incident response?", options: ["Handling access control incidents", "Creating access", "Deleting access", "None"], answer: "Handling access control incidents" },
+                { question: "What is access control recovery?", options: ["Restoring access control", "Creating access", "Deleting access", "None"], answer: "Restoring access control" }
+            ],
+            incident: [
+                { question: "What is incident response?", options: ["Handling security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Handling security incidents" },
+                { question: "What is incident detection?", options: ["Identifying security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Identifying security incidents" },
+                { question: "What is incident analysis?", options: ["Studying security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Studying security incidents" },
+                { question: "What is incident containment?", options: ["Controlling security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Controlling security incidents" },
+                { question: "What is incident eradication?", options: ["Removing security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Removing security incidents" },
+                { question: "What is incident recovery?", options: ["Restoring after security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Restoring after security incidents" },
+                { question: "What is incident reporting?", options: ["Documenting security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Documenting security incidents" },
+                { question: "What is incident investigation?", options: ["Examining security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Examining security incidents" },
+                { question: "What is incident documentation?", options: ["Recording security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Recording security incidents" },
+                { question: "What is incident communication?", options: ["Sharing information about incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Sharing information about incidents" },
+                { question: "What is incident coordination?", options: ["Organizing incident response", "Creating incidents", "Deleting incidents", "None"], answer: "Organizing incident response" },
+                { question: "What is incident management?", options: ["Managing security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Managing security incidents" },
+                { question: "What is incident planning?", options: ["Planning for security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Planning for security incidents" },
+                { question: "What is incident prevention?", options: ["Preventing security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Preventing security incidents" },
+                { question: "What is incident monitoring?", options: ["Watching for security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Watching for security incidents" },
+                { question: "What is incident assessment?", options: ["Evaluating security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Evaluating security incidents" },
+                { question: "What is incident classification?", options: ["Categorizing security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Categorizing security incidents" },
+                { question: "What is incident prioritization?", options: ["Ranking security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Ranking security incidents" },
+                { question: "What is incident escalation?", options: ["Moving incidents to higher level", "Creating incidents", "Deleting incidents", "None"], answer: "Moving incidents to higher level" },
+                { question: "What is incident resolution?", options: ["Solving security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Solving security incidents" },
+                { question: "What is incident closure?", options: ["Ending security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Ending security incidents" },
+                { question: "What is incident review?", options: ["Reviewing security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Reviewing security incidents" },
+                { question: "What is incident lessons learned?", options: ["Learning from security incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Learning from security incidents" },
+                { question: "What is incident improvement?", options: ["Improving incident response", "Creating incidents", "Deleting incidents", "None"], answer: "Improving incident response" },
+                { question: "What is incident training?", options: ["Training for incident response", "Creating incidents", "Deleting incidents", "None"], answer: "Training for incident response" },
+                { question: "What is incident testing?", options: ["Testing incident response", "Creating incidents", "Deleting incidents", "None"], answer: "Testing incident response" },
+                { question: "What is incident documentation?", options: ["Documenting incident response", "Creating incidents", "Deleting incidents", "None"], answer: "Documenting incident response" },
+                { question: "What is incident compliance?", options: ["Meeting incident response standards", "Creating incidents", "Deleting incidents", "None"], answer: "Meeting incident response standards" },
+                { question: "What is incident risk assessment?", options: ["Evaluating incident risks", "Creating incidents", "Deleting incidents", "None"], answer: "Evaluating incident risks" },
+                { question: "What is incident recovery?", options: ["Recovering from incidents", "Creating incidents", "Deleting incidents", "None"], answer: "Recovering from incidents" }
+            ],
+            compliance: [
+                { question: "What is security compliance?", options: ["Meeting security standards", "Creating standards", "Deleting standards", "None"], answer: "Meeting security standards" },
+                { question: "What is regulatory compliance?", options: ["Meeting government regulations", "Creating regulations", "Deleting regulations", "None"], answer: "Meeting government regulations" },
+                { question: "What is industry compliance?", options: ["Meeting industry standards", "Creating standards", "Deleting standards", "None"], answer: "Meeting industry standards" },
+                { question: "What is compliance audit?", options: ["Reviewing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Reviewing compliance" },
+                { question: "What is compliance monitoring?", options: ["Watching compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Watching compliance" },
+                { question: "What is compliance reporting?", options: ["Documenting compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Documenting compliance" },
+                { question: "What is compliance assessment?", options: ["Evaluating compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Evaluating compliance" },
+                { question: "What is compliance documentation?", options: ["Recording compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Recording compliance" },
+                { question: "What is compliance training?", options: ["Training on compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Training on compliance" },
+                { question: "What is compliance testing?", options: ["Testing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Testing compliance" },
+                { question: "What is compliance maintenance?", options: ["Maintaining compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Maintaining compliance" },
+                { question: "What is compliance review?", options: ["Reviewing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Reviewing compliance" },
+                { question: "What is compliance update?", options: ["Updating compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Updating compliance" },
+                { question: "What is compliance verification?", options: ["Verifying compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Verifying compliance" },
+                { question: "What is compliance validation?", options: ["Validating compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Validating compliance" },
+                { question: "What is compliance certification?", options: ["Certifying compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Certifying compliance" },
+                { question: "What is compliance accreditation?", options: ["Accrediting compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Accrediting compliance" },
+                { question: "What is compliance enforcement?", options: ["Enforcing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Enforcing compliance" },
+                { question: "What is compliance investigation?", options: ["Investigating compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Investigating compliance" },
+                { question: "What is compliance resolution?", options: ["Resolving compliance issues", "Creating compliance", "Deleting compliance", "None"], answer: "Resolving compliance issues" },
+                { question: "What is compliance improvement?", options: ["Improving compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Improving compliance" },
+                { question: "What is compliance risk assessment?", options: ["Evaluating compliance risks", "Creating compliance", "Deleting compliance", "None"], answer: "Evaluating compliance risks" },
+                { question: "What is compliance incident response?", options: ["Responding to compliance incidents", "Creating compliance", "Deleting compliance", "None"], answer: "Responding to compliance incidents" },
+                { question: "What is compliance recovery?", options: ["Recovering compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Recovering compliance" },
+                { question: "What is compliance planning?", options: ["Planning for compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Planning for compliance" },
+                { question: "What is compliance implementation?", options: ["Implementing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Implementing compliance" },
+                { question: "What is compliance management?", options: ["Managing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Managing compliance" },
+                { question: "What is compliance governance?", options: ["Governing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Governing compliance" },
+                { question: "What is compliance oversight?", options: ["Overseeing compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Overseeing compliance" },
+                { question: "What is compliance accountability?", options: ["Being accountable for compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Being accountable for compliance" },
+                { question: "What is compliance responsibility?", options: ["Being responsible for compliance", "Creating compliance", "Deleting compliance", "None"], answer: "Being responsible for compliance" }
+            ]
+
+        };
+
+        let quizData = []; // Stores selected topic questions
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let timeLeft;
+
+        // Function to format time
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Function to start timer
+        function startTimer() {
+            const timerDisplay = document.querySelector('.quiz-timer');
+            const timerSpan = document.getElementById('timer');
+            timeLeft = 20; // 10 minutes in seconds
+
+            timerDisplay.style.display = 'block';
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerSpan.textContent = formatTime(timeLeft);
+
+                // Warning when 1 minute remaining
+                if (timeLeft <= 60) {
+                    timerDisplay.classList.add('warning');
+                }
+
+                // Auto-submit when time's up
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showTimeUpMessage();
+                    disableQuizOptions();
+                    updateQuestionGrid();
+                }
+            }, 1000);
+        }
+
+        // Add new function to show Time's Up message
+        function showTimeUpMessage() {
+            const quizQuestionsDiv = document.getElementById('quiz-questions');
+            const timeUpMessage = document.createElement('div');
+            timeUpMessage.style.textAlign = 'center';
+            timeUpMessage.style.padding = '20px';
+            timeUpMessage.style.marginTop = '20px';
+            timeUpMessage.style.backgroundColor = '#ff4444';
+            timeUpMessage.style.color = 'white';
+            timeUpMessage.style.borderRadius = '10px';
+            timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+            timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+            quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+
+            // Show submit button
+            document.getElementById('submit-quiz').style.display = 'inline-block';
+            document.getElementById('next-question').style.display = 'none';
+        }
+
+        // Function to disable quiz options
+        function disableQuizOptions() {
+            const optionsDiv = document.querySelector('.quiz-options');
+            if (optionsDiv) {
+                optionsDiv.classList.add('disabled');
+                const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+            }
+        }
+
+        // Function to stop timer
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.querySelector('.quiz-timer').style.display = 'none';
+        }
+
+        // Function to start quiz with selected topic
+        function startQuiz(topic, isRestore = false) {
+            currentTopic = topic;
+            const quizIntro = document.querySelector('.quiz-intro');
+            const quizContainer = document.querySelector('.quiz-container');
+            const topicSelect = document.querySelector('.quiz-topics');
+
+            if (!topic) {
+                // Show intro, hide quiz container when no topic selected
+                quizIntro.style.display = 'block';
+                quizContainer.style.display = 'none';
+                stopTimer();
+                return;
+            }
+
+            // Hide intro and topic select with fade out effect
+            quizIntro.style.opacity = '0';
+            topicSelect.style.opacity = '0';
+            setTimeout(() => {
+                quizIntro.style.display = 'none';
+                topicSelect.style.display = 'none';
+            }, 300);
+
+            let allQuestions = topicQuestions[topic];
+            if (!allQuestions) {
+                console.error('No questions found for topic:', topic);
+                return;
+            }
+
+            // After setting quizData:
+            if (!isRestore) {
+                quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+                currentQuestionIndex = 0;
+                userAnswers = new Array(quizData.length).fill(null);
+            }
+
+            // Reset quiz UI
+            document.getElementById('quiz-questions').style.display = 'block';
+            document.getElementById('quiz-questions').innerHTML = '';
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('retake-quiz').style.display = 'none';
+
+            // Update quiz heading
+            document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+            // Show quiz container with fade in effect
+            quizContainer.style.opacity = '0';
+            quizContainer.style.display = 'block';
+            setTimeout(() => {
+                quizContainer.style.opacity = '1';
+            }, 50);
+
+            // Reset navigation buttons
+            document.getElementById('prev-question').style.display = 'inline-block';
+            document.getElementById('next-question').style.display = 'inline-block';
+            document.getElementById('submit-quiz').style.display = 'none';
+
+            // Start the timer
+            startTimer();
+
+            displayQuestion();
+            updateQuestionGrid();
+        }
+
+        // Function to format topic names (e.g., "file_handling" → "File Handling")
+        function formatTopic(topic) {
+            return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+
+        // Function to display questions
+        function displayQuestion() {
+            if (!quizData || quizData.length === 0) return;
+
+            const quizQuestionsDiv = document.getElementById('quiz-questions');
+            quizQuestionsDiv.innerHTML = '';
+
+            const question = quizData[currentQuestionIndex];
+            if (!question) return;
+
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('quiz-question');
+
+            const questionText = document.createElement('p');
+            questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+            questionDiv.appendChild(questionText);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.classList.add('quiz-options');
+
+            if (timeLeft <= 0) {
+                optionsDiv.classList.add('disabled');
+            }
+
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `question${currentQuestionIndex}`;
+                input.value = option;
+                input.checked = userAnswers[currentQuestionIndex] === option;
+
+                if (timeLeft <= 0) {
+                    input.disabled = true;
+                }
+
+                input.onchange = () => {
+                    if (timeLeft > 0) {
+                        userAnswers[currentQuestionIndex] = option;
+                        // Immediate grid update when answer is selected
+                        setTimeout(() => {
+                            updateQuestionGrid();
+                        }, 50);
+                    }
+                };
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                optionsDiv.appendChild(label);
+            });
+
+            questionDiv.appendChild(optionsDiv);
+            quizQuestionsDiv.appendChild(questionDiv);
+
+            document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+            document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+            document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+
+            updateQuestionGrid();
+        }
+
+        // Function to navigate questions
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                // Mark current question as skipped if no answer selected
+                if (userAnswers[currentQuestionIndex] === null) {
+                    userAnswers[currentQuestionIndex] = "skipped";
+                }
+
+                currentQuestionIndex++;
+                displayQuestion();
+                updateQuestionGrid();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Function to submit quiz
+        function submitQuiz() {
+            stopTimer();
+
+            // Mark all unanswered questions as incorrect
+            userAnswers.forEach((answer, index) => {
+                if (answer === null) {
+                    userAnswers[index] = "skipped";
+                }
+            });
+            updateQuestionGrid();
+
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizData[index].answer) {
+                    score++;
+                }
+            });
+
+            document.getElementById('quiz-questions').style.display = 'none';
+            document.getElementById('prev-question').style.display = 'none';
+            document.getElementById('next-question').style.display = 'none';
+            document.getElementById('submit-quiz').style.display = 'none';
+
+            const quizResultDiv = document.getElementById('quiz-result');
+            const percentage = Math.round((score / quizData.length) * 100);
+
+            let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+            message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+
+            if (percentage === 100) {
+                message += `<p>Perfect score! Excellent work! 🌟</p>`;
+            } else if (percentage >= 80) {
+                message += `<p>Great job! Keep up the good work! 👍</p>`;
+            } else if (percentage >= 60) {
+                message += `<p>Not bad! Keep practicing! 💪</p>`;
+            } else {
+                message += `<p>Keep practicing! You can do better! 📚</p>`;
+            }
+
+            // Add detailed summary in a scrollable container
+            message += `
+        <div class="quiz-summary" style="
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f8f8;
+        ">
+            <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+    `;
+
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.answer;
+                const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+                const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+                message += `
+            <div style="
+                margin-bottom: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: left;
+            ">
+                <p style="font-weight: 600; margin-bottom: 10px;">
+                    Question ${index + 1}: ${question.question}
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Your Answer:</span> 
+                    <span style="color: ${statusColor}; font-weight: 500;">
+                        ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                    </span>
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Correct Answer:</span> 
+                    <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                </p>
+                <p style="
+                    margin-top: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    border-radius: 4px;
+                    background: ${statusColor};
+                    color: white;
+                    font-size: 0.9rem;
+                ">${answerStatus}</p>
+            </div>
+        `;
+            });
+
+            message += `</div>`;
+
+            quizResultDiv.innerHTML = message;
+            quizResultDiv.style.display = 'block';
+            quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+            document.getElementById('retake-quiz').style.display = 'inline-block';
+            document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+            // Scroll to top of the results
+            quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Function to retake quiz
+        function retakeQuiz() {
+            stopTimer();
+
+            // Show intro and topic select again
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+
+            // Hide quiz container
+            quizContainer.style.opacity = '0';
+            setTimeout(() => {
+                quizContainer.style.display = 'none';
+
+                // Show intro and topic select with fade in
+                quizIntro.style.display = 'block';
+                topicSelect.style.display = 'block';
+                setTimeout(() => {
+                    quizIntro.style.opacity = '1';
+                    topicSelect.style.opacity = '1';
+                }, 50);
+            }, 300);
+
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+
+        // Add these functions before the startQuiz function:
+        function updateQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < quizData.length; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.textContent = (i + 1).toString();
+
+                // Check if question has been attempted (any answer selected)
+                if (userAnswers[i] && userAnswers[i] !== "skipped") {
+            // Question attempted - Blue
+            gridItem.style.backgroundColor = '#2196F3';
+            gridItem.style.borderColor = '#2196F3';
+                    gridItem.style.color = '#ffffff';
+                } else if (userAnswers[i] === "skipped") {
+                    // Question skipped or not attempted - Red
+                    gridItem.style.backgroundColor = '#ff4444';
+                    gridItem.style.borderColor = '#ff4444';
+                    gridItem.style.color = '#ffffff';
+                }
+
+                // Current question - Black
+                if (i === currentQuestionIndex) {
+                    gridItem.style.backgroundColor = '#000000';
+                    gridItem.style.borderColor = '#000000';
+                    gridItem.style.color = '#ffffff';
+                }
+
+                // Disabled state when time's up
+                if (timeLeft <= 0) {
+                    gridItem.classList.add('disabled');
+                } else {
+                    gridItem.onclick = () => {
+                        currentQuestionIndex = i;
+                        displayQuestion();
+                        updateQuestionGrid();
+                    };
+                }
+
+                grid.appendChild(gridItem);
+            }
+
+            saveQuizState();
+        }
+
+        function saveQuizState() {
+            const quizState = {
+                topic: currentTopic,
+                answers: userAnswers,
+                timeLeft: timeLeft,
+                currentIndex: currentQuestionIndex,
+                quizData: quizData
+            };
+            localStorage.setItem('quizState', JSON.stringify(quizState));
+        }
+
+        function loadQuizState() {
+            const savedState = localStorage.getItem('quizState');
+            if (savedState) {
+                if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+                    const state = JSON.parse(savedState);
+                    currentTopic = state.topic;
+                    userAnswers = state.answers;
+                    timeLeft = state.timeLeft;
+                    currentQuestionIndex = state.currentIndex;
+                    quizData = state.quizData;
+
+                    if (currentTopic) {
+                        startQuiz(currentTopic, true);
+                    }
+                } else {
+                    // Clear saved state and show the starting page
+                    localStorage.removeItem('quizState');
+                    const quizIntro = document.querySelector('.quiz-intro');
+                    const topicSelect = document.querySelector('.quiz-topics');
+                    const quizContainer = document.querySelector('.quiz-container');
+
+                    // Reset all states
+                    currentQuestionIndex = 0;
+                    userAnswers = [];
+                    quizData = [];
+                    currentTopic = '';
+
+                    // Show intro and topic select
+                    quizContainer.style.display = 'none';
+                    quizIntro.style.display = 'block';
+                    topicSelect.style.display = 'block';
+                    quizIntro.style.opacity = '1';
+                    topicSelect.style.opacity = '1';
+
+                    // Reset topic select
+                    document.querySelector('.quiz-topic-select').value = '';
+                }
+            }
+        }
+
+        // Modify the startQuiz function:
+        let currentTopic = '';
+
+        // Add to the end of the script:
+        // Load saved state when page loads
+        window.addEventListener('load', loadQuizState);
+        // JavaScript to handle modal functionality
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+        // JavaScript to handle redirection to home.html
+        function redirectToHome() {
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+
+</html>

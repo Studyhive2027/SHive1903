@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHive - Study Rooms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --background-color: #f9f9f9;
+            --text-color: #333333;
+            --border-color: #cccccc;
+            --hover-color: #444444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+        }
+
+        .rooms-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .rooms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            margin-top: 2rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+        }
+
+        .create-room-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-room-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .room-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .room-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+        }
+
+        .status-active {
+            background: #e3e3e3;
+            color: #000000;
+        }
+
+        .status-private {
+            background: #f5f5f5;
+            color: #333333;
+        }
+
+        .room-info {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .room-participants {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .participant-avatars {
+            display: flex;
+            margin-right: 0.5rem;
+        }
+
+        .participant-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: -10px;
+            border: 2px solid white;
+        }
+
+        .join-room-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .join-room-btn:hover {
+            background: var(--hover-color);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-footer button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .create-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .cancel-btn:hover,
+        .create-btn:hover {
+            opacity: 0.9;
+        }
+
+        .creator-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .creator-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .creator-name {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .expiration {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            background: #e3e3e3;
+            color: #000000;
+            margin-top: 0.5rem;
+        }
+
+        .expiration.expired {
+            background: #f5f5f5;
+            color: #333333;
+        }
+
+        .room-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .end-room-btn {
+            padding: 0.75rem;
+            background: #333333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex: 1;
+        }
+
+        .end-room-btn:hover {
+            background: #555555;
+        }
+
+        .join-room-btn {
+            flex: 2;
+        }
+        
+        .back-to-home {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .back-to-home:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="rooms-container">
+        <div class="rooms-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="{{ url_for('home') }}" class="back-to-home" style="position: absolute; top: 30px; left: 20px; z-index: 1001;">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </a>
+                <h1 style="margin-left: 0.5rem;">Study Rooms</h1>
+            </div>
+            <div class="header-controls">
+                <div class="search-bar">
+                    <input type="text" id="roomSearch" placeholder="Search rooms..." onkeyup="filterRooms()">
+                    <i class="fas fa-search"></i>
+                </div>
+                <button class="create-room-btn" onclick="showCreateRoomModal()">
+                    <i class="fas fa-plus"></i> Create Room
+                </button>
+            </div>
+        </div>
+
+        <div class="rooms-grid" id="roomsGrid">
+            <!-- Rooms will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Study Room</h2>
+                <button class="close-modal" onclick="hideCreateRoomModal()">&times;</button>
+            </div>
+            <form id="createRoomForm" onsubmit="createRoom(event)">
+                <div class="form-group">
+                    <label for="roomName">Room Name</label>
+                    <input type="text" id="roomName" required placeholder="Enter room name">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="isPrivate">
+                        Private Room
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="expiresIn">Room Duration (hours)</label>
+                    <select id="expiresIn" required>
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="4">4 hours</option>
+                        <option value="8">8 hours</option>
+                        <option value="12">12 hours</option>
+                        <option value="24" selected>24 hours</option>
+                        <option value="48">48 hours</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" onclick="hideCreateRoomModal()">Cancel</button>
+                    <button type="submit" class="create-btn">Create Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is authenticated
+        const currentUser = '{{ current_user.username }}';
+        if (!currentUser || currentUser === '') {
+            // Redirect to login page if not authenticated
+            window.location.href = '/login?next=' + encodeURIComponent(window.location.pathname);
+        }
+        
+        // Fetch and display rooms
+        function fetchRooms() {
+            fetch('/study-rooms/list')
+                .then(response => response.json())
+                .then(data => {
+                    const roomsGrid = document.getElementById('roomsGrid');
+                    roomsGrid.innerHTML = '';
+                    
+                    data.rooms.forEach(room => {
+                        const roomCard = createRoomCard(room);
+                        roomsGrid.appendChild(roomCard);
+                    });
+                })
+                .catch(error => console.error('Error fetching rooms:', error));
+        }
+
+        // Create room card element with improved creator info
+        function createRoomCard(room) {
+            const card = document.createElement('div');
+            card.className = 'room-card';
+            
+            // Get creator initials for avatar
+            const creatorInitials = room.creator_name.split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+            
+            // Format expiration time
+            let expirationText = '';
+            if (room.time_remaining_hours !== null) {
+                if (room.time_remaining_hours <= 0) {
+                    expirationText = '<span class="expiration expired">Expired</span>';
+                } else {
+                    expirationText = `<span class="expiration">Expires in ${Math.round(room.time_remaining_hours)} hours</span>`;
+                }
+            }
+
+            // Check if current user is the creator
+            const isCreator = room.creator_id === '{{ current_user.id }}';
+            
+            card.innerHTML = `
+                <div class="room-header">
+                    <h3 class="room-title">${room.name}</h3>
+                    <span class="room-status ${room.is_private ? 'status-private' : 'status-active'}">
+                        ${room.is_private ? 'Private' : 'Active'}
+                    </span>
+                </div>
+                <div class="creator-info">
+                    <div class="creator-avatar">${creatorInitials}</div>
+                    <span class="creator-name">Created by ${room.creator_name}</span>
+                </div>
+                <div class="room-info">
+                    <p>Created: ${new Date(room.created_at).toLocaleString()}</p>
+                    ${expirationText}
+                </div>
+                <div class="room-actions">
+                    <button class="join-room-btn" onclick="joinRoom('${room.room_id}')">
+                        Join Room
+                    </button>
+                    ${isCreator ? `
+                        <button class="end-room-btn" onclick="endRoom('${room.room_id}')">
+                            End Room
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+            return card;
+        }
+
+        // Show create room modal
+        function showCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.add('active');
+        }
+
+        // Hide create room modal
+        function hideCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.remove('active');
+            document.getElementById('createRoomForm').reset();
+        }
+
+        // Create new room
+        function createRoom(event) {
+            event.preventDefault();
+            
+            const roomName = document.getElementById('roomName').value;
+            const isPrivate = document.getElementById('isPrivate').checked;
+            const expiresIn = parseInt(document.getElementById('expiresIn').value);
+            
+            fetch('/study-rooms/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: roomName,
+                    is_private: isPrivate,
+                    expires_in: expiresIn
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.room_id) {
+                    hideCreateRoomModal();
+                    joinRoom(data.room_id);
+                }
+            })
+            .catch(error => console.error('Error creating room:', error));
+        }
+
+        // Join room
+        function joinRoom(roomId) {
+            window.location.href = `/study-rooms/${roomId}`;
+        }
+
+        // Filter rooms based on search input
+        function filterRooms() {
+            const searchTerm = document.getElementById('roomSearch').value.toLowerCase();
+            const roomsGrid = document.getElementById('roomsGrid');
+            const rooms = Array.from(roomsGrid.children);
+
+            rooms.forEach(room => {
+                const roomName = room.querySelector('.room-title').textContent.toLowerCase();
+                const creatorName = room.querySelector('.creator-name').textContent.toLowerCase();
+                const isMatch = roomName.includes(searchTerm) || creatorName.includes(searchTerm);
+                room.style.display = isMatch ? 'block' : 'none';
+            });
+        }
+
+        // End room function
+        function endRoom(roomId) {
+            if (!confirm('Are you sure you want to end this room? This action cannot be undone.')) {
+                return;
+            }
+
+            fetch(`/study-rooms/${roomId}/end`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Remove the room card from the display
+                    fetchRooms();  // Refresh the rooms list
+                }
+            })
+            .catch(error => console.error('Error ending room:', error));
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', fetchRooms);
+
+        // Refresh rooms every 30 seconds
+        setInterval(fetchRooms, 30000);
+    </script>
+</body>
+</html> 

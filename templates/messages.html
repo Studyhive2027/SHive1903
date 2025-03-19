@@ -1,0 +1,2962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - StudyHive</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <audio id="messageSound" src="{{ url_for('static', filename='sounds/message.mp3') }}" preload="auto"></audio>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --accent-color: #bb86fc;
+            --error-color: #cf6679;
+            --success-color: #03dac6;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-primary);
+        }
+
+        .navbar {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--bg-tertiary);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--accent-color);
+        }
+
+        .messages-container {
+            display: flex;
+            flex: 1;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--bg-tertiary);
+            margin: 20px auto;
+            width: 95%;
+            max-width: 1200px;
+            height: calc(100vh - 100px);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .conversations-list {
+            width: 350px;
+            border-right: 1px solid var(--bg-tertiary);
+            overflow-y: auto;
+            background-color: var(--bg-secondary);
+        }
+
+        .conversation-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-tertiary);
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .new-message-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .new-message-btn:hover {
+            background-color: rgba(187, 134, 252, 0.1);
+        }
+
+        .conversation-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--bg-tertiary);
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateX(5px);
+        }
+
+        .conversation-item.active {
+            background-color: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--bg-primary);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .conversation-item:hover .avatar {
+            transform: scale(1.1);
+        }
+
+        .conversation-info {
+            flex: 1;
+        }
+
+        .conversation-username {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .last-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-primary);
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            margin: 4px 0;
+            border-radius: 18px;
+            word-wrap: break-word;
+            position: relative;
+            animation: messageAppear 0.3s ease;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.received {
+            background-color: var(--bg-tertiary);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.sent {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--bg-secondary);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 25px;
+            font-size: 0.95rem;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+        }
+
+        .send-button {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(187, 134, 252, 0.3);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .send-button:disabled {
+            background-color: var(--bg-tertiary);
+            cursor: default;
+            transform: none;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .empty-state h2 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: modalFadeIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            padding: 30px;
+            border-radius: 16px;
+            width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--bg-tertiary);
+            max-width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .modal-header h2 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .modal-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal button.cancel {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .modal button.start {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+        }
+
+        .modal button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* Message Timestamp */
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        /* Online Status Indicator */
+        .online-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            margin-left: 8px;
+        }
+
+        .offline-status {
+            background-color: var(--text-secondary);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 20px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+            width: 250px;
+        }
+
+        .search-button {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(187, 134, 252, 0.3);
+        }
+
+        .search-results-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            transition: all 0.3s ease;
+            position: relative;
+            gap: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        .search-result-item .avatar {
+            width: 65px;
+            height: 65px;
+            min-width: 65px; /* Prevent avatar from shrinking */
+            border-radius: 50%;
+            margin-right: 0;
+            object-fit: cover;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--bg-primary);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bg-tertiary);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .search-result-item:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-result-item .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .search-result-item .user-info {
+            flex: 1;
+            margin-left: 15px;
+            padding-right: 15px;
+            min-width: 200px;
+        }
+
+        .search-result-item .username {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+        }
+
+        .search-result-item .full-name {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .search-result-item .bio {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .search-result-item .stats {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-result-item .stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .search-result-item .stats i {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .search-result-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 110px;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn i {
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Follow button styles */
+        .action-btn.following {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            position: relative;
+        }
+        
+        .action-btn.following:hover {
+            background-color: #ff3b30;
+            color: white;
+        }
+        
+        .action-btn.following span {
+            display: inline;
+        }
+        
+        .action-btn.following:hover span {
+            display: none;
+        }
+        
+        .action-btn.following:hover::after {
+            content: "Unfollow";
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Message Preview Styles */
+        .message-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .message-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message-preview-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .message-preview-content {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .notification-badge.show {
+            display: block;
+        }
+
+        /* Online Status Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .online-status {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading indicator */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: var(--text-secondary);
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--bg-tertiary);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-results {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .no-results i {
+            font-size: 40px;
+            color: var(--accent-color);
+            opacity: 0.7;
+        }
+
+        /* User Profile Modal Styles */
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .profile-modal-content {
+            background-color: var(--bg-secondary);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            border-radius: 16px;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .profile-close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+
+        /* Profile header styles */
+        .profile-header {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .profile-top-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .profile-avatar-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-container:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-avatar-large {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-tertiary);
+        }
+
+        .profile-avatar-large i {
+            font-size: 32px;
+            color: var(--accent-color);
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-name-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .profile-username {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-fullname {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .profile-actions-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .follow-btn, .message-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .follow-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .follow-btn.following {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .message-btn {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .follow-btn:hover, .message-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .follow-btn.following:hover {
+            background-color: #ff3b30;
+            color: white;
+        }
+
+        .follow-btn.following:hover span {
+            display: none;
+        }
+
+        .follow-btn.following:hover::after {
+            content: "Unfollow";
+        }
+
+        /* Profile avatar large image styling */
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Stats bar style */
+        .profile-stats-row {
+            display: flex;
+            border-bottom: 1px solid var(--bg-tertiary);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .profile-stat-item {
+            flex: 1;
+            padding: 15px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .profile-stat-item:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .profile-stat-value {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--accent-color);
+        }
+
+        .profile-stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Profile tabs */
+        .profile-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .profile-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .profile-tab.active {
+            color: var(--accent-color);
+        }
+
+        .profile-tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .profile-tab:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        /* Profile content sections */
+        .profile-content {
+            padding: 20px;
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: var(--bg-tertiary);
+            transition: all 0.3s ease;
+        }
+
+        .profile-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-section-title i {
+            font-size: 18px;
+        }
+
+        .profile-section-content {
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .empty-content {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Followers/Following List Modal Styles */
+        .follow-list-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .follow-list-container {
+            background-color: var(--bg-secondary);
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--bg-tertiary);
+        }
+
+        .follow-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            max-height: 60vh;
+            min-height: 150px;
+            overflow-y: auto !important;
+        }
+
+        .follow-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Fix followers/following display - restored styles */
+        .follow-list-header {
+            padding: 18px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-tertiary);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .follow-list-header h3 {
+            font-size: 18px;
+            margin: 0;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Animation for modal appearance */
+        @keyframes scaleIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Enhanced scrollbar styling */
+        .follow-list {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--bg-tertiary);
+        }
+
+        .follow-list::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background: transparent;
+        }
+
+        .follow-list::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        .follow-list::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        /* Improved close button styling */
+        .follow-list-close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 11;
+        }
+
+        .follow-list-close:hover {
+            color: var(--accent-color);
+            transform: translateY(-50%) scale(1.1);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Improved list styling */
+        .follow-list::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color: transparent;
+        }
+
+        .follow-list::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        .follow-list::-webkit-scrollbar-track {
+            background-color: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        /* Improved list item styling */
+        .follow-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .follow-list-item:hover {
+            background-color: var(--bg-tertiary);
+            transform: translateX(5px);
+        }
+
+        .follow-list-avatar {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            background-color: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            border: 2px solid var(--bg-tertiary);
+            transition: all 0.3s ease;
+        }
+
+        .follow-list-item:hover .follow-list-avatar {
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        /* Ensure images display correctly */
+        .follow-list-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .follow-list-avatar i {
+            font-size: 22px;
+            color: var(--text-secondary);
+        }
+
+        .follow-list-info {
+            flex: 1;
+            min-width: 0;
+            margin-right: 15px;
+        }
+
+        .follow-list-username {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+
+        .follow-list-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Improved action button styling */
+        .follow-list-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Fix button icons */
+        .follow-list-action i {
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .follow-action-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .follow-action-btn:hover {
+            background-color: #9d69d5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .following-action-btn {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .following-action-btn:hover {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .following-action-btn:hover i {
+            display: none;
+        }
+
+        .following-action-btn:hover::before {
+            content: "Unfollow";
+        }
+
+        /* Fixed responsive styles for smaller screens */
+        @media (max-width: 576px) {
+            .follow-list-container {
+                width: 95%;
+                max-height: 90vh;
+                max-width: none;
+            }
+            
+            .follow-list-avatar {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+            }
+            
+            .follow-list-action {
+                min-width: 80px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Fix for empty state styling */
+        .follow-list-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .follow-list-empty i {
+            font-size: 40px;
+            color: var(--accent-color);
+            opacity: 0.5;
+        }
+
+        /* Add an indicator when content is scrollable */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent-color);
+            font-size: 18px;
+            animation: bounceDown 1.5s infinite;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes bounceDown {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-8px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-4px);
+            }
+        }
+
+        /* Animation for loading and updates */
+        .follow-list-action.loading {
+            pointer-events: none;
+            position: relative;
+            color: transparent;
+        }
+
+        .follow-list-action.loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: rotate 0.8s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Add a subtle update animation */
+        @keyframes listItemUpdate {
+            0% { background-color: rgba(187, 134, 252, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .list-item-updated {
+            animation: listItemUpdate 1.5s ease;
+        }
+
+        /* Add a badge for counts update */
+        .count-update {
+            animation: countPulse 0.6s ease;
+        }
+
+        @keyframes countPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); color: var(--accent-color); }
+            100% { transform: scale(1); }
+        }
+
+        /* Profile avatar large image styling */
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Ensure close buttons work properly */
+        .follow-list-close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 11;
+        }
+
+        .follow-list-close:hover {
+            color: var(--accent-color);
+            transform: translateY(-50%) scale(1.1);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+        <h1>Messages</h1>
+        <div class="search-container">
+            <input type="text" id="user-search" placeholder="Search users..." class="search-input">
+            <button class="search-button" onclick="searchUsers()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="messages-container">
+        <div class="conversations-list">
+            <div class="conversation-header">
+                <span class="username">{{ username }}</span>
+                <button class="new-message-btn" onclick="showNewMessageModal()">
+                    <i class="fas fa-edit"></i> New Message
+                </button>
+            </div>
+            <div id="conversations"></div>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="empty-state">
+                <i class="fas fa-comments" style="font-size: 48px; margin-bottom: 20px; color: var(--accent-color);"></i>
+                <h2>Your Messages</h2>
+                <p>Send private messages to other users</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="newMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Message</h2>
+                <p>Start a conversation with another user</p>
+            </div>
+            <input type="text" id="recipientUsername" placeholder="Enter username">
+            <div class="modal-buttons">
+                <button class="cancel" onclick="hideNewMessageModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="start" onclick="startNewConversation()">
+                    <i class="fas fa-paper-plane"></i> Start Chat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Modal -->
+    <div class="modal" id="searchResultsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Search Results</h2>
+                <p>Find and connect with other StudyHive users</p>
+            </div>
+            <div id="search-results" class="search-results-container">
+                <!-- Search results will be populated here -->
+            </div>
+            <div class="modal-buttons">
+                <button class="cancel" onclick="hideSearchResultsModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="profile-modal" id="userProfileModal">
+        <div class="profile-modal-content">
+            <button class="profile-close-btn" onclick="hideUserProfileModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="profile-header">
+                <div class="profile-top-section">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar-large" id="profileModalAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-name-container">
+                            <h2 class="profile-username" id="profileUsername">Username</h2>
+                            <p class="profile-fullname" id="profileFullname">Full Name</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-actions-buttons">
+                    <button class="follow-btn" id="profileFollowBtn" onclick="toggleFollowFromProfile()">
+                        <i class="fas fa-user-plus"></i> Follow
+                    </button>
+                    <button class="message-btn" onclick="messageUserFromProfile()">
+                        <i class="fas fa-paper-plane"></i> Message
+                    </button>
+                </div>
+            </div>
+            
+            <div class="profile-stats-row">
+                <div class="profile-stat-item">
+                    <span class="profile-stat-value" id="profileFollowersCount">0</span>
+                    <span class="profile-stat-label">Followers</span>
+                </div>
+                <div class="profile-stat-item">
+                    <span class="profile-stat-value" id="profileFollowingCount">0</span>
+                    <span class="profile-stat-label">Following</span>
+                </div>
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" onclick="switchProfileTab(this, 'about')">About</div>
+                <div class="profile-tab" onclick="switchProfileTab(this, 'posts')">Posts</div>
+                <div class="profile-tab" onclick="switchProfileTab(this, 'photos')">Photos</div>
+            </div>
+            
+            <div class="profile-content" id="about-content">
+                <div class="profile-section">
+                    <div class="profile-section-title"><i class="fas fa-info-circle"></i> Bio</div>
+                    <div class="profile-section-content" id="profileBio">
+                        <p class="empty-content">No bio available</p>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-section-title"><i class="fas fa-graduation-cap"></i> Education</div>
+                    <div class="profile-section-content" id="profileEducation">
+                        <p class="empty-content">No education information available</p>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-section-title"><i class="fas fa-map-marker-alt"></i> Location</div>
+                    <div class="profile-section-content" id="profileLocation">
+                        <p class="empty-content">No location information available</p>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-section-title"><i class="fas fa-heart"></i> Interests</div>
+                    <div class="profile-section-content" id="profileInterests">
+                        <p class="empty-content">No interests listed</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-content" id="posts-content" style="display: none;">
+                <div class="empty-state">
+                    <i class="fas fa-newspaper" style="font-size: 40px; margin-bottom: 15px;"></i>
+                    <h3>No Posts Yet</h3>
+                    <p>When this user posts something, it will appear here.</p>
+                </div>
+            </div>
+            
+            <div class="profile-content" id="photos-content" style="display: none;">
+                <div class="empty-state">
+                    <i class="fas fa-images" style="font-size: 40px; margin-bottom: 15px;"></i>
+                    <h3>No Photos Yet</h3>
+                    <p>When this user shares photos, they will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Followers List Modal -->
+    <div class="follow-list-modal" id="followersModal">
+        <div class="follow-list-container">
+            <div class="follow-list-header">
+                <h3>Followers</h3>
+                <button class="follow-list-close" onclick="hideFollowersModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="follow-list" id="followersList">
+                <!-- Followers will be listed here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Following List Modal -->
+    <div class="follow-list-modal" id="followingModal">
+        <div class="follow-list-container">
+            <div class="follow-list-header">
+                <h3>Following</h3>
+                <button class="follow-list-close" onclick="hideFollowingModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="follow-list" id="followingList">
+                <!-- Following users will be listed here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let currentConversationId = null;
+
+        // Connect to WebSocket
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+            loadConversations();
+        });
+
+        // Handle incoming messages with sound notification
+        socket.on('new_message', (data) => {
+            if (data.conversation_id === currentConversationId) {
+                appendMessage(data.content, false, new Date(data.timestamp));
+                markConversationRead(currentConversationId);
+            } else {
+                // Play sound notification for new messages in other conversations
+                const messageSound = document.getElementById('messageSound');
+                messageSound.play().catch(error => console.log('Error playing sound:', error));
+                
+                // Show notification badge
+                const notificationBadge = document.querySelector('.notification-badge');
+                if (notificationBadge) {
+                    notificationBadge.classList.add('show');
+                }
+            }
+            loadConversations();
+        });
+
+        // Load conversations with enhanced preview
+        async function loadConversations() {
+            const response = await fetch('/api/conversations');
+            const conversations = await response.json();
+            
+            const conversationsDiv = document.getElementById('conversations');
+            conversationsDiv.innerHTML = '';
+            
+            conversations.forEach(conv => {
+                conversationsDiv.appendChild(createConversationItem(conv));
+            });
+        }
+
+        // Update conversation item with enhanced preview
+        function createConversationItem(conv) {
+            const div = document.createElement('div');
+            div.className = `conversation-item${conv.id === currentConversationId ? ' active' : ''}`;
+            div.onclick = () => loadMessages(conv.id, conv.other_user);
+            
+            const unreadBadge = conv.unread_count > 0 
+                ? `<span class="unread-badge">${conv.unread_count}</span>` 
+                : '';
+            
+            const messageTime = conv.last_message_time ? new Date(conv.last_message_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+            
+            // Create avatar element
+            const avatarElement = document.createElement('div');
+            avatarElement.className = 'avatar';
+            
+            // Use consistent avatar loading function
+            loadUserAvatar(avatarElement, conv.other_user);
+            
+            div.appendChild(avatarElement);
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'conversation-info';
+            infoDiv.innerHTML = `
+                <div class="message-preview">
+                    <div class="message-preview-header">
+                        <div class="conversation-username">${conv.other_user}</div>
+                        <div class="message-preview-time">${messageTime}</div>
+                    </div>
+                    <div class="message-preview-content">${conv.last_message || 'No messages yet'}</div>
+                </div>
+            `;
+            
+            div.appendChild(infoDiv);
+            
+            if (conv.unread_count > 0) {
+                const badge = document.createElement('span');
+                badge.className = 'unread-badge';
+                badge.textContent = conv.unread_count;
+                div.appendChild(badge);
+            }
+            
+            return div;
+        }
+
+        // Load messages for a conversation
+        async function loadMessages(conversationId, otherUser) {
+            currentConversationId = conversationId;
+            
+            const chatArea = document.getElementById('chatArea');
+            
+            // Create chat header with consistent avatar handling
+            const chatHeader = document.createElement('div');
+            chatHeader.className = 'chat-header';
+            
+            const avatarElement = document.createElement('div');
+            avatarElement.className = 'avatar';
+            
+            // Use consistent avatar loading
+            loadUserAvatar(avatarElement, otherUser);
+            
+            chatHeader.appendChild(avatarElement);
+            
+            const usernameElement = document.createElement('span');
+            usernameElement.className = 'username';
+            usernameElement.textContent = otherUser;
+            chatHeader.appendChild(usernameElement);
+            
+            const statusElement = document.createElement('div');
+            statusElement.className = 'online-status';
+            chatHeader.appendChild(statusElement);
+            
+            // Create messages list
+            const messagesList = document.createElement('div');
+            messagesList.className = 'messages';
+            messagesList.id = 'messagesList';
+            
+            // Create message input container
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'message-input-container';
+            inputContainer.innerHTML = `
+                <input type="text" class="message-input" id="messageInput" placeholder="Type your message...">
+                <button class="send-button" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Send</span>
+                </button>
+            `;
+            
+            // Clear and append all elements
+            chatArea.innerHTML = '';
+            chatArea.appendChild(chatHeader);
+            chatArea.appendChild(messagesList);
+            chatArea.appendChild(inputContainer);
+
+            // Request online status
+            socket.emit('check_status', { username: otherUser });
+
+            const response = await fetch(`/api/messages/${conversationId}`);
+            const messages = await response.json();
+            
+            messages.forEach(msg => {
+                appendMessage(msg.content, msg.sender === '{{ username }}', new Date(msg.timestamp));
+            });
+            
+            messagesList.scrollTop = messagesList.scrollHeight;
+            markConversationRead(conversationId);
+            
+            const input = document.getElementById('messageInput');
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            input.focus();
+        }
+
+        // Send a new message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            socket.emit('send_message', {
+                conversation_id: currentConversationId,
+                content: content
+            });
+            
+            appendMessage(content, true, new Date());
+            input.value = '';
+            
+            loadConversations();
+        }
+
+        // Append a message to the messages list
+        function appendMessage(content, isSent, timestamp) {
+            const messagesList = document.getElementById('messagesList');
+            const div = document.createElement('div');
+            div.className = `message ${isSent ? 'sent' : 'received'}`;
+            
+            const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+                ${content}
+                <div class="message-time">${time}</div>
+            `;
+            
+            messagesList.appendChild(div);
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }
+
+        // Mark conversation as read
+        function markConversationRead(conversationId) {
+            socket.emit('mark_read', { conversation_id: conversationId });
+        }
+
+        // Show new message modal
+        function showNewMessageModal() {
+            document.getElementById('newMessageModal').style.display = 'flex';
+            document.getElementById('recipientUsername').focus();
+        }
+
+        // Hide new message modal
+        function hideNewMessageModal() {
+            document.getElementById('newMessageModal').style.display = 'none';
+            document.getElementById('recipientUsername').value = '';
+        }
+
+        // Start a new conversation
+        async function startNewConversation() {
+            const username = document.getElementById('recipientUsername').value.trim();
+            
+            if (!username) return;
+            
+            const response = await fetch('/api/conversations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            
+            const result = await response.json();
+            
+            if (result.error) {
+                alert(result.error);
+                return;
+            }
+            
+            hideNewMessageModal();
+            loadConversations();
+            loadMessages(result.id, username);
+        }
+
+        // Search for users
+        function searchUsers() {
+            const searchTerm = document.getElementById('user-search').value.trim();
+            
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            // Show the modal with loading indicator
+            showSearchResultsModal();
+            
+            const searchResults = document.getElementById('search-results');
+            searchResults.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>Searching for users...</div>
+                </div>
+            `;
+            
+            fetch(`/api/search_users?query=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    
+                    if (data.users && data.users.length > 0) {
+                        data.users.forEach(user => {
+                            const div = document.createElement('div');
+                            div.className = 'search-result-item';
+                            
+                            // Create avatar element
+                            const avatarElement = document.createElement('div');
+                            avatarElement.className = 'avatar';
+                            loadUserAvatar(avatarElement, user.username);
+                            
+                            div.appendChild(avatarElement);
+                            
+                            // Create user info div
+                            const userInfoDiv = document.createElement('div');
+                            userInfoDiv.className = 'user-info';
+                            
+                            userInfoDiv.innerHTML = `
+                                <div class="username">${user.username}</div>
+                                <div class="full-name">${user.full_name || 'No name provided'}</div>
+                                <div class="bio">${user.bio || 'No bio yet'}</div>
+                                <div class="stats">
+                                    <span><i class="fas fa-user-friends"></i> ${user.followers_count} followers</span>
+                                    <span><i class="fas fa-user-plus"></i> ${user.following_count} following</span>
+                                </div>
+                            `;
+                            
+                            div.appendChild(userInfoDiv);
+                            
+                            // Create a container for the action buttons
+                            const actionBtnsContainer = document.createElement('div');
+                            actionBtnsContainer.className = 'search-result-actions';
+                            
+                            // Add the message button
+                            const actionBtn = document.createElement('button');
+                            actionBtn.className = 'action-btn';
+                            actionBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Message';
+                            actionBtn.onclick = (e) => {
+                                e.stopPropagation(); // Prevent triggering the parent div's click event
+                                startConversationWithUser(user.username);
+                            };
+                            actionBtnsContainer.appendChild(actionBtn);
+                            
+                            // Check if this is the current user - only add follow button if it's not
+                            const currentUsername = '{{ username }}';
+                            if (user.username !== currentUsername) {
+                                // Add the follow/unfollow button
+                                const followBtn = document.createElement('button');
+                                followBtn.className = `action-btn ${user.is_following ? 'following' : ''}`;
+                                
+                                if (user.is_following) {
+                                    followBtn.innerHTML = '<i class="fas fa-user-check"></i> <span>Following</span>';
+                                } else {
+                                    followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                                }
+                                
+                                followBtn.onclick = (e) => {
+                                    e.stopPropagation(); // Prevent triggering the parent div's click event
+                                    toggleFollow(user.username, followBtn);
+                                };
+                                actionBtnsContainer.appendChild(followBtn);
+                            }
+                            
+                            div.appendChild(actionBtnsContainer);
+                            searchResults.appendChild(div);
+                            
+                            // Add click event to open user profile modal
+                            div.addEventListener('click', function() {
+                                hideSearchResultsModal();
+                                showUserProfile(user);
+                            });
+                        });
+                    } else {
+                        searchResults.innerHTML = `
+                            <div class="no-results">
+                                <i class="fas fa-search"></i>
+                                <h3>No users found</h3>
+                                <p>We couldn't find any users matching "${searchTerm}"</p>
+                                <p>Try a different search term or check your spelling</p>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error searching users:', error);
+                    searchResults.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h3>Error</h3>
+                            <p>An error occurred while searching for users</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Show search results modal
+        function showSearchResultsModal() {
+            document.getElementById('searchResultsModal').style.display = 'flex';
+        }
+        
+        // Hide search results modal
+        function hideSearchResultsModal() {
+            document.getElementById('searchResultsModal').style.display = 'none';
+            document.getElementById('user-search').value = '';
+        }
+        
+        // Toggle follow/unfollow
+        function toggleFollow(username, button) {
+            const isFollowing = button.classList.contains('following');
+            const endpoint = isFollowing ? '/api/unfollow/' : '/api/follow/';
+            
+            // Show loading state
+            button.disabled = true;
+            button.innerHTML = '';
+            
+            fetch(endpoint + username, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const newIsFollowing = !isFollowing;
+                    
+                    if (newIsFollowing) {
+                        button.className = 'action-btn following';
+                        button.innerHTML = '<i class="fas fa-user-check"></i> <span>Following</span>';
+                    } else {
+                        button.className = 'action-btn';
+                        button.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                    }
+                } else {
+                    // Restore original state on error
+                    if (isFollowing) {
+                        button.className = 'action-btn following';
+                    } else {
+                        button.className = 'action-btn';
+                    }
+                    alert(data.message || 'Failed to update follow status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Restore original state on error
+                if (isFollowing) {
+                    button.className = 'action-btn following';
+                } else {
+                    button.className = 'action-btn';
+                }
+                
+                alert('An error occurred while updating follow status');
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const newMessageModal = document.getElementById('newMessageModal');
+            const searchResultsModal = document.getElementById('searchResultsModal');
+            const userProfileModal = document.getElementById('userProfileModal');
+            const followersModal = document.getElementById('followersModal');
+            const followingModal = document.getElementById('followingModal');
+            
+            if (event.target === newMessageModal) {
+                hideNewMessageModal();
+            }
+            
+            if (event.target === searchResultsModal) {
+                hideSearchResultsModal();
+            }
+            
+            if (event.target === userProfileModal) {
+                hideUserProfileModal();
+            }
+            
+            if (event.target === followersModal) {
+                hideFollowersModal();
+            }
+            
+            if (event.target === followingModal) {
+                hideFollowingModal();
+            }
+        }
+
+        // Update online status
+        socket.on('user_status', (data) => {
+            const statusIndicator = document.querySelector('.online-status');
+            if (statusIndicator) {
+                if (data.online) {
+                    statusIndicator.classList.add('online-status');
+                } else {
+                    statusIndicator.classList.remove('online-status');
+                }
+            }
+        });
+
+        // Start conversation with a user from search results
+        async function startConversationWithUser(username) {
+            const response = await fetch('/api/conversations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            
+            const result = await response.json();
+            
+            if (result.error) {
+                alert(result.error);
+                return;
+            }
+            
+            hideSearchResultsModal();
+            loadConversations();
+            loadMessages(result.id, username);
+        }
+
+        // Current profile user
+        let currentProfileUser = null;
+
+        // Show user profile modal
+        function showUserProfile(user) {
+            currentProfileUser = user;
+            
+            // Set profile data
+            document.getElementById('profileUsername').textContent = user.username;
+            document.getElementById('profileFullname').textContent = user.full_name || 'No name provided';
+            
+            // Load avatar consistently
+            const avatarElement = document.getElementById('profileModalAvatar');
+            loadUserAvatar(avatarElement, user.username);
+            
+            // Get the current user's username from Flask session
+            const currentUsername = '{{ username }}';
+            
+            // Only show follow button if it's not the current user's profile
+            const followBtn = document.getElementById('profileFollowBtn');
+            if (user.username === currentUsername) {
+                followBtn.style.display = 'none';
+            } else {
+                followBtn.style.display = 'block';
+                updateFollowButton(followBtn, user.is_following);
+            }
+            
+            // Set follower/following counts
+            document.getElementById('profileFollowersCount').textContent = user.followers_count || '0';
+            document.getElementById('profileFollowingCount').textContent = user.following_count || '0';
+            
+            // Make the stats clickable by adding styles and cursor property
+            const followersStat = document.querySelector('.profile-stat-item:nth-child(1)');
+            followersStat.style.cursor = 'pointer';
+            followersStat.onclick = function() {
+                showFollowersModal(user.username);
+            };
+
+            const followingStat = document.querySelector('.profile-stat-item:nth-child(2)');
+            followingStat.style.cursor = 'pointer';
+            followingStat.onclick = function() {
+                showFollowingModal(user.username);
+            };
+            
+            // Set bio
+            const bioElement = document.getElementById('profileBio');
+            if (user.bio) {
+                bioElement.innerHTML = `<p>${user.bio}</p>`;
+            } else {
+                bioElement.innerHTML = `<p class="empty-content">No bio available</p>`;
+            }
+            
+            // Fetch additional user details with cache-busting parameter
+            fetch(`/api/user_profile/${user.username}?_=${new Date().getTime()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const userData = data.user;
+                        
+                        // Update education
+                        const educationElement = document.getElementById('profileEducation');
+                        if (userData.education) {
+                            educationElement.innerHTML = `<p>${userData.education}</p>`;
+                        } else {
+                            educationElement.innerHTML = `<p class="empty-content">No education information available</p>`;
+                        }
+                        
+                        // Update location
+                        const locationElement = document.getElementById('profileLocation');
+                        if (userData.location) {
+                            locationElement.innerHTML = `<p>${userData.location}</p>`;
+                        } else {
+                            locationElement.innerHTML = `<p class="empty-content">No location information available</p>`;
+                        }
+                        
+                        // Update interests
+                        const interestsElement = document.getElementById('profileInterests');
+                        if (userData.interests) {
+                            interestsElement.innerHTML = `<p>${userData.interests}</p>`;
+                        } else {
+                            interestsElement.innerHTML = `<p class="empty-content">No interests listed</p>`;
+                        }
+                        
+                        // Make sure we have the latest following info
+                        if (userData.is_following !== undefined && user.username !== currentUsername) {
+                            updateFollowButton(followBtn, userData.is_following);
+                            currentProfileUser.is_following = userData.is_following;
+                        }
+                        
+                        // Update the current profile user with fresh data
+                        currentProfileUser = {
+                            ...currentProfileUser,
+                            ...userData,
+                            followers_count: userData.followers_count || currentProfileUser.followers_count,
+                            following_count: userData.following_count || currentProfileUser.following_count,
+                        };
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user profile data:', error);
+                });
+            
+            // Show the modal
+            document.getElementById('userProfileModal').style.display = 'flex';
+        }
+
+        // Hide user profile modal
+        function hideUserProfileModal() {
+            document.getElementById('userProfileModal').style.display = 'none';
+            currentProfileUser = null;
+        }
+
+        // Toggle follow from profile
+        function toggleFollowFromProfile() {
+            if (!currentProfileUser) return;
+            
+            const followBtn = document.getElementById('profileFollowBtn');
+            const isFollowing = followBtn.getAttribute('data-following') === 'true';
+            const endpoint = isFollowing ? '/api/unfollow/' : '/api/follow/';
+            
+            // Show loading state
+            followBtn.disabled = true;
+            followBtn.innerHTML = '';
+            
+            fetch(endpoint + currentProfileUser.username, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update follow state
+                    const newIsFollowing = !isFollowing;
+                    updateFollowButton(followBtn, newIsFollowing);
+                    
+                    // Update counts
+                    if (newIsFollowing) {
+                        currentProfileUser.followers_count = (parseInt(currentProfileUser.followers_count) || 0) + 1;
+                    } else {
+                        currentProfileUser.followers_count = Math.max((parseInt(currentProfileUser.followers_count) || 1) - 1, 0);
+                    }
+                    
+                    document.getElementById('profileFollowersCount').textContent = currentProfileUser.followers_count;
+                    
+                    // Update the state
+                    currentProfileUser.is_following = newIsFollowing;
+                } else {
+                    // Restore original state on error
+                    updateFollowButton(followBtn, isFollowing);
+                    alert(data.message || 'Failed to update follow status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Restore original state on error
+                updateFollowButton(followBtn, isFollowing);
+                alert('An error occurred while updating follow status');
+            })
+            .finally(() => {
+                followBtn.disabled = false;
+            });
+        }
+
+        // Improved follow button update function
+        function updateFollowButton(button, isFollowing) {
+            if (isFollowing) {
+                button.className = 'follow-btn following';
+                button.innerHTML = '<i class="fas fa-user-check"></i> <span>Following</span>';
+                button.setAttribute('data-following', 'true');
+            } else {
+                button.className = 'follow-btn';
+                button.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                button.setAttribute('data-following', 'false');
+            }
+        }
+
+        // Fixed function for showing followers correctly
+        function showFollowersModal(username) {
+            if (!username && currentProfileUser) {
+                username = currentProfileUser.username;
+            }
+            
+            if (!username) return;
+            
+            const followersList = document.getElementById('followersList');
+            followersList.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>Loading followers...</div>
+                </div>
+            `;
+            
+            // Show the modal
+            document.getElementById('followersModal').style.display = 'flex';
+            
+            // Clear any previous scroll indicator
+            const existingIndicator = document.querySelector('#followersModal .scroll-indicator');
+            if (existingIndicator) existingIndicator.remove();
+            
+            // Fetch with stronger cache busting
+            fetch(`/api/followers/${username}?t=${new Date().getTime()}&nocache=true`, {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    followersList.innerHTML = '';
+                    
+                    if (!data.followers || data.followers.length === 0) {
+                        followersList.innerHTML = `
+                            <div class="follow-list-empty">
+                                <i class="fas fa-user-friends"></i>
+                                <p>No followers yet</p>
+                                <p class="text-secondary">When someone follows you, they'll appear here</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Add a counter to show total followers
+                    const followersCount = data.followers.length;
+                    const headerElement = document.querySelector('#followersModal .follow-list-header h3');
+                    headerElement.textContent = `Followers (${followersCount})`;
+                    
+                    console.log(`Displaying ${followersCount} followers`);
+                    
+                    // Populate the followers list
+                    data.followers.forEach((follower, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'follow-list-item';
+                        li.setAttribute('data-username', follower.username);
+                        li.setAttribute('data-index', index);
+                        
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.className = 'follow-list-avatar';
+                        loadUserAvatar(avatarDiv, follower.username);
+                        
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = 'follow-list-info';
+                        infoDiv.innerHTML = `
+                            <div class="follow-list-username">${follower.username}</div>
+                            <div class="follow-list-name">${follower.full_name || 'No name provided'}</div>
+                        `;
+                        
+                        const actionBtn = document.createElement('button');
+                        
+                        if (follower.is_following) {
+                            actionBtn.className = 'follow-list-action following-action-btn';
+                            actionBtn.innerHTML = '<i class="fas fa-user-check"></i> <span>Following</span>';
+                            actionBtn.setAttribute('data-following', 'true');
+                        } else {
+                            actionBtn.className = 'follow-list-action follow-action-btn';
+                            actionBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                            actionBtn.setAttribute('data-following', 'false');
+                        }
+                        
+                        actionBtn.onclick = function(e) {
+                            e.stopPropagation(); // Prevent triggering the parent li's click
+                            const isCurrentlyFollowing = actionBtn.getAttribute('data-following') === 'true';
+                            toggleFollowInList(follower.username, actionBtn, isCurrentlyFollowing);
+                        };
+                        
+                        li.appendChild(avatarDiv);
+                        li.appendChild(infoDiv);
+                        li.appendChild(actionBtn);
+                        
+                        // Add click handler to view profile
+                        li.addEventListener('click', function(e) {
+                            if (e.target !== actionBtn && !actionBtn.contains(e.target)) {
+                                // Fetch fresh user data and show profile
+                                fetch(`/api/user_profile/${follower.username}?t=${new Date().getTime()}&nocache=true`)
+                                    .then(response => response.json())
+                                    .then(userData => {
+                                        if (userData.success) {
+                                            hideFollowersModal();
+                                            showUserProfile({
+                                                ...userData.user,
+                                                is_following: follower.is_following
+                                            });
+                                        }
+                                    });
+                            }
+                        });
+                        
+                        followersList.appendChild(li);
+                    });
+                    
+                    // Force layout recalculation
+                    setTimeout(() => {
+                        // Check if all items are properly displayed
+                        const itemCount = followersList.querySelectorAll('.follow-list-item').length;
+                        console.log(`Followers rendered: ${itemCount} of ${followersCount}`);
+                        
+                        // Force scrollbar to appear if needed
+                        if (followersList.scrollHeight > followersList.clientHeight) {
+                            followersList.style.overflowY = 'scroll';
+                            
+                            // Add scroll indicator
+                            const container = document.querySelector('#followersModal .follow-list-container');
+                            const scrollIndicator = document.createElement('div');
+                            scrollIndicator.className = 'scroll-indicator';
+                            scrollIndicator.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            container.appendChild(scrollIndicator);
+                            
+                            followersList.addEventListener('scroll', function() {
+                                scrollIndicator.style.opacity = '0';
+                                setTimeout(() => {
+                                    if (scrollIndicator.parentNode) {
+                                        scrollIndicator.remove();
+                                    }
+                                }, 300);
+                            }, { once: true });
+                        }
+                    }, 200);
+                } else {
+                    followersList.innerHTML = `
+                        <div class="follow-list-empty">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error Loading Followers</p>
+                            <p class="text-secondary">Please try again later</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching followers:', error);
+                followersList.innerHTML = `
+                    <div class="follow-list-empty">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error Loading Followers</p>
+                        <p class="text-secondary">Please try again later</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Fixed function for showing following correctly
+        function showFollowingModal(username) {
+            if (!username && currentProfileUser) {
+                username = currentProfileUser.username;
+            }
+            
+            if (!username) return;
+            
+            const followingList = document.getElementById('followingList');
+            followingList.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>Loading following...</div>
+                </div>
+            `;
+            
+            // Show the modal
+            document.getElementById('followingModal').style.display = 'flex';
+            
+            // Clear any previous scroll indicator
+            const existingIndicator = document.querySelector('#followingModal .scroll-indicator');
+            if (existingIndicator) existingIndicator.remove();
+            
+            // Fetch with stronger cache busting
+            fetch(`/api/following/${username}?t=${new Date().getTime()}&nocache=true`, {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    followingList.innerHTML = '';
+                    
+                    if (!data.following || data.following.length === 0) {
+                        followingList.innerHTML = `
+                            <div class="follow-list-empty">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Not following anyone yet</p>
+                                <p class="text-secondary">When you follow people, they'll appear here</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Add a counter to show total following
+                    const followingCount = data.following.length;
+                    const headerElement = document.querySelector('#followingModal .follow-list-header h3');
+                    headerElement.textContent = `Following (${followingCount})`;
+                    
+                    console.log(`Displaying ${followingCount} following`);
+                    
+                    // Populate the following list
+                    data.following.forEach((following, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'follow-list-item';
+                        li.setAttribute('data-username', following.username);
+                        li.setAttribute('data-index', index);
+                        
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.className = 'follow-list-avatar';
+                        loadUserAvatar(avatarDiv, following.username);
+                        
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = 'follow-list-info';
+                        infoDiv.innerHTML = `
+                            <div class="follow-list-username">${following.username}</div>
+                            <div class="follow-list-name">${following.full_name || 'No name provided'}</div>
+                        `;
+                        
+                        const actionBtn = document.createElement('button');
+                        actionBtn.className = 'follow-list-action following-action-btn';
+                        actionBtn.innerHTML = '<i class="fas fa-user-check"></i> <span>Following</span>';
+                        actionBtn.setAttribute('data-following', 'true');
+                        
+                        actionBtn.onclick = function(e) {
+                            e.stopPropagation(); // Prevent triggering the parent li's click
+                            toggleFollowInList(following.username, actionBtn, true);
+                        };
+                        
+                        li.appendChild(avatarDiv);
+                        li.appendChild(infoDiv);
+                        li.appendChild(actionBtn);
+                        
+                        // Add click handler to view profile
+                        li.addEventListener('click', function(e) {
+                            if (e.target !== actionBtn && !actionBtn.contains(e.target)) {
+                                // Fetch fresh user data and show profile
+                                fetch(`/api/user_profile/${following.username}?t=${new Date().getTime()}&nocache=true`)
+                                    .then(response => response.json())
+                                    .then(userData => {
+                                        if (userData.success) {
+                                            hideFollowingModal();
+                                            showUserProfile({
+                                                ...userData.user,
+                                                is_following: true // We know we're following this user
+                                            });
+                                        }
+                                    });
+                            }
+                        });
+                        
+                        followingList.appendChild(li);
+                    });
+                    
+                    // Force layout recalculation
+                    setTimeout(() => {
+                        // Check if all items are properly displayed
+                        const itemCount = followingList.querySelectorAll('.follow-list-item').length;
+                        console.log(`Following rendered: ${itemCount} of ${followingCount}`);
+                        
+                        // Force scrollbar to appear if needed
+                        if (followingList.scrollHeight > followingList.clientHeight) {
+                            followingList.style.overflowY = 'scroll';
+                            
+                            // Add scroll indicator
+                            const container = document.querySelector('#followingModal .follow-list-container');
+                            const scrollIndicator = document.createElement('div');
+                            scrollIndicator.className = 'scroll-indicator';
+                            scrollIndicator.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                            container.appendChild(scrollIndicator);
+                            
+                            followingList.addEventListener('scroll', function() {
+                                scrollIndicator.style.opacity = '0';
+                                setTimeout(() => {
+                                    if (scrollIndicator.parentNode) {
+                                        scrollIndicator.remove();
+                                    }
+                                }, 300);
+                            }, { once: true });
+                        }
+                    }, 200);
+                } else {
+                    followingList.innerHTML = `
+                        <div class="follow-list-empty">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error Loading Following</p>
+                            <p class="text-secondary">Please try again later</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching following:', error);
+                followingList.innerHTML = `
+                    <div class="follow-list-empty">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error Loading Following</p>
+                        <p class="text-secondary">Please try again later</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Improved toggle follow in list with real-time updates
+        function toggleFollowInList(username, button, isFollowing = false) {
+            const endpoint = isFollowing ? '/api/unfollow/' : '/api/follow/';
+            
+            // Show loading state
+            button.disabled = true;
+            button.classList.add('loading');
+            button.innerHTML = '';
+            
+            fetch(endpoint + username, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                cache: 'no-cache'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const newIsFollowing = !isFollowing;
+                    
+                    // Remove loading state
+                    button.classList.remove('loading');
+                    
+                    if (newIsFollowing) {
+                        button.className = 'follow-list-action following-action-btn';
+                        button.textContent = 'Following';
+                        button.setAttribute('data-following', 'true');
+                    } else {
+                        button.className = 'follow-list-action follow-action-btn';
+                        button.textContent = 'Follow';
+                        button.setAttribute('data-following', 'false');
+                    }
+                    
+                    // Add highlight animation
+                    button.closest('.follow-list-item').classList.add('list-item-updated');
+                    setTimeout(() => {
+                        button.closest('.follow-list-item').classList.remove('list-item-updated');
+                    }, 1500);
+                    
+                    // Update all instances of this user in both lists
+                    updateUserFollowState(username, newIsFollowing);
+                    
+                    // Update followers/following counts on the profile
+                    if (currentProfileUser) {
+                        updateProfileCounts();
+                    }
+                } else {
+                    // Remove loading state and restore original state
+                    button.classList.remove('loading');
+                    
+                    if (isFollowing) {
+                        button.className = 'follow-list-action following-action-btn';
+                        button.textContent = 'Following';
+                    } else {
+                        button.className = 'follow-list-action follow-action-btn';
+                        button.textContent = 'Follow';
+                    }
+                    
+                    alert(data.message || 'Failed to update follow status');
+                }
+            })
+            .catch(error => {
+                console.error('Error toggling follow:', error);
+                
+                // Remove loading state and restore original state
+                button.classList.remove('loading');
+                
+                if (isFollowing) {
+                    button.className = 'follow-list-action following-action-btn';
+                    button.textContent = 'Following';
+                } else {
+                    button.className = 'follow-list-action follow-action-btn';
+                    button.textContent = 'Follow';
+                }
+                
+                alert('An error occurred while updating follow status');
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
+        }
+        
+        // Update followers/following counts on the profile
+        function updateProfileCounts() {
+            // Only proceed if we have a current profile user
+            if (!currentProfileUser) return;
+            
+            // Fetch fresh user data
+            fetch(`/api/user_profile/${currentProfileUser.username}?_=${new Date().getTime()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const user = data.user;
+                        
+                        // Animate count changes
+                        const followersCountElement = document.getElementById('profileFollowersCount');
+                        const followingCountElement = document.getElementById('profileFollowingCount');
+                        
+                        if (followersCountElement.textContent !== (user.followers_count || '0')) {
+                            followersCountElement.classList.add('count-update');
+                            setTimeout(() => followersCountElement.classList.remove('count-update'), 600);
+                        }
+                        
+                        if (followingCountElement.textContent !== (user.following_count || '0')) {
+                            followingCountElement.classList.add('count-update');
+                            setTimeout(() => followingCountElement.classList.remove('count-update'), 600);
+                        }
+                        
+                        // Update counts
+                        followersCountElement.textContent = user.followers_count || '0';
+                        followingCountElement.textContent = user.following_count || '0';
+                        
+                        // Update user data
+                        currentProfileUser.followers_count = user.followers_count || 0;
+                        currentProfileUser.following_count = user.following_count || 0;
+                        currentProfileUser.followers = user.followers || [];
+                        currentProfileUser.following = user.following || [];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating profile counts:', error);
+                });
+        }
+        
+        // Update all instances of a user in both lists
+        function updateUserFollowState(username, isFollowing) {
+            // Update in followers list
+            document.querySelectorAll('#followersList .follow-list-item').forEach(item => {
+                if (item.getAttribute('data-username') === username) {
+                    const actionBtn = item.querySelector('.follow-list-action');
+                    if (actionBtn) {
+                        if (isFollowing) {
+                            actionBtn.className = 'follow-list-action following-action-btn';
+                            actionBtn.textContent = 'Following';
+                            actionBtn.setAttribute('data-following', 'true');
+                        } else {
+                            actionBtn.className = 'follow-list-action follow-action-btn';
+                            actionBtn.textContent = 'Follow';
+                            actionBtn.setAttribute('data-following', 'false');
+                        }
+                        
+                        item.classList.add('list-item-updated');
+                        setTimeout(() => item.classList.remove('list-item-updated'), 1500);
+                    }
+                }
+            });
+            
+            // Update in following list (might need to remove if unfollowed)
+            let itemsToRemove = [];
+            document.querySelectorAll('#followingList .follow-list-item').forEach(item => {
+                if (item.getAttribute('data-username') === username) {
+                    if (!isFollowing) {
+                        // We unfollowed this user, mark for removal with animation
+                        item.style.transition = 'all 0.5s ease';
+                        item.style.height = item.offsetHeight + 'px';
+                        
+                        setTimeout(() => {
+                            item.style.height = '0';
+                            item.style.opacity = '0';
+                            item.style.padding = '0';
+                            item.style.margin = '0';
+                            item.style.overflow = 'hidden';
+                        }, 50);
+                        
+                        // Queue for removal after animation
+                        itemsToRemove.push(item);
+                    }
+                }
+            });
+            
+            // Remove unfollowed items after animation
+            if (itemsToRemove.length > 0) {
+                setTimeout(() => {
+                    itemsToRemove.forEach(item => item.remove());
+                    
+                    // Check if the list is empty now
+                    const followingList = document.getElementById('followingList');
+                    if (followingList.children.length === 0) {
+                        followingList.innerHTML = `
+                            <div class="follow-list-empty">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Not following anyone yet</p>
+                                <p class="text-secondary">When you follow people, they'll appear here</p>
+                            </div>
+                        `;
+                    }
+                }, 550);
+            }
+            
+            // Update profile follow button if this is the current profile
+            if (currentProfileUser && currentProfileUser.username === username) {
+                const profileFollowBtn = document.getElementById('profileFollowBtn');
+                if (profileFollowBtn) {
+                    updateFollowButton(profileFollowBtn, isFollowing);
+                    currentProfileUser.is_following = isFollowing;
+                }
+            }
+        }
+        
+        // Improved loadUserAvatar function with error handling
+        function loadUserAvatar(element, username) {
+            if (!username) {
+                element.innerHTML = `<i class="fas fa-user"></i>`;
+                return;
+            }
+            
+            // Set default avatar with icon
+            element.innerHTML = `<i class="fas fa-user"></i>`;
+            
+            // Try to load profile picture with cache busting
+            fetch(`/api/get_user_avatar/${username}?_=${new Date().getTime()}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Avatar fetch failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success && data.profile_pic) {
+                        // Create a new image element with proper styling
+                        const img = document.createElement('img');
+                        img.src = `/static/avatars/${data.profile_pic}?_=${new Date().getTime()}`;
+                        img.alt = username;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        img.style.borderRadius = '50%';
+                        
+                        img.onerror = function() {
+                            // Fallback to default if image fails to load
+                            element.innerHTML = `<i class="fas fa-user"></i>`;
+                        };
+                        
+                        // Clear the element and append the image
+                        element.innerHTML = '';
+                        element.appendChild(img);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading avatar:', error);
+                    // Ensure we have the default avatar on errors
+                    element.innerHTML = `<i class="fas fa-user"></i>`;
+                });
+        }
+
+        // Add the missing modal hide functions
+        function hideUserProfileModal() {
+            document.getElementById('userProfileModal').style.display = 'none';
+            currentProfileUser = null;
+        }
+
+        // Hide followers modal
+        function hideFollowersModal() {
+            document.getElementById('followersModal').style.display = 'none';
+        }
+
+        // Hide following modal
+        function hideFollowingModal() {
+            document.getElementById('followingModal').style.display = 'none';
+        }
+
+        // Message user from profile
+        function messageUserFromProfile() {
+            if (!currentProfileUser) return;
+            
+            hideUserProfileModal();
+            startConversationWithUser(currentProfileUser.username);
+        }
+
+        // Add this to the JavaScript section
+        function switchProfileTab(tabElement, tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to the clicked tab
+            tabElement.classList.add('active');
+            
+            // Hide all content areas
+            document.querySelectorAll('.profile-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show the selected content
+            document.getElementById(tabName + '-content').style.display = 'block';
+        }
+    </script>
+</body>
+</html> 

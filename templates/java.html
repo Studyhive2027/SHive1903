@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Coding Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        section h2:hover::after {
+            width: 100px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            justify-content: space-between;
+
+        }
+        .item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            height: 325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #333333;
+            flex-grow: 1;
+        }
+
+        .item a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .item a:hover {
+            color: #666666;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #000000;
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-section {
+            padding: 40px 0;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            opacity: 1;
+            border: 2px solid #000000;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom dropdown styling */
+        .quiz-topics {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quiz-topic-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 2px solid #000000;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-topics::after {
+            content: '⌄';
+            font-size: 1.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .quiz-topics:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .quiz-topic-select:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-topic-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-topic-select option {
+            padding: 20px;
+            font-size: 1.1rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Update the topics selection HTML */
+        .quiz-topics {
+            margin-bottom: 40px;
+        }
+
+        .quiz-topic-select {
+            background-image: linear-gradient(45deg, transparent 50%, #000000 50%),
+                            linear-gradient(135deg, #000000 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 10px),
+                               calc(100% - 15px) calc(1em + 10px);
+            background-size: 5px 5px,
+                           5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        .quiz-topic-select:hover {
+            background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                            linear-gradient(135deg, #ffffff 50%, transparent 50%);
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .quiz-question:hover {
+            transform: translateX(5px) scale(1.01);
+            border-color: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-options label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .quiz-options label:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+            border-color: #000000;
+        }
+
+        .quiz-options label:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .quiz-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .quiz-navigation button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-navigation button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: #ffffff;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .quiz-navigation button:hover {
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-navigation button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+        }
+
+        .quiz-navigation button:disabled {
+            background: #cccccc;
+            border-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+            border: 2px solid #000000;
+        }
+
+        .quiz-result h3 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .quiz-result p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        #retake-quiz {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        #retake-quiz:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .c-hub-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .c-hub-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .c-hub-header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Timer styles */
+        .quiz-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            margin-left: 20px;
+        }
+
+        .quiz-timer.warning {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        #quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2rem;
+            margin: 20px 0 40px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quiz-options.disabled label {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .quiz-options.disabled input[type="radio"] {
+            pointer-events: none;
+        }
+
+        /* Question Grid styles */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            max-width: 900px;
+        }
+
+        .grid-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.current {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .grid-item.answered {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .grid-item.incorrect {
+            background: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+        }
+
+        .grid-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the chat interface */
+        .chat-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <button class="connect-button" onclick="toggleChatPanel()" style="position: fixed; top: 30px; right: 30px; background: #000000; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1001;">Connect</button>
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="c-hub-header">
+    <h1>Welcome to Java Hub</h1>
+    <p>Your go-to platform to test and improve your Java programming skills.</p>
+</header>
+
+    <main class="content">
+        
+        <section id="tutorials" class="tutorials">
+            <div class="container">
+                <h2>Tutorials</h2>
+                <div class="item-container">
+                    <!-- Introduction to JavaScript -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/eIrMbAQSU34')">
+                            <img src="https://i.ytimg.com/vi/eIrMbAQSU34/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC3bM8lm8NAZf6SKcaS2MAv4IjZZg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Programming with Mosh</a></h3>
+                        <p>Java Full Course for Beginners</p>
+                    </div>
+
+                    <!-- JavaScript for Beginners -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/xk4_1vDrzzo')">
+                            <img src="https://i.ytimg.com/vi/xk4_1vDrzzo/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAth_O_MNc_OV26hRdmoBU4djW1eg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Bro Code</a></h3>
+                        <p>Java Full Course for free ☕</p>
+                    </div>
+
+                    <!-- JavaScript Projects for Beginners -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/NGFh1tn2Up4')">
+                            <img src="https://i.ytimg.com/vi/NGFh1tn2Up4/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBs0N5d9UuR8cT927gtWCzmds33Qg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">JAVA Full Course for Beginners </a></h3>
+                        <p>12 HOURS (Basic to Advanced with Practical) 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://www.hackerrank.com/domains/java"
+                                target="_blank">
+                                <img src="https://th.bing.com/th/id/OIP.2QTcbQJp-Jkfyx8JXOpZ9QHaEO?rs=1&pid=ImgDetMain" alt="hackerrank" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                hackerrank</a></h3>
+                        <p>HackerRank provides Java coding challenges for skill improvement.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.geeksforgeeks.org/java-projects/" target="_blank">
+                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210702175749/20210702175652.gif" alt="geeksforgeeks" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        geeksforgeeks</a></h3>
+                        <p>GeeksforGeeks offers Java project ideas and tutorials for hands-on learning.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.codeproject.com/?cat=10" target="_blank">
+                        <img src="https://th.bing.com/th/id/OIP.A03xaZ-oJ8JvX0oqe4FwjQAAAA?rs=1&pid=ImgDetMain" alt="codeproject" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        codeproject</a></h3>
+                        <p>CodeProject provides articles, tutorials, and discussions on Java programming and development.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="resources">
+            <div class="container">
+                <h2>Resources</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://www.w3schools.com/java/" target="_blank">
+                            <img src="https://cdn.knoji.com/images/logo/w3schools1.jpg?fit=contain&trim=true&flatten=true&extend=25&width=1200&height=630" alt="w3schools" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            w3schools</a></h3>
+                        <p>W3Schools offers beginner-friendly Java tutorials and interactive examples.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.geeksforgeeks.org/java/" target="_blank">
+                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210702175749/20210702175652.gif" alt="w3schools" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        geeksforgeeks</a></h3>
+                        <p>GeeksforGeeks provides comprehensive Java tutorials and coding examples</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://javaranch.com/" target="_blank">
+                        <img src="https://th.bing.com/th/id/OIP.bkblviz4h1yT_ZYLMkrIRgAAAA?rs=1&pid=ImgDetMain" alt="javascript" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        javaranch</a></h3>
+                        <p>JavaRanch is a community forum for Java developers to discuss and solve coding issues.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.edx.org/learn/java" target="_blank">
+                        <img src="https://th.bing.com/th/id/OIP.3Ya0R8OFDDbE_3MTi-zPxgHaD4?rs=1&pid=ImgDetMain" alt="codecademy" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        edx</a></h3>
+                        <p>edX offers online Java courses from top universities and institutions for learning and skill development..</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="container">
+                <h2 class="quiz-title">Test Your Java Knowledge</h2>
+
+                <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                            <p style="color: #333333;">Select from various Java programming concepts to test your knowledge</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                            <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                            <p style="color: #333333;">From Java basics to advanced concepts</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                            <p style="color: #333333;">10 questions per quiz session</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                            <p style="color: #333333;">Get immediate feedback on your performance</p>
+                        </div>
+                    </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                    </div>
+                </div>
+
+                <!-- Topics Selection -->
+                <div class="quiz-topics">
+                    <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                        <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="basics">📚 Java Basics</option>
+                        <option value="oop">🏗️ Object-Oriented Programming</option>
+                        <option value="collections">📊 Collections Framework</option>
+                        <option value="exceptions">⚠️ Exception Handling</option>
+                        <option value="multithreading">⚙️ Multithreading</option>
+                        <option value="io">📁 Java I/O</option>
+                    </select>
+                </div>
+        
+                <div class="quiz-container">
+                    <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                    <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                    <div class="question-grid" id="question-grid"></div>
+                    <div id="quiz-questions"></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                        <button id="next-question" onclick="nextQuestion()">Next</button>
+                        <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                    </div>
+                    <div id="quiz-result" class="quiz-result"></div>
+                    <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    
+    <script>
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; modal.style.display = 'none';
+        }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+        const topicQuestions = {
+            basics: [
+                { question: "What is the correct syntax to declare a variable in Java?", options: ["int x;", "var x;", "x = int;", "x int;"], answer: "int x;" },
+                { question: "Which of the following is NOT a valid Java data type?", options: ["int", "float", "string", "double"], answer: "string" },
+                { question: "Which method is used to display output in Java?", options: ["System.out.println()", "print()", "display()", "output()"], answer: "System.out.println()" },
+                { question: "What is the correct syntax to take input in Java?", options: ["Scanner sc = new Scanner(System.in);", "input(x);", "get(x);", "cin >> x;"], answer: "Scanner sc = new Scanner(System.in);" },
+                { question: "Which keyword is used to define a constant in Java?", options: ["final", "constant", "const", "#define"], answer: "final" },
+                { question: "Which of these is NOT a valid identifier in Java?", options: ["_var", "2ndVar", "myVar", "VAR_123"], answer: "2ndVar" },
+                { question: "What is the size of an int in Java?", options: ["4 bytes", "2 bytes", "8 bytes", "Depends on the compiler"], answer: "4 bytes" },
+                { question: "Which symbol is used to indicate a single-line comment in Java?", options: ["//", "/*", "#", "--"], answer: "//" },
+                { question: "What will be the output of System.out.println(3 + 4 * 2);?", options: ["14", "11", "10", "8"], answer: "11" },
+                { question: "Which data type is used to store a single character?", options: ["char", "string", "character", "byte"], answer: "char" },
+                { question: "Which operator is used for modulus operation?", options: ["%", "/", "*", "&"], answer: "%" },
+                { question: "Which loop runs at least once even if the condition is false?", options: ["do-while", "for", "while", "if"], answer: "do-while" },
+                { question: "Which keyword is used to exit a loop in Java?", options: ["break", "exit", "stop", "return"], answer: "break" },
+                { question: "Which operator is used to compare two values in Java?", options: ["==", "=", "===", "!="], answer: "==" },
+                { question: "Which method is used to find the length of a String?", options: ["length()", "size()", "count()", "strlen()"], answer: "length()" },
+                { question: "What is the default value of a boolean variable in Java?", options: ["false", "true", "0", "null"], answer: "false" },
+                { question: "Which operator is used for logical AND in Java?", options: ["&&", "&", "and", "AND"], answer: "&&" },
+                { question: "What is the range of a byte data type in Java?", options: ["-128 to 127", "-256 to 255", "-64 to 63", "-32 to 31"], answer: "-128 to 127" },
+                { question: "Which method is used to convert a String to an integer?", options: ["Integer.parseInt()", "String.toInt()", "parseInt()", "toInteger()"], answer: "Integer.parseInt()" },
+                { question: "What is the output of System.out.println(5/2);?", options: ["2", "2.5", "2.0", "Error"], answer: "2" },
+                { question: "Which keyword is used to skip the current iteration of a loop?", options: ["continue", "skip", "next", "break"], answer: "continue" },
+                { question: "What is the size of a long data type in Java?", options: ["8 bytes", "4 bytes", "16 bytes", "Depends on the system"], answer: "8 bytes" },
+                { question: "Which method is used to convert a number to a String?", options: ["String.valueOf()", "toString()", "convert()", "toStr()"], answer: "String.valueOf()" },
+                { question: "What is the output of System.out.println(5.0/2);?", options: ["2.5", "2", "2.0", "Error"], answer: "2.5" },
+                { question: "Which operator is used for logical OR in Java?", options: ["||", "|", "or", "OR"], answer: "||" },
+                { question: "What is the default value of an int variable in Java?", options: ["0", "null", "undefined", "1"], answer: "0" },
+                { question: "What is the purpose of the break statement in a switch case?", options: ["To exit the switch block", "To continue to next case", "To restart the switch", "None"], answer: "To exit the switch block" },
+                { question: "What is the difference between ++x and x++?", options: ["++x: pre-increment; x++: post-increment", "++x: post-increment; x++: pre-increment", "Both are same", "None"], answer: "++x: pre-increment; x++: post-increment" },
+                { question: "What is the purpose of the ternary operator (?:)?", options: ["To provide a shorthand if-else", "To create a loop", "To define a method", "None"], answer: "To provide a shorthand if-else" },
+                { question: "What is the purpose of the instanceof operator?", options: ["To check object type", "To create objects", "To delete objects", "None"], answer: "To check object type" }
+            ],
+            oop: [
+                { question: "What is encapsulation?", options: ["Binding data and methods together", "Creating objects", "Inheritance", "Polymorphism"], answer: "Binding data and methods together" },
+                { question: "Which keyword is used for inheritance?", options: ["extends", "implements", "inherits", "super"], answer: "extends" },
+                { question: "What is polymorphism?", options: ["Multiple forms of a single entity", "Creating objects", "Data binding", "None"], answer: "Multiple forms of a single entity" },
+                { question: "Which keyword is used to prevent inheritance?", options: ["final", "private", "static", "abstract"], answer: "final" },
+                { question: "What is an abstract class?", options: ["Class with abstract methods", "Interface", "Final class", "None"], answer: "Class with abstract methods" },
+                { question: "Which keyword is used to implement an interface?", options: ["implements", "extends", "inherits", "super"], answer: "implements" },
+                { question: "What is method overriding?", options: ["Redefining parent class method", "Creating new method", "Deleting method", "None"], answer: "Redefining parent class method" },
+                { question: "Which keyword is used to call parent class constructor?", options: ["super()", "parent()", "base()", "this()"], answer: "super()" },
+                { question: "What is a constructor?", options: ["Special method to initialize objects", "Regular method", "Class variable", "None"], answer: "Special method to initialize objects" },
+                { question: "Which keyword is used to prevent method overriding?", options: ["final", "private", "static", "abstract"], answer: "final" },
+                { question: "What is method overloading?", options: ["Same method name, different parameters", "Different method names", "Same parameters", "None"], answer: "Same method name, different parameters" },
+                { question: "Which keyword is used to access current object?", options: ["this", "self", "current", "super"], answer: "this" },
+                { question: "What is an interface?", options: ["Collection of abstract methods", "Class", "Object", "None"], answer: "Collection of abstract methods" },
+                { question: "Which keyword is used to create an object?", options: ["new", "create", "make", "build"], answer: "new" },
+                { question: "What is a class?", options: ["Blueprint for objects", "Method", "Variable", "None"], answer: "Blueprint for objects" },
+                { question: "What is the difference between method overloading and overriding?", options: ["Overloading: same name, different parameters; Overriding: same signature", "Overloading: different name; Overriding: same name", "Overloading: same parameters; Overriding: different parameters", "None"], answer: "Overloading: same name, different parameters; Overriding: same signature" },
+                { question: "Which access modifier provides the most restrictive access?", options: ["private", "protected", "public", "default"], answer: "private" },
+                { question: "What is a static method?", options: ["Method that belongs to the class, not the object", "Method that can't be overridden", "Method that can't be inherited", "None"], answer: "Method that belongs to the class, not the object" },
+                { question: "What is the purpose of the final keyword?", options: ["To prevent modification", "To make a method static", "To make a class abstract", "None"], answer: "To prevent modification" },
+                { question: "What is a package in Java?", options: ["A group of related classes", "A single class", "A method", "None"], answer: "A group of related classes" },
+                { question: "What is the default access modifier in Java?", options: ["package-private", "public", "private", "protected"], answer: "package-private" },
+                { question: "What is a nested class?", options: ["A class defined inside another class", "A class that inherits from another class", "A class that implements an interface", "None"], answer: "A class defined inside another class" },
+                { question: "What is the purpose of the super keyword?", options: ["To refer to parent class members", "To create a new object", "To define a class", "None"], answer: "To refer to parent class members" },
+                { question: "What is a marker interface?", options: ["An interface with no methods", "An interface with only one method", "An interface that marks a class", "None"], answer: "An interface with no methods" },
+                { question: "What is the purpose of the instanceof operator?", options: ["To check if an object is an instance of a class", "To create a new instance", "To delete an instance", "None"], answer: "To check if an object is an instance of a class" },
+                { question: "What is method chaining?", options: ["Calling multiple methods in sequence", "Creating multiple methods", "Deleting multiple methods", "None"], answer: "Calling multiple methods in sequence" },
+                { question: "What is the purpose of the clone() method?", options: ["To create a copy of an object", "To delete an object", "To modify an object", "None"], answer: "To create a copy of an object" },
+                { question: "What is the difference between shallow and deep copy?", options: ["Shallow: references; Deep: new objects", "Shallow: new objects; Deep: references", "Both are same", "None"], answer: "Shallow: references; Deep: new objects" },
+                { question: "What is the purpose of the transient keyword?", options: ["To exclude fields from serialization", "To make fields static", "To make fields final", "None"], answer: "To exclude fields from serialization" }
+            ],
+            collections: [
+                { question: "Which collection type maintains insertion order?", options: ["ArrayList", "HashSet", "HashMap", "TreeMap"], answer: "ArrayList" },
+                { question: "Which collection type is synchronized?", options: ["Vector", "ArrayList", "LinkedList", "HashSet"], answer: "Vector" },
+                { question: "Which collection type is best for frequent insertions and deletions?", options: ["LinkedList", "ArrayList", "Vector", "HashSet"], answer: "LinkedList" },
+                { question: "Which collection type stores unique elements?", options: ["HashSet", "ArrayList", "LinkedList", "Vector"], answer: "HashSet" },
+                { question: "Which collection type maintains sorted order?", options: ["TreeSet", "HashSet", "ArrayList", "LinkedList"], answer: "TreeSet" },
+                { question: "Which collection type is thread-safe?", options: ["Vector", "ArrayList", "LinkedList", "HashSet"], answer: "Vector" },
+                { question: "Which collection type is best for searching?", options: ["HashMap", "ArrayList", "LinkedList", "Vector"], answer: "HashMap" },
+                { question: "Which collection type allows null values?", options: ["ArrayList", "TreeSet", "HashSet", "None"], answer: "ArrayList" },
+                { question: "Which collection type is best for FIFO operations?", options: ["Queue", "Stack", "List", "Set"], answer: "Queue" },
+                { question: "Which collection type is best for LIFO operations?", options: ["Stack", "Queue", "List", "Set"], answer: "Stack" },
+                { question: "Which collection type is best for key-value pairs?", options: ["HashMap", "ArrayList", "LinkedList", "Vector"], answer: "HashMap" },
+                { question: "Which collection type is best for unique elements?", options: ["HashSet", "ArrayList", "LinkedList", "Vector"], answer: "HashSet" },
+                { question: "Which collection type is best for sorted elements?", options: ["TreeSet", "HashSet", "ArrayList", "LinkedList"], answer: "TreeSet" },
+                { question: "Which collection type is best for random access?", options: ["ArrayList", "LinkedList", "Vector", "HashSet"], answer: "ArrayList" },
+                { question: "Which collection type is best for sequential access?", options: ["LinkedList", "ArrayList", "Vector", "HashSet"], answer: "LinkedList" },
+                { question: "What is the difference between ArrayList and LinkedList?", options: ["ArrayList: dynamic array; LinkedList: doubly linked list", "ArrayList: linked list; LinkedList: array", "ArrayList: stack; LinkedList: queue", "None"], answer: "ArrayList: dynamic array; LinkedList: doubly linked list" },
+                { question: "What is the purpose of the Collections class?", options: ["To provide utility methods for collections", "To create new collections", "To delete collections", "None"], answer: "To provide utility methods for collections" },
+                { question: "What is a ConcurrentHashMap?", options: ["Thread-safe version of HashMap", "Faster version of HashMap", "Sorted version of HashMap", "None"], answer: "Thread-safe version of HashMap" },
+                { question: "What is the difference between HashSet and TreeSet?", options: ["HashSet: unordered; TreeSet: ordered", "HashSet: ordered; TreeSet: unordered", "HashSet: synchronized; TreeSet: not synchronized", "None"], answer: "HashSet: unordered; TreeSet: ordered" },
+                { question: "What is the purpose of the Iterator interface?", options: ["To traverse through collections", "To create collections", "To delete collections", "None"], answer: "To traverse through collections" },
+                { question: "What is a PriorityQueue?", options: ["Queue where elements are ordered by priority", "Queue where elements are ordered by insertion", "Queue where elements are random", "None"], answer: "Queue where elements are ordered by priority" },
+                { question: "What is the difference between HashMap and Hashtable?", options: ["HashMap: not synchronized; Hashtable: synchronized", "HashMap: synchronized; Hashtable: not synchronized", "HashMap: ordered; Hashtable: unordered", "None"], answer: "HashMap: not synchronized; Hashtable: synchronized" },
+                { question: "What is the purpose of the Comparator interface?", options: ["To define custom sorting order", "To create collections", "To delete collections", "None"], answer: "To define custom sorting order" },
+                { question: "What is a LinkedHashMap?", options: ["HashMap that maintains insertion order", "HashMap that is sorted", "HashMap that is synchronized", "None"], answer: "HashMap that maintains insertion order" },
+                { question: "What is the purpose of the Collections.synchronizedList() method?", options: ["To make a List thread-safe", "To make a List faster", "To make a List sorted", "None"], answer: "To make a List thread-safe" },
+                { question: "What is the purpose of the Collections.unmodifiableList() method?", options: ["To create an immutable List", "To create a synchronized List", "To create a sorted List", "None"], answer: "To create an immutable List" },
+                { question: "What is the difference between List and Set?", options: ["List: ordered, duplicates; Set: unordered, unique", "List: unordered, unique; Set: ordered, duplicates", "Both are same", "None"], answer: "List: ordered, duplicates; Set: unordered, unique" },
+                { question: "What is the purpose of the Collections.reverse() method?", options: ["To reverse the order of elements", "To sort elements", "To shuffle elements", "None"], answer: "To reverse the order of elements" },
+                { question: "What is the purpose of the Collections.shuffle() method?", options: ["To randomly reorder elements", "To sort elements", "To reverse elements", "None"], answer: "To randomly reorder elements" }
+            ],
+            exceptions: [
+                { question: "Which keyword is used to handle exceptions?", options: ["try-catch", "catch-throw", "try-throw", "catch-finally"], answer: "try-catch" },
+                { question: "Which block is always executed?", options: ["finally", "catch", "try", "throw"], answer: "finally" },
+                { question: "Which keyword is used to throw an exception?", options: ["throw", "throws", "catch", "try"], answer: "throw" },
+                { question: "Which is the parent class of all exceptions?", options: ["Throwable", "Exception", "Error", "RuntimeException"], answer: "Throwable" },
+                { question: "Which exception is checked?", options: ["IOException", "NullPointerException", "ArrayIndexOutOfBoundsException", "ArithmeticException"], answer: "IOException" },
+                { question: "Which exception is unchecked?", options: ["NullPointerException", "IOException", "SQLException", "ClassNotFoundException"], answer: "NullPointerException" },
+                { question: "Which keyword is used to declare exceptions?", options: ["throws", "throw", "catch", "try"], answer: "throws" },
+                { question: "Which block is used to handle exceptions?", options: ["catch", "try", "finally", "throw"], answer: "catch" },
+                { question: "Which exception occurs when dividing by zero?", options: ["ArithmeticException", "DivideByZeroException", "NumberFormatException", "None"], answer: "ArithmeticException" },
+                { question: "Which exception occurs when accessing null object?", options: ["NullPointerException", "NullException", "ObjectException", "None"], answer: "NullPointerException" },
+                { question: "Which exception occurs when array index is out of bounds?", options: ["ArrayIndexOutOfBoundsException", "IndexOutOfBoundsException", "ArrayException", "None"], answer: "ArrayIndexOutOfBoundsException" },
+                { question: "Which exception occurs when number format is invalid?", options: ["NumberFormatException", "FormatException", "NumberException", "None"], answer: "NumberFormatException" },
+                { question: "Which exception occurs when class is not found?", options: ["ClassNotFoundException", "ClassException", "NotFoundException", "None"], answer: "ClassNotFoundException" },
+                { question: "Which exception occurs when file is not found?", options: ["FileNotFoundException", "FileException", "NotFoundException", "None"], answer: "FileNotFoundException" },
+                { question: "Which exception occurs when string index is out of bounds?", options: ["StringIndexOutOfBoundsException", "IndexOutOfBoundsException", "StringException", "None"], answer: "StringIndexOutOfBoundsException" },
+                { question: "What is the difference between checked and unchecked exceptions?", options: ["Checked: must be handled; Unchecked: optional", "Checked: optional; Unchecked: must be handled", "Checked: runtime; Unchecked: compile time", "None"], answer: "Checked: must be handled; Unchecked: optional" },
+                { question: "What is the purpose of the finally block?", options: ["To execute code regardless of exception", "To handle exceptions", "To throw exceptions", "None"], answer: "To execute code regardless of exception" },
+                { question: "What is exception chaining?", options: ["Linking one exception to another", "Creating multiple exceptions", "Deleting exceptions", "None"], answer: "Linking one exception to another" },
+                { question: "What is the purpose of the try-with-resources statement?", options: ["To automatically close resources", "To handle exceptions", "To create resources", "None"], answer: "To automatically close resources" },
+                { question: "What is a custom exception?", options: ["User-defined exception class", "Built-in exception", "Runtime exception", "None"], answer: "User-defined exception class" },
+                { question: "What is the purpose of the getMessage() method?", options: ["To get exception message", "To set exception message", "To delete exception message", "None"], answer: "To get exception message" },
+                { question: "What is the difference between throw and throws?", options: ["throw: to throw exception; throws: to declare exception", "throw: to declare exception; throws: to throw exception", "throw: for runtime; throws: for compile time", "None"], answer: "throw: to throw exception; throws: to declare exception" },
+                { question: "What is the purpose of the printStackTrace() method?", options: ["To print exception stack trace", "To handle exception", "To create exception", "None"], answer: "To print exception stack trace" },
+                { question: "What is a checked exception?", options: ["Exception that must be handled at compile time", "Exception that occurs at runtime", "Exception that is optional", "None"], answer: "Exception that must be handled at compile time" },
+                { question: "What is the purpose of the getCause() method?", options: ["To get the original exception", "To set the exception cause", "To delete the exception cause", "None"], answer: "To get the original exception" },
+                { question: "What is the difference between Error and Exception?", options: ["Error: system level; Exception: application level", "Error: application level; Exception: system level", "Both are same", "None"], answer: "Error: system level; Exception: application level" },
+                { question: "What is the purpose of the suppress() method?", options: ["To suppress exceptions", "To throw exceptions", "To handle exceptions", "None"], answer: "To suppress exceptions" },
+                { question: "What is the purpose of the addSuppressed() method?", options: ["To add suppressed exceptions", "To remove suppressed exceptions", "To handle suppressed exceptions", "None"], answer: "To add suppressed exceptions" }
+            ],
+            multithreading: [
+                { question: "Which method is used to start a thread?", options: ["start()", "run()", "begin()", "execute()"], answer: "start()" },
+                { question: "Which interface is used for creating threads?", options: ["Runnable", "Thread", "Startable", "Executable"], answer: "Runnable" },
+                { question: "Which method is used to make a thread sleep?", options: ["sleep()", "wait()", "pause()", "stop()"], answer: "sleep()" },
+                { question: "Which keyword is used for synchronization?", options: ["synchronized", "sync", "lock", "mutex"], answer: "synchronized" },
+                { question: "Which method is used to wait for thread completion?", options: ["join()", "wait()", "sleep()", "stop()"], answer: "join()" },
+                { question: "Which method is used to get current thread?", options: ["currentThread()", "getThread()", "this()", "None"], answer: "currentThread()" },
+                { question: "Which method is used to check if thread is alive?", options: ["isAlive()", "alive()", "running()", "None"], answer: "isAlive()" },
+                { question: "Which method is used to get thread priority?", options: ["getPriority()", "priority()", "getLevel()", "None"], answer: "getPriority()" },
+                { question: "Which method is used to set thread priority?", options: ["setPriority()", "priority()", "setLevel()", "None"], answer: "setPriority()" },
+                { question: "Which method is used to get thread name?", options: ["getName()", "name()", "getTitle()", "None"], answer: "getName()" },
+                { question: "Which method is used to set thread name?", options: ["setName()", "name()", "setTitle()", "None"], answer: "setName()" },
+                { question: "Which method is used to check if thread is daemon?", options: ["isDaemon()", "daemon()", "isSystem()", "None"], answer: "isDaemon()" },
+                { question: "Which method is used to set thread as daemon?", options: ["setDaemon()", "daemon()", "setSystem()", "None"], answer: "setDaemon()" },
+                { question: "Which method is used to get thread ID?", options: ["getId()", "id()", "getNumber()", "None"], answer: "getId()" },
+                { question: "Which method is used to get thread state?", options: ["getState()", "state()", "getStatus()", "None"], answer: "getState()" },
+                { question: "What is the difference between start() and run() methods?", options: ["start(): creates new thread; run(): executes in current thread", "start(): executes in current thread; run(): creates new thread", "start(): faster; run(): slower", "None"], answer: "start(): creates new thread; run(): executes in current thread" },
+                { question: "What is thread synchronization?", options: ["Controlling access to shared resources", "Creating new threads", "Deleting threads", "None"], answer: "Controlling access to shared resources" },
+                { question: "What is a deadlock?", options: ["When two threads wait for each other", "When a thread is stopped", "When a thread is created", "None"], answer: "When two threads wait for each other" },
+                { question: "What is the purpose of the wait() method?", options: ["To make thread wait for notification", "To stop thread", "To start thread", "None"], answer: "To make thread wait for notification" },
+                { question: "What is the purpose of the notify() method?", options: ["To wake up waiting thread", "To stop thread", "To start thread", "None"], answer: "To wake up waiting thread" },
+                { question: "What is thread priority?", options: ["Relative importance of a thread", "Speed of thread", "Size of thread", "None"], answer: "Relative importance of a thread" },
+                { question: "What is a daemon thread?", options: ["Thread that runs in background", "Thread that runs in foreground", "Thread that is stopped", "None"], answer: "Thread that runs in background" },
+                { question: "What is thread pooling?", options: ["Reusing threads for multiple tasks", "Creating new threads", "Deleting threads", "None"], answer: "Reusing threads for multiple tasks" },
+                { question: "What is the purpose of the yield() method?", options: ["To give other threads chance to execute", "To stop thread", "To start thread", "None"], answer: "To give other threads chance to execute" },
+                { question: "What is thread starvation?", options: ["When thread never gets CPU time", "When thread is stopped", "When thread is created", "None"], answer: "When thread never gets CPU time" },
+                { question: "What is the purpose of the ReentrantLock class?", options: ["To provide advanced synchronization", "To create threads", "To delete threads", "None"], answer: "To provide advanced synchronization" },
+                { question: "What is the purpose of the CountDownLatch class?", options: ["To synchronize multiple threads", "To create threads", "To delete threads", "None"], answer: "To synchronize multiple threads" },
+                { question: "What is the purpose of the CyclicBarrier class?", options: ["To synchronize threads at a common point", "To create threads", "To delete threads", "None"], answer: "To synchronize threads at a common point" },
+                { question: "What is the purpose of the Semaphore class?", options: ["To control access to resources", "To create threads", "To delete threads", "None"], answer: "To control access to resources" }
+            ],
+            io: [
+                { question: "Which class is used for reading files?", options: ["FileReader", "FileWriter", "FileInputStream", "FileOutputStream"], answer: "FileReader" },
+                { question: "Which class is used for writing files?", options: ["FileWriter", "FileReader", "FileInputStream", "FileOutputStream"], answer: "FileWriter" },
+                { question: "Which class is used for reading binary files?", options: ["FileInputStream", "FileReader", "FileWriter", "FileOutputStream"], answer: "FileInputStream" },
+                { question: "Which class is used for writing binary files?", options: ["FileOutputStream", "FileWriter", "FileReader", "FileInputStream"], answer: "FileOutputStream" },
+                { question: "Which class is used for buffered reading?", options: ["BufferedReader", "FileReader", "InputStreamReader", "FileInputStream"], answer: "BufferedReader" },
+                { question: "Which class is used for buffered writing?", options: ["BufferedWriter", "FileWriter", "OutputStreamWriter", "FileOutputStream"], answer: "BufferedWriter" },
+                { question: "Which class is used for reading objects?", options: ["ObjectInputStream", "ObjectReader", "ObjectFileReader", "None"], answer: "ObjectInputStream" },
+                { question: "Which class is used for writing objects?", options: ["ObjectOutputStream", "ObjectWriter", "ObjectFileWriter", "None"], answer: "ObjectOutputStream" },
+                { question: "Which class is used for reading characters?", options: ["InputStreamReader", "FileReader", "BufferedReader", "None"], answer: "InputStreamReader" },
+                { question: "Which class is used for writing characters?", options: ["OutputStreamWriter", "FileWriter", "BufferedWriter", "None"], answer: "OutputStreamWriter" },
+                { question: "Which class is used for reading data input?", options: ["DataInputStream", "DataReader", "DataFileReader", "None"], answer: "DataInputStream" },
+                { question: "Which class is used for writing data output?", options: ["DataOutputStream", "DataWriter", "DataFileWriter", "None"], answer: "DataOutputStream" },
+                { question: "Which class is used for reading print stream?", options: ["PrintStream", "PrintReader", "PrintFileReader", "None"], answer: "PrintStream" },
+                { question: "Which class is used for writing print writer?", options: ["PrintWriter", "PrintStream", "PrintFileWriter", "None"], answer: "PrintWriter" },
+                { question: "Which class is used for reading sequence input?", options: ["SequenceInputStream", "SequenceReader", "SequenceFileReader", "None"], answer: "SequenceInputStream" },
+                { question: "What is the purpose of the File class?", options: ["To represent file and directory paths", "To read files", "To write files", "None"], answer: "To represent file and directory paths" },
+                { question: "What is the difference between FileReader and FileInputStream?", options: ["FileReader: for text; FileInputStream: for binary", "FileReader: for binary; FileInputStream: for text", "FileReader: faster; FileInputStream: slower", "None"], answer: "FileReader: for text; FileInputStream: for binary" },
+                { question: "What is the purpose of the RandomAccessFile class?", options: ["To read and write files randomly", "To read files only", "To write files only", "None"], answer: "To read and write files randomly" },
+                { question: "What is the purpose of the FileChannel class?", options: ["To perform file operations using channels", "To read files", "To write files", "None"], answer: "To perform file operations using channels" },
+                { question: "What is the purpose of the Path class?", options: ["To represent file system paths", "To read files", "To write files", "None"], answer: "To represent file system paths" },
+                { question: "What is the purpose of the Files class?", options: ["To perform file operations", "To read files", "To write files", "None"], answer: "To perform file operations" },
+                { question: "What is the purpose of the DirectoryStream class?", options: ["To iterate over directory entries", "To read files", "To write files", "None"], answer: "To iterate over directory entries" },
+                { question: "What is the purpose of the WatchService class?", options: ["To monitor directory changes", "To read files", "To write files", "None"], answer: "To monitor directory changes" },
+                { question: "What is the purpose of the FileSystem class?", options: ["To access file system", "To read files", "To write files", "None"], answer: "To access file system" },
+                { question: "What is the purpose of the FileStore class?", options: ["To represent storage", "To read files", "To write files", "None"], answer: "To represent storage" },
+                { question: "What is the purpose of the FileSystemProvider class?", options: ["To provide file system operations", "To read files", "To write files", "None"], answer: "To provide file system operations" },
+                { question: "What is the purpose of the FileAttributeView interface?", options: ["To access file attributes", "To read files", "To write files", "None"], answer: "To access file attributes" },
+                { question: "What is the purpose of the FileTime class?", options: ["To represent file timestamps", "To read files", "To write files", "None"], answer: "To represent file timestamps" },
+                { question: "What is the purpose of the FilePermission class?", options: ["To control file access permissions", "To read files", "To write files", "None"], answer: "To control file access permissions" }
+            ]
+        };
+
+let quizData = []; // Stores selected topic questions
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let timerInterval;
+let timeLeft;
+
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Function to start timer
+function startTimer() {
+    const timerDisplay = document.querySelector('.quiz-timer');
+    const timerSpan = document.getElementById('timer');
+    timeLeft = 20; // 10 minutes in seconds
+    
+    timerDisplay.style.display = 'block';
+    
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerSpan.textContent = formatTime(timeLeft);
+        
+        // Warning when 1 minute remaining
+        if (timeLeft <= 60) {
+            timerDisplay.classList.add('warning');
+        }
+        
+        // Auto-submit when time's up
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpMessage();
+            disableQuizOptions();
+            updateQuestionGrid();
+        }
+    }, 1000);
+}
+
+// Add new function to show Time's Up message
+function showTimeUpMessage() {
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    const timeUpMessage = document.createElement('div');
+    timeUpMessage.style.textAlign = 'center';
+    timeUpMessage.style.padding = '20px';
+    timeUpMessage.style.marginTop = '20px';
+    timeUpMessage.style.backgroundColor = '#ff4444';
+    timeUpMessage.style.color = 'white';
+    timeUpMessage.style.borderRadius = '10px';
+    timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+    timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+    quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+    
+    // Show submit button
+    document.getElementById('submit-quiz').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'none';
+}
+
+// Function to disable quiz options
+function disableQuizOptions() {
+    const optionsDiv = document.querySelector('.quiz-options');
+    if (optionsDiv) {
+        optionsDiv.classList.add('disabled');
+        const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+
+// Function to stop timer
+function stopTimer() {
+    clearInterval(timerInterval);
+    document.querySelector('.quiz-timer').style.display = 'none';
+}
+
+// Function to start quiz with selected topic
+function startQuiz(topic, isRestore = false) {
+    currentTopic = topic;
+    const quizIntro = document.querySelector('.quiz-intro');
+    const quizContainer = document.querySelector('.quiz-container');
+    const topicSelect = document.querySelector('.quiz-topics');
+
+    if (!topic) {
+        // Show intro, hide quiz container when no topic selected
+        quizIntro.style.display = 'block';
+        quizContainer.style.display = 'none';
+        stopTimer();
+        return;
+    }
+
+    // Hide intro and topic select with fade out effect
+    quizIntro.style.opacity = '0';
+    topicSelect.style.opacity = '0';
+    setTimeout(() => {
+        quizIntro.style.display = 'none';
+        topicSelect.style.display = 'none';
+    }, 300);
+
+    let allQuestions = topicQuestions[topic];
+    if (!allQuestions) {
+        console.error('No questions found for topic:', topic);
+        return;
+    }
+
+    // After setting quizData:
+    if (!isRestore) {
+        quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+        currentQuestionIndex = 0;
+        userAnswers = new Array(quizData.length).fill(null);
+    }
+
+    // Reset quiz UI
+    document.getElementById('quiz-questions').style.display = 'block';
+    document.getElementById('quiz-questions').innerHTML = '';
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('retake-quiz').style.display = 'none';
+
+    // Update quiz heading
+    document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+    // Show quiz container with fade in effect
+    quizContainer.style.opacity = '0';
+    quizContainer.style.display = 'block';
+    setTimeout(() => {
+        quizContainer.style.opacity = '1';
+    }, 50);
+
+    // Reset navigation buttons
+    document.getElementById('prev-question').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'inline-block';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    // Start the timer
+    startTimer();
+
+    displayQuestion();
+    updateQuestionGrid();
+}
+
+// Function to format topic names (e.g., "io" → "Java I/O")
+function formatTopic(topic) {
+    return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+// Function to display questions
+function displayQuestion() {
+    if (!quizData || quizData.length === 0) return;
+
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    quizQuestionsDiv.innerHTML = '';
+
+    const question = quizData[currentQuestionIndex];
+    if (!question) return;
+
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('quiz-question');
+
+    const questionText = document.createElement('p');
+    questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+    questionDiv.appendChild(questionText);
+
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('quiz-options');
+    
+    if (timeLeft <= 0) {
+        optionsDiv.classList.add('disabled');
+    }
+
+    question.options.forEach(option => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `question${currentQuestionIndex}`;
+        input.value = option;
+        input.checked = userAnswers[currentQuestionIndex] === option;
+        
+        if (timeLeft <= 0) {
+            input.disabled = true;
+        }
+
+        input.onchange = () => {
+            if (timeLeft > 0) {
+                userAnswers[currentQuestionIndex] = option;
+                // Immediate grid update when answer is selected
+                setTimeout(() => {
+                    updateQuestionGrid();
+                }, 50);
+            }
+        };
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(option));
+        optionsDiv.appendChild(label);
+    });
+
+    questionDiv.appendChild(optionsDiv);
+    quizQuestionsDiv.appendChild(questionDiv);
+
+    document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+    document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+    document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+    
+    updateQuestionGrid();
+}
+
+// Function to navigate questions
+function nextQuestion() {
+    if (currentQuestionIndex < quizData.length - 1) {
+        // Mark current question as skipped if no answer selected
+        if (userAnswers[currentQuestionIndex] === null) {
+            userAnswers[currentQuestionIndex] = "skipped";
+        }
+        
+        currentQuestionIndex++;
+        displayQuestion();
+        updateQuestionGrid();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+}
+
+// Function to submit quiz
+function submitQuiz() {
+    stopTimer();
+    
+    // Mark all unanswered questions as incorrect
+    userAnswers.forEach((answer, index) => {
+        if (answer === null) {
+            userAnswers[index] = "skipped";
+        }
+    });
+    updateQuestionGrid();
+    
+    let score = 0;
+    userAnswers.forEach((answer, index) => {
+        if (answer === quizData[index].answer) {
+            score++;
+        }
+    });
+
+    document.getElementById('quiz-questions').style.display = 'none';
+    document.getElementById('prev-question').style.display = 'none';
+    document.getElementById('next-question').style.display = 'none';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    const quizResultDiv = document.getElementById('quiz-result');
+    const percentage = Math.round((score / quizData.length) * 100);
+    
+    let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+    message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+    
+    if (percentage === 100) {
+        message += `<p>Perfect score! Excellent work! 🌟</p>`;
+    } else if (percentage >= 80) {
+        message += `<p>Great job! Keep up the good work! 👍</p>`;
+    } else if (percentage >= 60) {
+        message += `<p>Not bad! Keep practicing! 💪</p>`;
+    } else {
+        message += `<p>Keep practicing! You can do better! 📚</p>`;
+    }
+
+    // Add detailed summary in a scrollable container
+    message += `
+        <div class="quiz-summary" style="
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f8f8;
+        ">
+            <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+    `;
+
+    quizData.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.answer;
+        const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+        const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+        message += `
+            <div style="
+                margin-bottom: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: left;
+            ">
+                <p style="font-weight: 600; margin-bottom: 10px;">
+                    Question ${index + 1}: ${question.question}
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Your Answer:</span> 
+                    <span style="color: ${statusColor}; font-weight: 500;">
+                        ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                    </span>
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Correct Answer:</span> 
+                    <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                </p>
+                <p style="
+                    margin-top: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    border-radius: 4px;
+                    background: ${statusColor};
+                    color: white;
+                    font-size: 0.9rem;
+                ">${answerStatus}</p>
+            </div>
+        `;
+    });
+
+    message += `</div>`;
+    
+    quizResultDiv.innerHTML = message;
+    quizResultDiv.style.display = 'block';
+    quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+    document.getElementById('retake-quiz').style.display = 'inline-block';
+    document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+    // Scroll to top of the results
+    quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Function to retake quiz
+function retakeQuiz() {
+    stopTimer();
+    
+    // Show intro and topic select again
+    const quizIntro = document.querySelector('.quiz-intro');
+    const topicSelect = document.querySelector('.quiz-topics');
+    const quizContainer = document.querySelector('.quiz-container');
+
+    // Hide quiz container
+    quizContainer.style.opacity = '0';
+    setTimeout(() => {
+        quizContainer.style.display = 'none';
+        
+        // Show intro and topic select with fade in
+        quizIntro.style.display = 'block';
+        topicSelect.style.display = 'block';
+        setTimeout(() => {
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+        }, 50);
+    }, 300);
+
+    // Reset all states
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    quizData = [];
+    
+    // Reset topic select
+    document.querySelector('.quiz-topic-select').value = '';
+}
+
+// Add these functions before the startQuiz function:
+function updateQuestionGrid() {
+    const grid = document.getElementById('question-grid');
+    grid.innerHTML = '';
+    
+    for (let i = 0; i < quizData.length; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.textContent = (i + 1).toString();
+        
+        // Check if question has been attempted (any answer selected)
+        if (userAnswers[i] && userAnswers[i] !== "skipped") {
+            // Question attempted - Green
+            gridItem.style.backgroundColor = '#4CAF50';
+            gridItem.style.borderColor = '#4CAF50';
+            gridItem.style.color = '#ffffff';
+        } else if (userAnswers[i] === "skipped") {
+            // Question skipped or not attempted - Red
+            gridItem.style.backgroundColor = '#ff4444';
+            gridItem.style.borderColor = '#ff4444';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Current question - Black
+        if (i === currentQuestionIndex) {
+            gridItem.style.backgroundColor = '#000000';
+            gridItem.style.borderColor = '#000000';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Disabled state when time's up
+        if (timeLeft <= 0) {
+            gridItem.classList.add('disabled');
+        } else {
+            gridItem.onclick = () => {
+                currentQuestionIndex = i;
+                displayQuestion();
+                updateQuestionGrid();
+            };
+        }
+        
+        grid.appendChild(gridItem);
+    }
+    
+    saveQuizState();
+}
+
+function saveQuizState() {
+    const quizState = {
+        topic: currentTopic,
+        answers: userAnswers,
+        timeLeft: timeLeft,
+        currentIndex: currentQuestionIndex,
+        quizData: quizData
+    };
+    localStorage.setItem('quizState', JSON.stringify(quizState));
+}
+
+function loadQuizState() {
+    const savedState = localStorage.getItem('quizState');
+    if (savedState) {
+        if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+            const state = JSON.parse(savedState);
+            currentTopic = state.topic;
+            userAnswers = state.answers;
+            timeLeft = state.timeLeft;
+            currentQuestionIndex = state.currentIndex;
+            quizData = state.quizData;
+            
+            if (currentTopic) {
+                startQuiz(currentTopic, true);
+            }
+        } else {
+            // Clear saved state and show the starting page
+            localStorage.removeItem('quizState');
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+            
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+            currentTopic = '';
+            
+            // Show intro and topic select
+            quizContainer.style.display = 'none';
+            quizIntro.style.display = 'block';
+            topicSelect.style.display = 'block';
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+            
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+    }
+}
+
+// Modify the startQuiz function:
+let currentTopic = '';
+
+// Add to the end of the script:
+// Load saved state when page loads
+window.addEventListener('load', loadQuizState);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - StudyHive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f9f9f9;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f0f0f0;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-color: #000000;
+            --border-color: #cccccc;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        body.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --accent-color: #ffffff;
+            --border-color: #444444;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 10px var(--shadow-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--accent-color);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--accent-color);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .settings-card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .settings-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-header h2 {
+            font-size: 20px;
+            color: var(--accent-color);
+        }
+
+        .settings-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-option:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        body.dark-mode .slider {
+            background-color: #555;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        body.dark-mode .slider:before {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+        }
+
+        input:checked + .slider {
+            background-color: #000000;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #000000;
+        }
+
+        body.dark-mode input:checked + .slider {
+            background-color: #ffffff;
+        }
+
+        body.dark-mode input:focus + .slider {
+            box-shadow: 0 0 1px #ffffff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Select Dropdown */
+        .settings-select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            min-width: 150px;
+        }
+
+        /* Button */
+        .settings-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            background-color: var(--accent-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            background-color: #333333;
+        }
+
+        body.dark-mode .settings-btn {
+            background-color: var(--accent-color);
+            color: var(--bg-secondary);
+        }
+
+        body.dark-mode .settings-btn:hover {
+            background-color: #cccccc;
+            color: #000000;
+        }
+
+        .settings-btn.danger {
+            background-color: var(--danger-color);
+        }
+
+        .settings-btn.danger:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Notification */
+        .notification {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .notification.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .settings-option {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .option-label {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
+        <h1>Settings</h1>
+       
+    </nav>
+
+    <div class="container">
+        <div id="notification" class="notification"></div>
+        
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2>Settings</h2>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Appearance</h3>
+                
+                <div class="settings-option">
+                    <div class="option-label">
+                        <div class="option-title">Dark Mode</div>
+                        <div class="option-description">Switch between light and dark theme</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Account</h3>
+                
+                <div class="settings-option">
+                    <div class="option-label">
+                        <div class="option-title">Change Username</div>
+                        <div class="option-description">Update your account username</div>
+                    </div>
+                    <button id="changeUsernameBtn" class="settings-btn">Change</button>
+                </div>
+                
+                <div class="settings-option">
+                    <div class="option-label">
+                        <div class="option-title">Change Password</div>
+                        <div class="option-description">Update your account password</div>
+                    </div>
+                    <button onclick="window.location.href='/changepassword'" class="settings-btn">Change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Username Change Modal -->
+    <div id="usernameModal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); overflow: auto;">
+        <div style="background-color: var(--bg-secondary); margin: 15% auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px var(--shadow-color); width: 90%; max-width: 450px;">
+            <h2 style="color: var(--accent-color); margin-bottom: 20px;">Change Username</h2>
+            
+            <div id="usernameErrorMsg" style="display: none; color: var(--danger-color); background-color: rgba(244,67,54,0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px;"></div>
+            <div id="usernameSuccessMsg" style="display: none; color: var(--success-color); background-color: rgba(76,175,80,0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px;"></div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--text-primary);">New Username</label>
+                <input type="text" id="newUsername" style="width: 100%; padding: 12px; background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px;">
+                    </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--text-primary);">Enter Password to Confirm</label>
+                <input type="password" id="passwordConfirm" style="width: 100%; padding: 12px; background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px;">
+                </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                <button id="cancelUsernameChange" style="padding: 10px 20px; border: 1px solid var(--border-color); background-color: var(--bg-tertiary); color: var(--text-primary); border-radius: 8px; cursor: pointer;">Cancel</button>
+                <button id="confirmUsernameChange" style="padding: 10px 20px; background-color: #000000; color: white; border: none; border-radius: 8px; cursor: pointer;">Change Username</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/avatar-manager.js') }}"></script>
+    <script>
+        // Initialize settings on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check localStorage for dark mode preference (synced with home page)
+            const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+            
+            // Apply dark mode if enabled
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                
+                // Update toggle button
+                const toggleIcon = document.querySelector('.dark-mode-toggle i');
+                if (toggleIcon) {
+                    toggleIcon.classList.replace('fa-moon', 'fa-sun');
+                }
+                
+                // Update toggle switch
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                if (darkModeToggle) {
+                    darkModeToggle.checked = true;
+                }
+            }
+            
+            // Add event listeners
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', function(e) {
+                    toggleDarkMode(e.target.checked);
+                    saveSettings('dark_mode', e.target.checked);
+                });
+            }
+        });
+        
+        // Username change functionality
+        document.getElementById('changeUsernameBtn').addEventListener('click', function() {
+            document.getElementById('usernameModal').style.display = 'block';
+            document.getElementById('usernameErrorMsg').style.display = 'none';
+            document.getElementById('usernameSuccessMsg').style.display = 'none';
+            document.getElementById('newUsername').value = '';
+            document.getElementById('passwordConfirm').value = '';
+        });
+        
+        document.getElementById('cancelUsernameChange').addEventListener('click', function() {
+            document.getElementById('usernameModal').style.display = 'none';
+        });
+        
+        document.getElementById('confirmUsernameChange').addEventListener('click', async function() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+            const errorMsg = document.getElementById('usernameErrorMsg');
+            const successMsg = document.getElementById('usernameSuccessMsg');
+            
+            // Reset messages
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            // Validate inputs
+            if (!newUsername) {
+                errorMsg.textContent = 'Please enter a new username';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            if (!passwordConfirm) {
+                errorMsg.textContent = 'Please enter your password to confirm';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            // Check if username exists
+            try {
+                const checkResponse = await fetch('/check_username', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: newUsername })
+                });
+                
+                const checkResult = await checkResponse.json();
+                if (checkResult.exists) {
+                    errorMsg.textContent = 'Username already exists. Please choose another one.';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                
+                // Verify password and change username
+                const response = await fetch('/change_username', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        newUsername: newUsername,
+                        password: passwordConfirm
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    successMsg.textContent = 'Username changed successfully! Redirecting...';
+                    successMsg.style.display = 'block';
+                    
+                    // Redirect after showing success message
+                    setTimeout(() => {
+                        window.location.href = '/settings';
+                    }, 2000);
+                } else {
+                    errorMsg.textContent = result.message || 'Failed to change username';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.textContent = 'An error occurred. Please try again.';
+                errorMsg.style.display = 'block';
+            }
+        });
+        
+        // Save settings to server
+        function saveSettings(setting, value) {
+            const data = {};
+            data[setting] = value;
+            
+            // Save to server
+            fetch('/api/update_settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Failed to save settings:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving settings:', error);
+            });
+            
+            // Also save to localStorage as fallback
+            if (setting === 'dark_mode') {
+                localStorage.setItem('dark-mode', value);
+            }
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode(isDarkMode = null) {
+            const body = document.body;
+            const toggleIcon = document.querySelector('.dark-mode-toggle i');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            if (isDarkMode === null) {
+                isDarkMode = !body.classList.contains('dark-mode');
+            }
+            
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+                if (toggleIcon) toggleIcon.classList.replace('fa-moon', 'fa-sun');
+                if (darkModeToggle) darkModeToggle.checked = true;
+            } else {
+                body.classList.remove('dark-mode');
+                if (toggleIcon) toggleIcon.classList.replace('fa-sun', 'fa-moon');
+                if (darkModeToggle) darkModeToggle.checked = false;
+            }
+            
+            // Update localStorage to sync with home page
+            localStorage.setItem('dark-mode', isDarkMode);
+            
+            showNotification('success', 'Theme updated successfully');
+        }
+        
+        // Show notification
+        function showNotification(type, message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(function() {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

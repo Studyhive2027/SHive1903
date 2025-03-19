@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Coding Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        section h2:hover::after {
+            width: 100px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            justify-content: space-between;
+
+        }
+        .item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            height: 325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #333333;
+            flex-grow: 1;
+        }
+
+        .item a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .item a:hover {
+            color: #666666;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #000000;
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-section {
+            padding: 40px 0;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            opacity: 1;
+            border: 2px solid #000000;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom dropdown styling */
+        .quiz-topics {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quiz-topic-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 2px solid #000000;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-topics::after {
+            content: '⌄';
+            font-size: 1.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .quiz-topics:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .quiz-topic-select:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-topic-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-topic-select option {
+            padding: 20px;
+            font-size: 1.1rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Update the topics selection HTML */
+        .quiz-topics {
+            margin-bottom: 40px;
+        }
+
+        .quiz-topic-select {
+            background-image: linear-gradient(45deg, transparent 50%, #000000 50%),
+                            linear-gradient(135deg, #000000 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 10px),
+                               calc(100% - 15px) calc(1em + 10px);
+            background-size: 5px 5px,
+                           5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        .quiz-topic-select:hover {
+            background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                            linear-gradient(135deg, #ffffff 50%, transparent 50%);
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .quiz-question:hover {
+            transform: translateX(5px) scale(1.01);
+            border-color: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-options label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .quiz-options label:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+            border-color: #000000;
+        }
+
+        .quiz-options label:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .quiz-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .quiz-navigation button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-navigation button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: #ffffff;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .quiz-navigation button:hover {
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-navigation button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+        }
+
+        .quiz-navigation button:disabled {
+            background: #cccccc;
+            border-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+            border: 2px solid #000000;
+        }
+
+        .quiz-result h3 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .quiz-result p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        #retake-quiz {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        #retake-quiz:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .js-hub-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .js-hub-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .js-hub-header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Timer styles */
+        .quiz-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            margin-left: 20px;
+        }
+
+        .quiz-timer.warning {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        #quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2rem;
+            margin: 20px 0 40px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quiz-options.disabled label {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .quiz-options.disabled input[type="radio"] {
+            pointer-events: none;
+        }
+
+        /* Question Grid styles */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            max-width: 900px;
+        }
+
+        .grid-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.current {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .grid-item.answered {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .grid-item.incorrect {
+            background: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+        }
+
+        .grid-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the chat interface */
+        .chat-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            outline: none;
+        }
+                /* General Styles */
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            /* Dark text for readability */
+            background-color: #ffffff;
+            /* White background */
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001; /* Ensure it's above other content */
+        }
+
+        .back-button:hover {
+            background-color: #333333;
+        }
+
+        /* Sections */
+        section {
+            padding: 40px 0;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #000000;
+            /* Black headings */
+        }
+
+        /* Flexbox Layout for Items */
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            /* Space between items */
+            justify-content: space-between;
+            /* Distribute items evenly */
+        }
+
+        /* Item Styling */
+        .item {
+            background: #f9f9f9;
+            /* Light gray background for items */
+            border: 1px solid #cccccc;
+            /* Gray border */
+            border-radius: 5px;
+            padding: 15px;
+            width: calc(33.33% - 20px);
+            /* Three items per row */
+            height: 325px;
+            /* Fixed height */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* Distribute content evenly */
+        }
+
+        @media (max-width: 1024px) {
+            .item {
+                width: calc(50% - 20px);
+                /* Two items per row on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .item {
+                width: 100%;
+                /* One item per row on small screens */
+            }
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            /* Black title */
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #666666;
+            /* Dark gray description */
+            flex-grow: 1;
+            /* Allow description to take up remaining space */
+        }
+
+        .item a {
+            color: #000000;
+            /* Black links */
+            text-decoration: none;
+        }
+
+        .item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Video Thumbnail */
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            /* Height of the thumbnail */
+            background: #cccccc;
+            /* Gray background for thumbnails */
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(0, 0, 0, 0.8);
+            /* Semi-transparent black play icon */
+        }
+
+        /* Modal for Video */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            /* Dark modal background */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <button class="connect-button" onclick="toggleChatPanel()" style="position: fixed; top: 30px; right: 30px; background: #000000; color: #ffffff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1001;">Connect</button>
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="js-hub-header">
+    <h1>Welcome to JavaScript Hub</h1>
+    <p>Your go-to platform to test and improve your JavaScript programming skills.</p>
+</header>
+
+     <!-- Back Button -->
+     <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    <!-- Main Content -->
+    <main class="content">
+        <!-- Tutorials Section -->
+        <section id="tutorials" class="tutorials">
+            <div class="container">
+                <h2>Tutorials</h2>
+                <div class="item-container">
+                    <!-- Introduction to JavaScript -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/PkZNo7MFNFg')">
+                            <img src="https://i.ytimg.com/vi/PkZNo7MFNFg/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">Introduction to JavaScript</a></h3>
+                        <p>Learn the basics of JavaScript programming, including variables, loops, and functions.</p>
+                    </div>
+
+                    <!-- JavaScript for Beginners -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/lfmg-EJ8gm4')">
+                            <img src="https://i.ytimg.com/vi/lfmg-EJ8gm4/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">JavaScript for Beginners</a></h3>
+                        <p>A beginner-friendly tutorial covering JavaScript basics and practical examples.</p>
+                    </div>
+
+                    <!-- JavaScript Projects for Beginners -->
+                    <div class="item">
+                        <div class="video-thumbnail" onclick="openModal('https://www.youtube.com/embed/EerdGm-ehJQ')">
+                            <img src="https://i.ytimg.com/vi/EerdGm-ehJQ/hqdefault.jpg" alt="Video Thumbnail">
+                            <span class="play-icon">▶</span>
+                        </div>
+                        <h3><a href="#">JavaScript Projects for Beginners</a></h3>
+                        <p>Build small projects to practice and reinforce your JavaScript skills.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://leetcode.com/studyplan/30-days-of-javascript/"
+                                target="_blank">
+                                <img src="https://miro.medium.com/v2/resize:fit:1118/1*xwh3VrV-PAG89ROdLj6oXg.png" alt="leetcode" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                                leetcode</a></h3>
+                        <p>LeetCode's "30 Days of JavaScript" study plan offers daily coding challenges to practice and improve JavaScript skills.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://javascript30.com/" target="_blank">
+                        <img src="https://i.ytimg.com/vi/Y1GTk4UyVA4/maxresdefault.jpg" alt="javascript30" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        javascript30</a></h3>
+                        <p>some for projects
+                            JavaScript30 provides 30 free hands-on projects to build JavaScript skills through practical codingp>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.khanacademy.org/computing/computer-programming" target="_blank">
+                        <img src="https://th.bing.com/th/id/OIP.9C20MK4t3UUrBkmk_VAbAgHaKc?rs=1&pid=ImgDetMain" alt="khanacademy" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        khanacademy</a></h3>
+                        <p>Khan Academy provides interactive coding projects for learning programming.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://brilliant.org/" target="_blank">
+                        <img src="https://i.pinimg.com/originals/85/cd/26/85cd261ddf4a4ab89a4152131d6dae88.png" alt="brilliant" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        brilliant</a></h3>
+                        <p>Brilliant offers interactive problem-solving courses and projects to learn programming and math.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="resources">
+            <div class="container">
+                <h2>Resources</h2>
+                <div class="item-container">
+                    <div class="item">
+                        <h3><a href="https://www.geeksforgeeks.org/javascript/" target="_blank">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210702175749/20210702175652.gif" alt="geeksforgeekse" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                            geeksforgeeks</a></h3>
+                        <p>GeeksforGeeks offers detailed JavaScript tutorials and examples.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.w3schools.com/js/DEFAULT.asp" target="_blank">
+                        <img src="https://cdn.knoji.com/images/logo/w3schools1.jpg?fit=contain&trim=true&flatten=true&extend=25&width=1200&height=630" alt="w3schools" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        w3schools</a></h3>
+                        <p>W3Schools provides beginner-friendly JavaScript tutorials and interactive examples.p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://javascript.info/" target="_blank">
+                        <img src="https://www.pragimtech.com/wp-content/uploads/2019/03/java-script.jpg" alt="javascript" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        javascript</a></h3>
+                        <p>JavaScript.info offers in-depth and modern JavaScript tutorials with detailed explanations.</p>
+                    </div>
+                    <div class="item">
+                        <h3><a href="https://www.codecademy.com/" target="_blank">
+                        <img src="https://th.bing.com/th/id/OIP.ujECD3gJMcmGPndvCCQkWQHaFV?rs=1&pid=ImgDetMain" alt="codecademy" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
+                        codecademy</a></h3>
+                        <p>Codecademy offers interactive coding courses, including JavaScript, for hands-on learning.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Video -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+       
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="container">
+                <h2 class="quiz-title">Test Your Java-scriptKnowledge</h2>
+
+                <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                            <p style="color: #333333;">Select from various JavaScript programming concepts to test your knowledge</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                            <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                            <p style="color: #333333;">From basics to advanced concepts</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                            <p style="color: #333333;">10 questions per quiz session</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                            <p style="color: #333333;">Get immediate feedback on your performance</p>
+                        </div>
+                    </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                    </div>
+                </div>
+
+                <!-- Topics Selection -->
+                <div class="quiz-topics">
+                    <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                        <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="basics">📚 JavaScript Basics</option>
+                        <option value="dom">🌐 DOM Manipulation</option>
+                        <option value="functions">⚡ Functions</option>
+                        <option value="oop">🎯 Object-Oriented Programming</option>
+                        <option value="async">⏱️ Asynchronous Programming</option>
+                        <option value="es6">✨ ES6+ Features</option>
+                    </select>
+                </div>
+        
+                <div class="quiz-container">
+                    <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                    <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                    <div class="question-grid" id="question-grid"></div>
+                    <div id="quiz-questions"></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                        <button id="next-question" onclick="nextQuestion()">Next</button>
+                        <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                    </div>
+                    <div id="quiz-result" class="quiz-result"></div>
+                    <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
+    <div id="videoModal" class="modal">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+
+    
+    <script>
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+const topicQuestions = {
+    basics: [
+                { question: "What is JavaScript?", options: ["A programming language", "A markup language", "A styling language", "A database"], answer: "A programming language" },
+                { question: "Which of the following is NOT a JavaScript data type?", options: ["String", "Integer", "Boolean", "Object"], answer: "Integer" },
+                { question: "What is the correct way to declare a variable in JavaScript?", options: ["var x = 5", "let x = 5", "const x = 5", "All of the above"], answer: "All of the above" },
+                { question: "What is the output of console.log(typeof null)?", options: ["object", "null", "undefined", "Error"], answer: "object" },
+                { question: "Which operator is used for strict equality comparison?", options: ["===", "==", "=", "!="], answer: "===" },
+                { question: "What is the output of console.log(2 + '2')?", options: ["22", "4", "Error", "NaN"], answer: "22" },
+                { question: "Which method is used to convert a string to an integer?", options: ["parseInt()", "Number()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log(0.1 + 0.2)?", options: ["0.3", "0.30000000000000004", "Error", "NaN"], answer: "0.30000000000000004" },
+                { question: "Which keyword is used to declare a constant variable?", options: ["const", "let", "var", "final"], answer: "const" },
+                { question: "What is the output of console.log([] + [])?", options: ["", "[]", "Error", "undefined"], answer: "" },
+                { question: "Which method is used to check if an array includes a value?", options: ["includes()", "contains()", "has()", "None"], answer: "includes()" },
+                { question: "What is the output of console.log(typeof undefined)?", options: ["undefined", "null", "object", "Error"], answer: "undefined" },
+                { question: "Which operator is used for logical AND?", options: ["&&", "&", "AND", "||"], answer: "&&" },
+                { question: "What is the output of console.log('5' - 3)?", options: ["2", "53", "Error", "NaN"], answer: "2" },
+                { question: "Which method is used to convert a number to a string?", options: ["toString()", "String()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log([] == ![])?", options: ["true", "false", "Error", "undefined"], answer: "true" },
+                { question: "Which method is used to get the length of an array?", options: ["length", "size()", "count()", "None"], answer: "length" },
+                { question: "What is the output of console.log(1 + '1' + 1)?", options: ["111", "3", "Error", "NaN"], answer: "111" },
+                { question: "Which operator is used for logical OR?", options: ["||", "|", "OR", "&&"], answer: "||" },
+                { question: "What is the output of console.log(typeof NaN)?", options: ["number", "NaN", "undefined", "Error"], answer: "number" },
+                { question: "Which method is used to check if a value is NaN?", options: ["isNaN()", "Number.isNaN()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log('5' + 3)?", options: ["53", "8", "Error", "NaN"], answer: "53" },
+                { question: "Which operator is used for logical NOT?", options: ["!", "NOT", "~", "None"], answer: "!" },
+                { question: "What is the output of console.log(typeof [])?", options: ["object", "array", "undefined", "Error"], answer: "object" },
+                { question: "Which method is used to check if a value is an array?", options: ["Array.isArray()", "isArray()", "typeOf()", "None"], answer: "Array.isArray()" },
+                { question: "What is the output of console.log(1 + +'1')?", options: ["2", "11", "Error", "NaN"], answer: "2" },
+                { question: "Which operator is used for nullish coalescing?", options: ["??", "||", "&&", "None"], answer: "??" },
+                { question: "What is the output of console.log(typeof function(){})?", options: ["function", "object", "undefined", "Error"], answer: "function" },
+                { question: "Which method is used to check if a value is finite?", options: ["isFinite()", "Number.isFinite()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log('5' * 3)?", options: ["15", "53", "Error", "NaN"], answer: "15" },
+                { question: "What is the output of console.log(Number.MAX_SAFE_INTEGER)?", options: ["9007199254740991", "Infinity", "Error", "undefined"], answer: "9007199254740991" },
+                { question: "Which method is used to check if a number is an integer?", options: ["Number.isInteger()", "isInteger()", "checkInteger()", "None"], answer: "Number.isInteger()" },
+                { question: "What is the output of console.log(Math.PI)?", options: ["3.141592653589793", "3.14", "Error", "undefined"], answer: "3.141592653589793" },
+                { question: "Which method is used to round a number to the nearest integer?", options: ["Math.round()", "round()", "toInteger()", "None"], answer: "Math.round()" },
+                { question: "What is the output of console.log(Math.random())?", options: ["Random number between 0 and 1", "0", "1", "Error"], answer: "Random number between 0 and 1" },
+                { question: "Which method is used to get the absolute value of a number?", options: ["Math.abs()", "abs()", "absolute()", "None"], answer: "Math.abs()" },
+                { question: "What is the output of console.log(Math.floor(3.7))?", options: ["3", "4", "Error", "undefined"], answer: "3" },
+                { question: "Which method is used to get the maximum value from a set of numbers?", options: ["Math.max()", "max()", "maximum()", "None"], answer: "Math.max()" },
+                { question: "What is the output of console.log(Math.ceil(3.2))?", options: ["4", "3", "Error", "undefined"], answer: "4" },
+                { question: "Which method is used to get the minimum value from a set of numbers?", options: ["Math.min()", "min()", "minimum()", "None"], answer: "Math.min()" }
+            ],
+            dom: [
+                { question: "What is the DOM?", options: ["Document Object Model", "Data Object Model", "Document Oriented Model", "None"], answer: "Document Object Model" },
+                { question: "Which method is used to select an element by ID?", options: ["getElementById()", "querySelector()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.body.tagName?", options: ["BODY", "body", "HTML", "None"], answer: "BODY" },
+                { question: "Which method is used to create a new element?", options: ["createElement()", "newElement()", "addElement()", "None"], answer: "createElement()" },
+                { question: "What is the output of document.documentElement.tagName?", options: ["HTML", "html", "HEAD", "None"], answer: "HTML" },
+                { question: "Which method is used to add a class to an element?", options: ["classList.add()", "addClass()", "setClass()", "None"], answer: "classList.add()" },
+                { question: "What is the output of document.readyState?", options: ["loading", "interactive", "complete", "All of the above"], answer: "All of the above" },
+                { question: "Which method is used to remove a class from an element?", options: ["classList.remove()", "removeClass()", "deleteClass()", "None"], answer: "classList.remove()" },
+                { question: "What is the output of document.URL?", options: ["Current page URL", "Empty string", "null", "undefined"], answer: "Current page URL" },
+                { question: "Which method is used to toggle a class on an element?", options: ["classList.toggle()", "toggleClass()", "switchClass()", "None"], answer: "classList.toggle()" },
+                { question: "What is the output of document.title?", options: ["Page title", "Empty string", "null", "undefined"], answer: "Page title" },
+                { question: "Which method is used to check if an element has a class?", options: ["classList.contains()", "hasClass()", "checkClass()", "None"], answer: "classList.contains()" },
+                { question: "What is the output of document.cookie?", options: ["Cookie string", "Empty string", "null", "undefined"], answer: "Cookie string" },
+                { question: "Which method is used to set an attribute on an element?", options: ["setAttribute()", "attr()", "setAttr()", "None"], answer: "setAttribute()" },
+                { question: "What is the output of document.domain?", options: ["Domain name", "Empty string", "null", "undefined"], answer: "Domain name" },
+                { question: "Which method is used to get an attribute from an element?", options: ["getAttribute()", "attr()", "getAttr()", "None"], answer: "getAttribute()" },
+                { question: "What is the output of document.lastModified?", options: ["Last modified date", "Empty string", "null", "undefined"], answer: "Last modified date" },
+                { question: "Which method is used to remove an attribute from an element?", options: ["removeAttribute()", "deleteAttr()", "removeAttr()", "None"], answer: "removeAttribute()" },
+                { question: "What is the output of document.characterSet?", options: ["Character encoding", "Empty string", "null", "undefined"], answer: "Character encoding" },
+                { question: "Which method is used to append a child to an element?", options: ["appendChild()", "addChild()", "insertChild()", "None"], answer: "appendChild()" },
+                { question: "What is the output of document.doctype?", options: ["Document type declaration", "Empty string", "null", "undefined"], answer: "Document type declaration" },
+                { question: "Which method is used to remove a child from an element?", options: ["removeChild()", "deleteChild()", "remove()", "None"], answer: "removeChild()" },
+                { question: "What is the output of document.forms?", options: ["Collection of forms", "Empty array", "null", "undefined"], answer: "Collection of forms" },
+                { question: "Which method is used to insert a child before another child?", options: ["insertBefore()", "addBefore()", "insert()", "None"], answer: "insertBefore()" },
+                { question: "What is the output of document.images?", options: ["Collection of images", "Empty array", "null", "undefined"], answer: "Collection of images" },
+                { question: "Which method is used to replace a child element?", options: ["replaceChild()", "swapChild()", "replace()", "None"], answer: "replaceChild()" },
+                { question: "What is the output of document.links?", options: ["Collection of links", "Empty array", "null", "undefined"], answer: "Collection of links" },
+                { question: "Which method is used to clone an element?", options: ["cloneNode()", "copyNode()", "duplicateNode()", "None"], answer: "cloneNode()" },
+                { question: "What is the output of document.scripts?", options: ["Collection of scripts", "Empty array", "null", "undefined"], answer: "Collection of scripts" },
+                { question: "Which method is used to get the parent element?", options: ["parentElement", "parentNode", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.styleSheets?", options: ["Collection of stylesheets", "Empty array", "null", "undefined"], answer: "Collection of stylesheets" },
+                { question: "Which method is used to get the next sibling element?", options: ["nextElementSibling", "nextSibling", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.documentElement.clientWidth?", options: ["Viewport width", "Document width", "Error", "undefined"], answer: "Viewport width" },
+                { question: "Which method is used to get the previous sibling element?", options: ["previousElementSibling", "previousSibling", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.documentElement.clientHeight?", options: ["Viewport height", "Document height", "Error", "undefined"], answer: "Viewport height" },
+                { question: "Which method is used to get the first child element?", options: ["firstElementChild", "firstChild", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.documentElement.scrollWidth?", options: ["Total scrollable width", "Viewport width", "Error", "undefined"], answer: "Total scrollable width" },
+                { question: "Which method is used to get the last child element?", options: ["lastElementChild", "lastChild", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.documentElement.scrollHeight?", options: ["Total scrollable height", "Viewport height", "Error", "undefined"], answer: "Total scrollable height" },
+                { question: "Which method is used to get the parent element?", options: ["parentElement", "parentNode", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of document.documentElement.offsetWidth?", options: ["Element width including borders", "Element width", "Error", "undefined"], answer: "Element width including borders" }
+            ],
+            functions: [
+                { question: "What is a function in JavaScript?", options: ["A block of code", "A method", "A procedure", "All of the above"], answer: "All of the above" },
+                { question: "Which keyword is used to declare a function?", options: ["function", "def", "func", "None"], answer: "function" },
+                { question: "What is the output of console.log(typeof function(){})?", options: ["function", "object", "undefined", "Error"], answer: "function" },
+                { question: "Which keyword is used to return a value from a function?", options: ["return", "break", "continue", "None"], answer: "return" },
+                { question: "What is the output of console.log(function(){})()?", options: ["undefined", "null", "Error", "None"], answer: "undefined" },
+                { question: "Which keyword is used for default parameters?", options: ["=", "default", "param", "None"], answer: "=" },
+                { question: "What is the output of console.log((() => {})())?", options: ["undefined", "null", "Error", "None"], answer: "undefined" },
+                { question: "Which keyword is used for rest parameters?", options: ["...", "rest", "params", "None"], answer: "..." },
+                { question: "What is the output of console.log(function(x){return x}(5))?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for spread operator?", options: ["...", "spread", "expand", "None"], answer: "..." },
+                { question: "What is the output of console.log((x => x)(5))?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for arrow functions?", options: ["=>", "->", "arrow", "None"], answer: "=>" },
+                { question: "What is the output of console.log(function(){return arguments}(1,2,3))?", options: ["Arguments object", "Array", "Error", "None"], answer: "Arguments object" },
+                { question: "Which keyword is used for function declaration?", options: ["function", "def", "func", "None"], answer: "function" },
+                { question: "What is the output of console.log(function(){return this}())?", options: ["Window object", "undefined", "Error", "None"], answer: "Window object" },
+                { question: "Which keyword is used for function expression?", options: ["const/let/var", "function", "def", "None"], answer: "const/let/var" },
+                { question: "What is the output of console.log(function(){return this}.bind({})())?", options: ["Empty object", "Window object", "Error", "None"], answer: "Empty object" },
+                { question: "Which keyword is used for function binding?", options: ["bind()", "attach()", "connect()", "None"], answer: "bind()" },
+                { question: "What is the output of console.log(function(){return this}.call({}))?", options: ["Empty object", "Window object", "Error", "None"], answer: "Empty object" },
+                { question: "Which keyword is used for function calling?", options: ["call()", "invoke()", "execute()", "None"], answer: "call()" },
+                { question: "What is the output of console.log(function(){return this}.apply({}))?", options: ["Empty object", "Window object", "Error", "None"], answer: "Empty object" },
+                { question: "Which keyword is used for function applying?", options: ["apply()", "use()", "implement()", "None"], answer: "apply()" },
+                { question: "What is the output of console.log(function(){return arguments.length}(1,2,3))?", options: ["3", "0", "Error", "None"], answer: "3" },
+                { question: "Which keyword is used for function length?", options: ["length", "size", "count", "None"], answer: "length" },
+                { question: "What is the output of console.log(function(){return arguments.callee}(1,2,3))?", options: ["Function itself", "undefined", "Error", "None"], answer: "Function itself" },
+                { question: "Which keyword is used for function name?", options: ["name", "id", "identifier", "None"], answer: "name" },
+                { question: "What is the output of console.log(function(){return arguments.caller}(1,2,3))?", options: ["null", "undefined", "Error", "None"], answer: "null" },
+                { question: "Which keyword is used for function prototype?", options: ["prototype", "proto", "type", "None"], answer: "prototype" },
+                { question: "What is the output of console.log(function(){return arguments.iterator}(1,2,3))?", options: ["Iterator function", "undefined", "Error", "None"], answer: "Iterator function" },
+                { question: "Which keyword is used for function constructor?", options: ["constructor", "create", "build", "None"], answer: "constructor" },
+                { question: "What is the output of console.log(function(){return arguments.callee.caller}(1,2,3))?", options: ["null", "undefined", "Error", "None"], answer: "null" },
+                { question: "Which method is used to create a new function with a specific 'this' value?", options: ["bind()", "attach()", "connect()", "None"], answer: "bind()" },
+                { question: "What is the output of console.log(function(){return arguments.callee.length}(1,2,3))?", options: ["0", "3", "Error", "None"], answer: "0" },
+                { question: "Which method is used to call a function with a specific 'this' value?", options: ["call()", "invoke()", "execute()", "None"], answer: "call()" },
+                { question: "What is the output of console.log(function(){return arguments.callee.name}(1,2,3))?", options: ["Function name", "undefined", "Error", "None"], answer: "Function name" },
+                { question: "Which method is used to apply a function with a specific 'this' value?", options: ["apply()", "use()", "implement()", "None"], answer: "apply()" },
+                { question: "What is the output of console.log(function(){return arguments.callee.caller}(1,2,3))?", options: ["null", "undefined", "Error", "None"], answer: "null" },
+                { question: "Which method is used to get the function prototype?", options: ["prototype", "proto", "type", "None"], answer: "prototype" },
+                { question: "What is the output of console.log(function(){return arguments.callee.arguments}(1,2,3))?", options: ["Arguments object", "undefined", "Error", "None"], answer: "Arguments object" },
+                { question: "Which method is used to get the function constructor?", options: ["constructor", "create", "build", "None"], answer: "constructor" },
+                { question: "What is the output of console.log(function(){return arguments.callee.caller.caller}(1,2,3))?", options: ["null", "undefined", "Error", "None"], answer: "null" }
+            ],
+            oop: [
+                { question: "What is OOP?", options: ["Object-Oriented Programming", "Object-Oriented Protocol", "Object-Oriented Process", "None"], answer: "Object-Oriented Programming" },
+                { question: "Which keyword is used to create a class?", options: ["class", "struct", "interface", "None"], answer: "class" },
+                { question: "What is the output of console.log(typeof class{})?", options: ["function", "object", "undefined", "Error"], answer: "function" },
+                { question: "Which keyword is used for inheritance?", options: ["extends", "inherits", "implements", "None"], answer: "extends" },
+                { question: "What is the output of console.log(new class{})?", options: ["Object instance", "undefined", "Error", "None"], answer: "Object instance" },
+                { question: "Which keyword is used for constructor?", options: ["constructor", "init", "build", "None"], answer: "constructor" },
+                { question: "What is the output of console.log(class{constructor(){return {}}})?", options: ["Object", "undefined", "Error", "None"], answer: "Object" },
+                { question: "Which keyword is used for static methods?", options: ["static", "class", "shared", "None"], answer: "static" },
+                { question: "What is the output of console.log(new class{constructor(){return 5}})?", options: ["Object", "5", "Error", "None"], answer: "Object" },
+                { question: "Which keyword is used for private fields?", options: ["#", "private", "protected", "None"], answer: "#" },
+                { question: "What is the output of console.log(class{static x = 5})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for getters?", options: ["get", "getter", "accessor", "None"], answer: "get" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for setters?", options: ["set", "setter", "mutator", "None"], answer: "set" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for abstract classes?", options: ["abstract", "virtual", "interface", "None"], answer: "abstract" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for interfaces?", options: ["interface", "protocol", "contract", "None"], answer: "interface" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for mixins?", options: ["mixin", "trait", "composition", "None"], answer: "mixin" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for decorators?", options: ["@", "decorator", "annotation", "None"], answer: "@" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for modules?", options: ["export", "module", "package", "None"], answer: "export" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for namespaces?", options: ["namespace", "package", "module", "None"], answer: "namespace" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for polymorphism?", options: ["extends", "implements", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for encapsulation?", options: ["private", "protected", "public", "None"], answer: "private" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for abstraction?", options: ["abstract", "virtual", "interface", "None"], answer: "abstract" },
+                { question: "Which keyword is used for method overriding?", options: ["override", "overwrite", "replace", "None"], answer: "None" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for method overloading?", options: ["overload", "override", "Both A and B", "None"], answer: "None" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for method chaining?", options: ["return this", "chain", "next", "None"], answer: "return this" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for method composition?", options: ["compose", "combine", "merge", "None"], answer: "None" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for method delegation?", options: ["delegate", "forward", "pass", "None"], answer: "None" },
+                { question: "What is the output of console.log(class{constructor(){this.x = 5}})?", options: ["5", "undefined", "Error", "None"], answer: "5" }
+            ],
+            async: [
+                { question: "What is asynchronous programming?", options: ["Non-blocking code execution", "Parallel processing", "Multi-threading", "None"], answer: "Non-blocking code execution" },
+                { question: "Which keyword is used for async functions?", options: ["async", "await", "promise", "None"], answer: "async" },
+                { question: "What is the output of console.log(Promise.resolve(5))?", options: ["Promise object", "5", "Error", "None"], answer: "Promise object" },
+                { question: "Which keyword is used for waiting in async functions?", options: ["await", "wait", "pause", "None"], answer: "await" },
+                { question: "What is the output of console.log(new Promise((resolve) => resolve(5)))?", options: ["Promise object", "5", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise resolution?", options: ["then()", "resolve()", "fulfill()", "None"], answer: "then()" },
+                { question: "What is the output of console.log(Promise.reject(5))?", options: ["Promise object", "5", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise rejection?", options: ["catch()", "reject()", "fail()", "None"], answer: "catch()" },
+                { question: "What is the output of console.log(Promise.all([Promise.resolve(1), Promise.resolve(2)]))?", options: ["Promise object", "[1,2]", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle multiple Promises?", options: ["Promise.all()", "Promise.race()", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log(Promise.race([Promise.resolve(1), Promise.resolve(2)]))?", options: ["Promise object", "1", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to create a resolved Promise?", options: ["Promise.resolve()", "Promise.fulfill()", "Promise.success()", "None"], answer: "Promise.resolve()" },
+                { question: "What is the output of console.log(Promise.reject(5).catch(x => x))?", options: ["Promise object", "5", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to create a rejected Promise?", options: ["Promise.reject()", "Promise.fail()", "Promise.error()", "None"], answer: "Promise.reject()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => x * 2))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise finally?", options: ["finally()", "complete()", "done()", "None"], answer: "finally()" },
+                { question: "What is the output of console.log(Promise.resolve(5).finally(() => 10))?", options: ["Promise object", "5", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise allSettled?", options: ["Promise.allSettled()", "Promise.allDone()", "Promise.allComplete()", "None"], answer: "Promise.allSettled()" },
+                { question: "What is the output of console.log(Promise.allSettled([Promise.resolve(1), Promise.reject(2)]))?", options: ["Promise object", "[1,2]", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise any?", options: ["Promise.any()", "Promise.some()", "Promise.one()", "None"], answer: "Promise.any()" },
+                { question: "What is the output of console.log(Promise.any([Promise.resolve(1), Promise.reject(2)]))?", options: ["Promise object", "1", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise timeout?", options: ["Promise.timeout()", "Promise.delay()", "Promise.wait()", "None"], answer: "Promise.timeout()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => Promise.resolve(x * 2)))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise retry?", options: ["Promise.retry()", "Promise.retryOnError()", "Promise.retryOnFailure()", "None"], answer: "Promise.retry()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => Promise.reject(x * 2)))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise debounce?", options: ["Promise.debounce()", "Promise.delay()", "Promise.wait()", "None"], answer: "Promise.debounce()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => Promise.resolve(x * 2)))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise throttle?", options: ["Promise.throttle()", "Promise.limit()", "Promise.rate()", "None"], answer: "Promise.throttle()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => Promise.resolve(x * 2)))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" },
+                { question: "Which method is used to handle Promise memoize?", options: ["Promise.memoize()", "Promise.cache()", "Promise.store()", "None"], answer: "Promise.memoize()" },
+                { question: "What is the output of console.log(Promise.resolve(5).then(x => Promise.resolve(x * 2)))?", options: ["Promise object", "10", "Error", "None"], answer: "Promise object" }
+            ],
+            es6: [
+                { question: "What is ES6?", options: ["ECMAScript 2015", "JavaScript 6", "ECMAScript 6", "None"], answer: "ECMAScript 2015" },
+                { question: "Which keyword is used for let declarations?", options: ["let", "var", "const", "None"], answer: "let" },
+                { question: "What is the output of console.log(let x = 5)?", options: ["Error", "5", "undefined", "None"], answer: "Error" },
+                { question: "Which keyword is used for const declarations?", options: ["const", "let", "var", "None"], answer: "const" },
+                { question: "What is the output of console.log(const x = 5)?", options: ["Error", "5", "undefined", "None"], answer: "Error" },
+                { question: "Which keyword is used for arrow functions?", options: ["=>", "->", "arrow", "None"], answer: "=>" },
+                { question: "What is the output of console.log(() => 5)()?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for template literals?", options: ["`", "'", '"', "None"], answer: "`" },
+                { question: "What is the output of console.log(`5 + 5 = ${5 + 5}`)?", options: ["5 + 5 = 10", "10", "Error", "None"], answer: "5 + 5 = 10" },
+                { question: "Which keyword is used for destructuring?", options: ["{}", "[]", "Both A and B", "None"], answer: "Both A and B" },
+                { question: "What is the output of console.log([a, b] = [1, 2])?", options: ["[1, 2]", "undefined", "Error", "None"], answer: "[1, 2]" },
+                { question: "Which keyword is used for spread operator?", options: ["...", "spread", "expand", "None"], answer: "..." },
+                { question: "What is the output of console.log([...'hello'])?", options: ["['h','e','l','l','o']", "hello", "Error", "None"], answer: "['h','e','l','l','o']" },
+                { question: "Which keyword is used for rest parameters?", options: ["...", "rest", "params", "None"], answer: "..." },
+                { question: "What is the output of console.log((...args) => args)(1,2,3))?", options: ["[1,2,3]", "undefined", "Error", "None"], answer: "[1,2,3]" },
+                { question: "Which keyword is used for default parameters?", options: ["=", "default", "param", "None"], answer: "=" },
+                { question: "What is the output of console.log((x = 5) => x)()?", options: ["5", "undefined", "Error", "None"], answer: "5" },
+                { question: "Which keyword is used for classes?", options: ["class", "struct", "interface", "None"], answer: "class" },
+                { question: "What is the output of console.log(class{})?", options: ["function", "object", "Error", "None"], answer: "function" },
+                { question: "Which keyword is used for modules?", options: ["export", "module", "package", "None"], answer: "export" },
+                { question: "What is the output of console.log(export x = 5)?", options: ["Error", "5", "undefined", "None"], answer: "Error" },
+                { question: "Which keyword is used for generators?", options: ["function*", "generator", "yield", "None"], answer: "function*" },
+                { question: "What is the output of console.log(function*(){yield 5})()?", options: ["Generator object", "5", "Error", "None"], answer: "Generator object" },
+                { question: "Which keyword is used for yield?", options: ["yield", "return", "next", "None"], answer: "yield" },
+                { question: "What is the output of console.log(function*(){yield 5}().next())?", options: ["{value: 5, done: false}", "5", "Error", "None"], answer: "{value: 5, done: false}" },
+                { question: "Which keyword is used for Map?", options: ["Map", "HashMap", "Dictionary", "None"], answer: "Map" },
+                { question: "What is the output of console.log(new Map())?", options: ["Map object", "{}", "Error", "None"], answer: "Map object" },
+                { question: "Which keyword is used for Set?", options: ["Set", "HashSet", "Collection", "None"], answer: "Set" },
+                { question: "What is the output of console.log(new Set())?", options: ["Set object", "[]", "Error", "None"], answer: "Set object" },
+                { question: "Which keyword is used for Symbol?", options: ["Symbol", "Token", "Key", "None"], answer: "Symbol" },
+                { question: "What is the output of console.log(Symbol())?", options: ["Symbol", "undefined", "Error", "None"], answer: "Symbol" },
+                { question: "Which keyword is used for Proxy?", options: ["Proxy", "Delegate", "Wrapper", "None"], answer: "Proxy" },
+                { question: "What is the output of console.log(new Proxy({}, {}))?", options: ["Proxy object", "{}", "Error", "None"], answer: "Proxy object" },
+                { question: "Which keyword is used for Reflect?", options: ["Reflect", "Mirror", "Reflection", "None"], answer: "Reflect" },
+                { question: "What is the output of console.log(Reflect)?", options: ["Reflect object", "undefined", "Error", "None"], answer: "Reflect object" }
+            ]
+
+};
+
+let quizData = []; // Stores selected topic questions
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let timerInterval;
+let timeLeft;
+
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Function to start timer
+function startTimer() {
+    const timerDisplay = document.querySelector('.quiz-timer');
+    const timerSpan = document.getElementById('timer');
+    timeLeft = 20; // 10 minutes in seconds
+    
+    timerDisplay.style.display = 'block';
+    
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerSpan.textContent = formatTime(timeLeft);
+        
+        // Warning when 1 minute remaining
+        if (timeLeft <= 60) {
+            timerDisplay.classList.add('warning');
+        }
+        
+        // Auto-submit when time's up
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            showTimeUpMessage();
+            disableQuizOptions();
+            updateQuestionGrid();
+        }
+    }, 1000);
+}
+
+// Add new function to show Time's Up message
+function showTimeUpMessage() {
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    const timeUpMessage = document.createElement('div');
+    timeUpMessage.style.textAlign = 'center';
+    timeUpMessage.style.padding = '20px';
+    timeUpMessage.style.marginTop = '20px';
+    timeUpMessage.style.backgroundColor = '#ff4444';
+    timeUpMessage.style.color = 'white';
+    timeUpMessage.style.borderRadius = '10px';
+    timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+    timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+    quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+    
+    // Show submit button
+    document.getElementById('submit-quiz').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'none';
+}
+
+// Function to disable quiz options
+function disableQuizOptions() {
+    const optionsDiv = document.querySelector('.quiz-options');
+    if (optionsDiv) {
+        optionsDiv.classList.add('disabled');
+        const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
+
+// Function to stop timer
+function stopTimer() {
+    clearInterval(timerInterval);
+    document.querySelector('.quiz-timer').style.display = 'none';
+}
+
+// Function to start quiz with selected topic
+function startQuiz(topic, isRestore = false) {
+    currentTopic = topic;
+    const quizIntro = document.querySelector('.quiz-intro');
+    const quizContainer = document.querySelector('.quiz-container');
+    const topicSelect = document.querySelector('.quiz-topics');
+
+    if (!topic) {
+        // Show intro, hide quiz container when no topic selected
+        quizIntro.style.display = 'block';
+        quizContainer.style.display = 'none';
+        stopTimer();
+        return;
+    }
+
+    // Hide intro and topic select with fade out effect
+    quizIntro.style.opacity = '0';
+    topicSelect.style.opacity = '0';
+    setTimeout(() => {
+        quizIntro.style.display = 'none';
+        topicSelect.style.display = 'none';
+    }, 300);
+
+    let allQuestions = topicQuestions[topic];
+    if (!allQuestions) {
+        console.error('No questions found for topic:', topic);
+        return;
+    }
+
+    // After setting quizData:
+    if (!isRestore) {
+        quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+        currentQuestionIndex = 0;
+        userAnswers = new Array(quizData.length).fill(null);
+    }
+
+    // Reset quiz UI
+    document.getElementById('quiz-questions').style.display = 'block';
+    document.getElementById('quiz-questions').innerHTML = '';
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('retake-quiz').style.display = 'none';
+
+    // Update quiz heading
+    document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+    // Show quiz container with fade in effect
+    quizContainer.style.opacity = '0';
+    quizContainer.style.display = 'block';
+    setTimeout(() => {
+        quizContainer.style.opacity = '1';
+    }, 50);
+
+    // Reset navigation buttons
+    document.getElementById('prev-question').style.display = 'inline-block';
+    document.getElementById('next-question').style.display = 'inline-block';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    // Start the timer
+    startTimer();
+
+    displayQuestion();
+    updateQuestionGrid();
+}
+
+// Function to format topic names (e.g., "file_handling" → "File Handling")
+function formatTopic(topic) {
+    return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+// Function to display questions
+function displayQuestion() {
+    if (!quizData || quizData.length === 0) return;
+
+    const quizQuestionsDiv = document.getElementById('quiz-questions');
+    quizQuestionsDiv.innerHTML = '';
+
+    const question = quizData[currentQuestionIndex];
+    if (!question) return;
+
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('quiz-question');
+
+    const questionText = document.createElement('p');
+    questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+    questionDiv.appendChild(questionText);
+
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('quiz-options');
+    
+    if (timeLeft <= 0) {
+        optionsDiv.classList.add('disabled');
+    }
+
+    question.options.forEach(option => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `question${currentQuestionIndex}`;
+        input.value = option;
+        input.checked = userAnswers[currentQuestionIndex] === option;
+        
+        if (timeLeft <= 0) {
+            input.disabled = true;
+        }
+
+        input.onchange = () => {
+            if (timeLeft > 0) {
+                userAnswers[currentQuestionIndex] = option;
+                // Immediate grid update when answer is selected
+                setTimeout(() => {
+                    updateQuestionGrid();
+                }, 50);
+            }
+        };
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(option));
+        optionsDiv.appendChild(label);
+    });
+
+    questionDiv.appendChild(optionsDiv);
+    quizQuestionsDiv.appendChild(questionDiv);
+
+    document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+    document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+    document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+    
+    updateQuestionGrid();
+}
+
+// Function to navigate questions
+function nextQuestion() {
+    if (currentQuestionIndex < quizData.length - 1) {
+        // Mark current question as skipped if no answer selected
+        if (userAnswers[currentQuestionIndex] === null) {
+            userAnswers[currentQuestionIndex] = "skipped";
+        }
+        
+        currentQuestionIndex++;
+        displayQuestion();
+        updateQuestionGrid();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+}
+
+// Function to submit quiz
+function submitQuiz() {
+    stopTimer();
+    
+    // Mark all unanswered questions as incorrect
+    userAnswers.forEach((answer, index) => {
+        if (answer === null) {
+            userAnswers[index] = "skipped";
+        }
+    });
+    updateQuestionGrid();
+    
+    let score = 0;
+    userAnswers.forEach((answer, index) => {
+        if (answer === quizData[index].answer) {
+            score++;
+        }
+    });
+
+    document.getElementById('quiz-questions').style.display = 'none';
+    document.getElementById('prev-question').style.display = 'none';
+    document.getElementById('next-question').style.display = 'none';
+    document.getElementById('submit-quiz').style.display = 'none';
+
+    const quizResultDiv = document.getElementById('quiz-result');
+    const percentage = Math.round((score / quizData.length) * 100);
+    
+    let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+    message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+    
+    if (percentage === 100) {
+        message += `<p>Perfect score! Excellent work! 🌟</p>`;
+    } else if (percentage >= 80) {
+        message += `<p>Great job! Keep up the good work! 👍</p>`;
+    } else if (percentage >= 60) {
+        message += `<p>Not bad! Keep practicing! 💪</p>`;
+    } else {
+        message += `<p>Keep practicing! You can do better! 📚</p>`;
+    }
+
+    // Add detailed summary in a scrollable container
+    message += `
+        <div class="quiz-summary" style="
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f8f8;
+        ">
+            <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+    `;
+
+    quizData.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.answer;
+        const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+        const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+        message += `
+            <div style="
+                margin-bottom: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                text-align: left;
+            ">
+                <p style="font-weight: 600; margin-bottom: 10px;">
+                    Question ${index + 1}: ${question.question}
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Your Answer:</span> 
+                    <span style="color: ${statusColor}; font-weight: 500;">
+                        ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                    </span>
+                </p>
+                <p style="margin-bottom: 5px;">
+                    <span style="color: #666;">Correct Answer:</span> 
+                    <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                </p>
+                <p style="
+                    margin-top: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+                    border-radius: 4px;
+                    background: ${statusColor};
+                    color: white;
+                    font-size: 0.9rem;
+                ">${answerStatus}</p>
+            </div>
+        `;
+    });
+
+    message += `</div>`;
+    
+    quizResultDiv.innerHTML = message;
+    quizResultDiv.style.display = 'block';
+    quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+    document.getElementById('retake-quiz').style.display = 'inline-block';
+    document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+    // Scroll to top of the results
+    quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Function to retake quiz
+function retakeQuiz() {
+    stopTimer();
+    
+    // Show intro and topic select again
+    const quizIntro = document.querySelector('.quiz-intro');
+    const topicSelect = document.querySelector('.quiz-topics');
+    const quizContainer = document.querySelector('.quiz-container');
+
+    // Hide quiz container
+    quizContainer.style.opacity = '0';
+    setTimeout(() => {
+        quizContainer.style.display = 'none';
+        
+        // Show intro and topic select with fade in
+        quizIntro.style.display = 'block';
+        topicSelect.style.display = 'block';
+        setTimeout(() => {
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+        }, 50);
+    }, 300);
+
+    // Reset all states
+    currentQuestionIndex = 0;
+    userAnswers = [];
+    quizData = [];
+    
+    // Reset topic select
+    document.querySelector('.quiz-topic-select').value = '';
+}
+
+// Add these functions before the startQuiz function:
+function updateQuestionGrid() {
+    const grid = document.getElementById('question-grid');
+    grid.innerHTML = '';
+    
+    for (let i = 0; i < quizData.length; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'grid-item';
+        gridItem.textContent = (i + 1).toString();
+        
+        // Check if question has been attempted (any answer selected)
+        if (userAnswers[i] && userAnswers[i] !== "skipped") {
+            // Question attempted - Blue
+            gridItem.style.backgroundColor = '#2196F3';
+            gridItem.style.borderColor = '#2196F3';
+            gridItem.style.color = '#ffffff';
+        } else if (userAnswers[i] === "skipped") {
+            // Question skipped or not attempted - Red
+            gridItem.style.backgroundColor = '#ff4444';
+            gridItem.style.borderColor = '#ff4444';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Current question - Black
+        if (i === currentQuestionIndex) {
+            gridItem.style.backgroundColor = '#000000';
+            gridItem.style.borderColor = '#000000';
+            gridItem.style.color = '#ffffff';
+        }
+        
+        // Disabled state when time's up
+        if (timeLeft <= 0) {
+            gridItem.classList.add('disabled');
+        } else {
+            gridItem.onclick = () => {
+                currentQuestionIndex = i;
+                displayQuestion();
+                updateQuestionGrid();
+            };
+        }
+        
+        grid.appendChild(gridItem);
+    }
+    
+    saveQuizState();
+}
+
+function saveQuizState() {
+    const quizState = {
+        topic: currentTopic,
+        answers: userAnswers,
+        timeLeft: timeLeft,
+        currentIndex: currentQuestionIndex,
+        quizData: quizData
+    };
+    localStorage.setItem('quizState', JSON.stringify(quizState));
+}
+
+function loadQuizState() {
+    const savedState = localStorage.getItem('quizState');
+    if (savedState) {
+        if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+            const state = JSON.parse(savedState);
+            currentTopic = state.topic;
+            userAnswers = state.answers;
+            timeLeft = state.timeLeft;
+            currentQuestionIndex = state.currentIndex;
+            quizData = state.quizData;
+            
+            if (currentTopic) {
+                startQuiz(currentTopic, true);
+            }
+        } else {
+            // Clear saved state and show the starting page
+            localStorage.removeItem('quizState');
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+            
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+            currentTopic = '';
+            
+            // Show intro and topic select
+            quizContainer.style.display = 'none';
+            quizIntro.style.display = 'block';
+            topicSelect.style.display = 'block';
+            quizIntro.style.opacity = '1';
+            topicSelect.style.opacity = '1';
+            
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+    }
+}
+
+// Modify the startQuiz function:
+let currentTopic = '';
+
+// Add to the end of the script:
+// Load saved state when page loads
+window.addEventListener('load', loadQuizState);
+        // JavaScript to handle modal functionality
+        function openModal(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = videoUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = ''; // Stop the video when closing
+            modal.style.display = 'none';
+        }
+
+        // JavaScript to handle redirection to home.html
+        function redirectToHome() {
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+
+</html>
