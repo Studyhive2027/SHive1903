@@ -6,8 +6,711 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Coding Hub</title>
     <style>
-        /* General Styles */
         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        section {
+            padding: 40px 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        section h2:hover::after {
+            width: 100px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            justify-content: space-between;
+
+        }
+        .item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.33% - 20px);
+            height: 325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item h3 {
+            font-size: 1.2rem;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .item p {
+            font-size: 0.9rem;
+            color: #333333;
+            flex-grow: 1;
+        }
+
+        .item a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .item a:hover {
+            color: #666666;
+        }
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #000000;
+            opacity: 0.8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+        .video-thumbnail:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-section {
+            padding: 40px 0;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            opacity: 1;
+            border: 2px solid #000000;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2.4rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom dropdown styling */
+        .quiz-topics {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quiz-topic-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px 30px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 2px solid #000000;
+            border-radius: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-topics::after {
+            content: '⌄';
+            font-size: 1.5rem;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .quiz-topics:hover::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .quiz-topic-select:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-topic-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-topic-select option {
+            padding: 20px;
+            font-size: 1.1rem;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Update the topics selection HTML */
+        .quiz-topics {
+            margin-bottom: 40px;
+        }
+
+        .quiz-topic-select {
+            background-image: linear-gradient(45deg, transparent 50%, #000000 50%),
+                            linear-gradient(135deg, #000000 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 10px),
+                               calc(100% - 15px) calc(1em + 10px);
+            background-size: 5px 5px,
+                           5px 5px;
+            background-repeat: no-repeat;
+        }
+
+        .quiz-topic-select:hover {
+            background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                            linear-gradient(135deg, #ffffff 50%, transparent 50%);
+        }
+
+        .quiz-question {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .quiz-question:hover {
+            transform: translateX(5px) scale(1.01);
+            border-color: #000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .quiz-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-options label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .quiz-options label:hover {
+            color: #ffffff;
+            transform: translateX(5px);
+            border-color: #000000;
+        }
+
+        .quiz-options label:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .quiz-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .quiz-navigation button {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-navigation button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            background: #ffffff;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .quiz-navigation button:hover {
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-navigation button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) translateY(0);
+        }
+
+        .quiz-navigation button:disabled {
+            background: #cccccc;
+            border-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease;
+            border: 2px solid #000000;
+        }
+
+        .quiz-result h3 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .quiz-result p {
+            font-size: 1.3rem;
+            color: #000000;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        #retake-quiz {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            margin: 30px auto 0;
+        }
+
+        #retake-quiz:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .js-hub-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 2px;
+            align-content: top;
+        }
+
+        .js-hub-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .js-hub-header p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+
+        /* Timer styles */
+        .quiz-timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            margin-left: 20px;
+        }
+
+        .quiz-timer.warning {
+            background: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        #quiz-title {
+            text-align: center;
+            color: #000000;
+            font-size: 2rem;
+            margin: 20px 0 40px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 30px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quiz-options.disabled label {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .quiz-options.disabled input[type="radio"] {
+            pointer-events: none;
+        }
+
+        /* Question Grid styles */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            max-width: 900px;
+        }
+
+        .grid-item {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.current {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .grid-item.answered {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .grid-item.incorrect {
+            background: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+        }
+
+        .grid-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the chat interface */
+        .chat-panel {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            outline: none;
+        }
+                /* General Styles */
+                * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -28,7 +731,24 @@
             max-width: 1200px;
         }
 
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1001; /* Ensure it's above other content */
+        }
 
+        .back-button:hover {
+            background-color: #333333;
+        }
 
         /* Sections */
         section {
@@ -163,33 +883,54 @@
             border: none;
             border-radius: 10px;
         }
-     /* Back Button */
-     .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #000000;
-            color: #ffffff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            z-index: 1001; /* Ensure it's above other content */
-        }
-
-        .back-button:hover {
-            background-color: #333333;
-        }
-
     </style>
 </head>
 
 <body>
+    <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
+    
+    
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header" onclick="toggleChatPanel()">Chat</div>
+        <div class="chat-body" id="chatBody">
+            <!-- Chat messages will appear here -->
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        function toggleChatPanel() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.style.display = chatPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    const chatBody = document.getElementById('chatBody');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = message;
+                    chatBody.appendChild(messageDiv);
+                    input.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+        }
+    </script>
+
+<!-- C Hub Title & Welcome Message -->
+<header class="js-hub-header">
+    <h1>Welcome to Python Programming Hub</h1>
+    <p>Your go-to platform to test and improve your Python programming skills.</p>
+</header>
+
      <!-- Back Button -->
      <button><a href="{{ url_for('home') }}" class="back-button">Back</a></button>
-    <!-- Main Content -->
-    <main class="content">
+
+     <!-- Main Content -->
+     <main class="content">
         <!-- Tutorials Section -->
         <section id="tutorials" class="tutorials">
             <div class="container">
@@ -330,31 +1071,814 @@
     </div>
 </section>
     </main>
+       
+        <!-- Quiz Section -->
+        <section id="quiz" class="quiz-section">
+            <div class="container">
+                <h2 class="quiz-title">Test Your Python Knowledge</h2>
 
-    <!-- Modal for Video -->
+                <!-- Added engaging intro content -->
+                <div class="quiz-intro" style="text-align: center; max-width: 800px; margin: 0 auto 40px; animation: fadeIn 0.8s ease-out;">
+                    <div class="quiz-steps" style="display: flex; justify-content: space-around; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">1️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Choose Your Topic</h3>
+                            <p style="color: #333333;">Select from various Python programming concepts to test your knowledge</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">2️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Answer Questions</h3>
+                            <p style="color: #333333;">Take on 15 carefully curated questions to challenge your understanding</p>
+                        </div>
+                        <div class="step" style="flex: 1; min-width: 200px; padding: 20px; background: #ffffff; border: 2px solid #000000; border-radius: 15px; transition: all 0.3s ease;">
+                            <div style="font-size: 2rem; margin-bottom: 15px;">3️⃣</div>
+                            <h3 style="margin-bottom: 10px; color: #000000;">Get Your Score</h3>
+                            <p style="color: #333333;">Receive immediate feedback and track your progress</p>
+                        </div>
+                    </div>
+
+                    <div class="quiz-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">📚 Multiple Topics</h4>
+                            <p style="color: #333333;">From basics to advanced concepts</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">⏱️ Quick Assessment</h4>
+                            <p style="color: #333333;">10 questions per quiz session</p>
+                        </div>
+                        <div class="feature" style="padding: 20px; background: #ffffff; border: 1px solid #000000; border-radius: 10px; transition: all 0.3s ease;">
+                            <h4 style="margin-bottom: 10px; color: #000000;">🎯 Instant Results</h4>
+                            <p style="color: #333333;">Get immediate feedback on your performance</p>
+                        </div>
+                    </div>
+
+                    <div class="start-prompt" style="background: #000000; color: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; animation: fadeInUp 0.8s ease-out;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Ready to Challenge Yourself? 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Select a topic below and start your learning journey!</p>
+                    </div>
+                </div>
+
+                <!-- Topics Selection -->
+                <div class="quiz-topics">
+                    <select class="quiz-topic-select" onchange="startQuiz(this.value)">
+                        <option value="" disabled selected>Choose Your Topic</option>
+                        <option value="basics">📚 Python Basics & Syntax</option>
+                        <option value="data_structures">🔍 Data Structures & Collections</option>
+                        <option value="functions">⚙️ Functions & Modules</option>
+                        <option value="oop">🏗️ Object-Oriented Programming</option>
+                        <option value="advanced">🚀 Advanced Python Concepts</option>
+                        <option value="libraries">📦 Popular Python Libraries</option>
+                    </select>
+                </div>
+        
+                <div class="quiz-container">
+                    <div class="quiz-timer">Time: <span id="timer">00:00</span></div>
+                    <h3 id="quiz-title">Choose a Topic to Begin</h3>
+                    <div class="question-grid" id="question-grid"></div>
+                    <div id="quiz-questions"></div>
+                    <div class="quiz-navigation">
+                        <button id="prev-question" onclick="prevQuestion()">Previous</button>
+                        <button id="next-question" onclick="nextQuestion()">Next</button>
+                        <button id="submit-quiz" onclick="submitQuiz()">Submit</button>
+                    </div>
+                    <div id="quiz-result" class="quiz-result"></div>
+                    <button id="retake-quiz" onclick="retakeQuiz()" style="display: none;">Retake Quiz</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal (unchanged) -->
     <div id="videoModal" class="modal">
         <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
         <button onclick="closeModal()"
             style="position: absolute; top: 20px; right: 20px; background: #ffffff; color: #000000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
     </div>
 
-
-
+    
     <script>
-        // JavaScript to handle modal functionality
         function openModal(videoUrl) {
             const modal = document.getElementById('videoModal');
             const iframe = document.getElementById('videoFrame');
             iframe.src = videoUrl;
             modal.style.display = 'flex';
         }
-
         function closeModal() {
             const modal = document.getElementById('videoModal');
             const iframe = document.getElementById('videoFrame');
             iframe.src = ''; // Stop the video when closing
             modal.style.display = 'none';
         }
+
+
+
+
+         // Quiz questions and answers
+         // Quiz questions and answers (30-40 questions)
+        // Questions categorized by topics
+        const topicQuestions = {
+            basics: [
+                { question: "What is Python?", options: ["A high-level programming language", "A database system", "An operating system", "A web browser"], answer: "A high-level programming language" },
+                { question: "Which of these is not a valid Python variable name?", options: ["my_variable", "123variable", "variable_name", "_variable"], answer: "123variable" },
+                { question: "What is the correct way to create a comment in Python?", options: ["# This is a comment", "// This is a comment", "/* This is a comment */", "<!-- This is a comment -->"], answer: "# This is a comment" },
+                { question: "What is the output of print(2 ** 3)?", options: ["8", "6", "9", "5"], answer: "8" },
+                { question: "Which operator is used for string concatenation in Python?", options: ["+", "&", ".", "||"], answer: "+" },
+                { question: "What is the result of 5 / 2 in Python 3?", options: ["2.5", "2", "2.0", "Error"], answer: "2.5" },
+                { question: "Which of these is a boolean value in Python?", options: ["True", "true", "TRUE", "1"], answer: "True" },
+                { question: "What is the correct way to check if a variable is None?", options: ["if x is None:", "if x == None:", "if x = None:", "if x === None:"], answer: "if x is None:" },
+                { question: "What is the output of print(type(3.14))?", options: ["<class 'float'>", "<class 'int'>", "<class 'double'>", "<class 'decimal'>"], answer: "<class 'float'>" },
+                { question: "Which of these is not a built-in data type in Python?", options: ["array", "int", "str", "bool"], answer: "array" },
+                { question: "What is the output of print('Hello' * 3)?", options: ["HelloHelloHello", "Hello 3", "Error", "Hello Hello Hello"], answer: "HelloHelloHello" },
+                { question: "Which of these is a valid way to create a multi-line string?", options: ["'''Hello\nWorld'''", "//Hello\nWorld//", "/*Hello\nWorld*/", "None of these"], answer: "'''Hello\nWorld'''" },
+                { question: "What is the output of print(round(3.14159, 2))?", options: ["3.14", "3.142", "3.1", "3.0"], answer: "3.14" },
+                { question: "Which of these is not a valid comparison operator in Python?", options: ["===", "==", "!=", "<="], answer: "===" },
+                { question: "What is the output of print(0.1 + 0.2)?", options: ["0.30000000000000004", "0.3", "0.30", "Error"], answer: "0.30000000000000004" },
+                { question: "Which of these is a valid way to convert a string to an integer?", options: ["int('123')", "toInt('123')", "parseInt('123')", "None of these"], answer: "int('123')" },
+                { question: "What is the output of print('Python'.lower())?", options: ["python", "PYTHON", "Python", "Error"], answer: "python" },
+                { question: "Which of these is a valid way to check if a string contains a substring?", options: ["'Hello' in 'Hello World'", "'Hello'.contains('World')", "'Hello'.includes('World')", "None of these"], answer: "'Hello' in 'Hello World'" },
+                { question: "What is the output of print(len([1, 2, 3, 4, 5]))?", options: ["5", "4", "6", "Error"], answer: "5" },
+                { question: "Which of these is a valid way to create an empty list?", options: ["[]", "list()", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of print('Python'.upper())?", options: ["PYTHON", "python", "Python", "Error"], answer: "PYTHON" },
+                { question: "Which of these is a valid way to convert a string to a float?", options: ["float('3.14')", "toFloat('3.14')", "parseFloat('3.14')", "None of these"], answer: "float('3.14')" },
+                { question: "What is the output of print('Hello'.replace('l', 'w'))?", options: ["Hewwo", "Hello", "Hewlo", "Error"], answer: "Hewwo" },
+                { question: "Which of these is a valid way to check if a string starts with a prefix?", options: ["'Hello'.startswith('He')", "'Hello'.beginsWith('He')", "'Hello'.startsWith('He')", "None of these"], answer: "'Hello'.startswith('He')" },
+                { question: "What is the output of print('Python'.find('th'))?", options: ["2", "1", "3", "Error"], answer: "2" },
+                { question: "Which of these is a valid way to split a string into a list?", options: ["'Hello World'.split()", "'Hello World'.split(' ')", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of print('Python'.strip('P'))?", options: ["ython", "Python", "Error", "None of these"], answer: "ython" },
+                { question: "Which of these is a valid way to join a list of strings?", options: ["' '.join(['Hello', 'World'])", "'Hello World'.join(' ')", "join(['Hello', 'World'])", "None of these"], answer: "' '.join(['Hello', 'World'])" },
+                { question: "What is the output of print('Python'.count('n'))?", options: ["1", "0", "2", "Error"], answer: "1" },
+                { question: "Which of these is a valid way to check if a string is numeric?", options: ["'123'.isdigit()", "'123'.isnumeric()", "Both A and B", "None of these"], answer: "Both A and B" }
+            ],
+            data_structures: [
+                { question: "What is a list in Python?", options: ["A mutable sequence of elements", "A fixed-size array", "A dictionary", "A set"], answer: "A mutable sequence of elements" },
+                { question: "How do you create an empty dictionary?", options: ["{}", "dict()", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the difference between a list and a tuple?", options: ["Lists are mutable, tuples are immutable", "Tuples are mutable, lists are immutable", "There is no difference", "Lists can only contain numbers"], answer: "Lists are mutable, tuples are immutable" },
+                { question: "What is a set in Python?", options: ["An unordered collection of unique elements", "A sorted collection of elements", "A key-value pair collection", "A sequence of elements"], answer: "An unordered collection of unique elements" },
+                { question: "How do you add an element to a set?", options: ["add()", "append()", "insert()", "push()"], answer: "add()" },
+                { question: "What is the output of len([1, 2, 3, 4, 5])?", options: ["5", "4", "6", "Error"], answer: "5" },
+                { question: "How do you access the last element of a list?", options: ["list[-1]", "list.last()", "list.end()", "list[len(list)]"], answer: "list[-1]" },
+                { question: "What is the difference between append() and extend()?", options: ["append adds one element, extend adds multiple elements", "extend adds one element, append adds multiple elements", "There is no difference", "append is faster than extend"], answer: "append adds one element, extend adds multiple elements" },
+                { question: "What is a dictionary comprehension?", options: ["A way to create dictionaries using a single line of code", "A way to sort dictionaries", "A way to merge dictionaries", "A way to delete dictionary elements"], answer: "A way to create dictionaries using a single line of code" },
+                { question: "What is the output of [1, 2, 3] * 2?", options: ["[1, 2, 3, 1, 2, 3]", "[2, 4, 6]", "[1, 2, 3, 2]", "Error"], answer: "[1, 2, 3, 1, 2, 3]" },
+                { question: "What is the output of {1: 'a', 2: 'b'}.get(3, 'default')?", options: ["'default'", "None", "KeyError", "Error"], answer: "'default'" },
+                { question: "How do you remove an element from a set?", options: ["remove()", "delete()", "erase()", "None of these"], answer: "remove()" },
+                { question: "What is the output of [1, 2, 3].pop()?", options: ["3", "1", "None", "Error"], answer: "3" },
+                { question: "Which of these is a valid way to create a tuple with one element?", options: ["(1,)", "(1)", "1", "None of these"], answer: "(1,)" },
+                { question: "What is the output of {1, 2, 3} & {3, 4, 5}?", options: ["{3}", "{1, 2, 3, 4, 5}", "{1, 2, 4, 5}", "Error"], answer: "{3}" },
+                { question: "How do you sort a list in reverse order?", options: ["list.sort(reverse=True)", "list.reverse()", "list.sort(reverse)", "None of these"], answer: "list.sort(reverse=True)" },
+                { question: "What is the output of [1, 2, 3].count(2)?", options: ["1", "2", "0", "Error"], answer: "1" },
+                { question: "Which of these is a valid way to create a deep copy of a list?", options: ["copy.deepcopy()", "list.copy()", "list.clone()", "None of these"], answer: "copy.deepcopy()" },
+                { question: "What is the output of {1: 'a'}.update({2: 'b'})?", options: ["None", "{1: 'a', 2: 'b'}", "Error", "None of these"], answer: "None" },
+                { question: "How do you check if a key exists in a dictionary?", options: ["'key' in dict", "dict.hasKey('key')", "dict.contains('key')", "None of these"], answer: "'key' in dict" },
+                { question: "What is the output of [1, 2, 3].insert(1, 4)?", options: ["None", "[1, 4, 2, 3]", "[1, 2, 4, 3]", "Error"], answer: "None" },
+                { question: "Which of these is a valid way to create a set from a list?", options: ["set([1, 2, 3])", "{1, 2, 3}", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of {1: 'a'}.setdefault(2, 'b')?", options: ["'b'", "None", "Error", "None of these"], answer: "'b'" },
+                { question: "Which of these is a valid way to get all keys from a dictionary?", options: ["dict.keys()", "dict.getKeys()", "dict.allKeys()", "None of these"], answer: "dict.keys()" },
+                { question: "What is the output of [1, 2, 3].extend([4, 5])?", options: ["None", "[1, 2, 3, 4, 5]", "[1, 2, 3]", "Error"], answer: "None" },
+                { question: "Which of these is a valid way to create a tuple from a list?", options: ["tuple([1, 2, 3])", "(1, 2, 3)", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of {1: 'a'}.pop(1)?", options: ["'a'", "None", "Error", "None of these"], answer: "'a'" },
+                { question: "Which of these is a valid way to check if a value exists in a set?", options: ["1 in {1, 2, 3}", "{1, 2, 3}.contains(1)", "{1, 2, 3}.has(1)", "None of these"], answer: "1 in {1, 2, 3}" },
+                { question: "What is the output of [1, 2, 3].remove(2)?", options: ["None", "[1, 3]", "[1, 2, 3]", "Error"], answer: "None" },
+                { question: "Which of these is a valid way to get all values from a dictionary?", options: ["dict.values()", "dict.getValues()", "dict.allValues()", "None of these"], answer: "dict.values()" }
+            ],
+            functions: [
+                { question: "What is a function in Python?", options: ["A reusable block of code", "A variable", "A data type", "A loop"], answer: "A reusable block of code" },
+                { question: "What is the correct way to define a function?", options: ["def function_name():", "function function_name():", "void function_name():", "func function_name():"], answer: "def function_name():" },
+                { question: "What is a lambda function?", options: ["An anonymous function", "A named function", "A recursive function", "A built-in function"], answer: "An anonymous function" },
+                { question: "What is the purpose of the return statement?", options: ["To send a value back from a function", "To stop the function", "To print a value", "To create a new variable"], answer: "To send a value back from a function" },
+                { question: "What is a default argument?", options: ["A parameter with a default value", "A required parameter", "A variable parameter", "A keyword parameter"], answer: "A parameter with a default value" },
+                { question: "What is *args used for?", options: ["To pass a variable number of arguments", "To multiply arguments", "To create arguments", "To delete arguments"], answer: "To pass a variable number of arguments" },
+                { question: "What is **kwargs used for?", options: ["To pass keyword arguments", "To create keywords", "To delete keywords", "To sort keywords"], answer: "To pass keyword arguments" },
+                { question: "What is a docstring?", options: ["A string that documents a function", "A string variable", "A string method", "A string operator"], answer: "A string that documents a function" },
+                { question: "What is the scope of a variable?", options: ["Where the variable can be accessed", "The size of the variable", "The type of the variable", "The value of the variable"], answer: "Where the variable can be accessed" },
+                { question: "What is a closure?", options: ["A function that remembers its enclosing scope", "A function that closes the program", "A function that deletes variables", "A function that sorts data"], answer: "A function that remembers its enclosing scope" },
+                { question: "What is the output of lambda x: x**2(5)?", options: ["25", "10", "Error", "None"], answer: "25" },
+                { question: "Which of these is a valid way to define a function with type hints?", options: ["def func(x: int) -> str:", "def func(x: int) -> str():", "def func(x) -> str:", "None of these"], answer: "def func(x: int) -> str:" },
+                { question: "What is the output of def func(x=[]): x.append(1); return x; print(func()); print(func())?", options: ["[1]\n[1, 1]", "[1]\n[1]", "Error", "None of these"], answer: "[1]\n[1, 1]" },
+                { question: "How do you make a function accept only keyword arguments?", options: ["def func(*, x, y):", "def func(x, y, *):", "def func(x, y, **):", "None of these"], answer: "def func(*, x, y):" },
+                { question: "What is the output of def func(x): return x; print(func(x=5))?", options: ["5", "None", "Error", "None of these"], answer: "5" },
+                { question: "Which of these is a valid way to create a function decorator?", options: ["def decorator(func):", "def decorator(func()):", "def decorator(*func):", "None of these"], answer: "def decorator(func):" },
+                { question: "What is the output of def func(x): return lambda y: x + y; f = func(5); print(f(3))?", options: ["8", "15", "Error", "None of these"], answer: "8" },
+                { question: "How do you make a function accept any number of keyword arguments?", options: ["def func(**kwargs):", "def func(*kwargs):", "def func(keywords):", "None of these"], answer: "def func(**kwargs):" },
+                { question: "What is the output of def func(x): return x; print(func())?", options: ["TypeError", "None", "Error", "None of these"], answer: "TypeError" },
+                { question: "Which of these is a valid way to create a recursive function?", options: ["def func(n): return n if n <= 1 else n * func(n-1)", "def func(n): return n * func(n)", "def func(n): return func(n)", "None of these"], answer: "def func(n): return n if n <= 1 else n * func(n-1)" },
+                { question: "What is the output of def func(x): return lambda y: x + y; f = func(5); print(f(3))?", options: ["8", "15", "Error", "None of these"], answer: "8" },
+                { question: "Which of these is a valid way to create a function with type hints?", options: ["def func(x: int) -> str:", "def func(x: int) -> str():", "def func(x) -> str:", "None of these"], answer: "def func(x: int) -> str:" },
+                { question: "What is the output of def func(x=[]): x.append(1); return x; print(func()); print(func())?", options: ["[1]\n[1, 1]", "[1]\n[1]", "Error", "None of these"], answer: "[1]\n[1, 1]" },
+                { question: "Which of these is a valid way to make a function accept only keyword arguments?", options: ["def func(*, x, y):", "def func(x, y, *):", "def func(x, y, **):", "None of these"], answer: "def func(*, x, y):" },
+                { question: "What is the output of def func(x): return x; print(func(x=5))?", options: ["5", "None", "Error", "None of these"], answer: "5" },
+                { question: "Which of these is a valid way to create a function decorator?", options: ["def decorator(func):", "def decorator(func()):", "def decorator(*func):", "None of these"], answer: "def decorator(func):" },
+                { question: "What is the output of def func(x): return x; print(func())?", options: ["TypeError", "None", "Error", "None of these"], answer: "TypeError" },
+                { question: "Which of these is a valid way to create a recursive function?", options: ["def func(n): return n if n <= 1 else n * func(n-1)", "def func(n): return n * func(n)", "def func(n): return func(n)", "None of these"], answer: "def func(n): return n if n <= 1 else n * func(n-1)" },
+                { question: "What is the output of def func(x): return lambda y: x + y; f = func(5); print(f(3))?", options: ["8", "15", "Error", "None of these"], answer: "8" },
+                { question: "Which of these is a valid way to create a function with default arguments?", options: ["def func(x=1):", "def func(x: int = 1):", "Both A and B", "None of these"], answer: "Both A and B" }
+            ],
+            oop: [
+                { question: "What is a class in Python?", options: ["A blueprint for creating objects", "A function", "A variable", "A loop"], answer: "A blueprint for creating objects" },
+                { question: "What is an object?", options: ["An instance of a class", "A variable", "A function", "A loop"], answer: "An instance of a class" },
+                { question: "What is the constructor method in Python?", options: ["__init__", "constructor", "init", "build"], answer: "__init__" },
+                { question: "What is inheritance?", options: ["A way to create a new class from an existing class", "A way to delete a class", "A way to modify a class", "A way to print a class"], answer: "A way to create a new class from an existing class" },
+                { question: "What is encapsulation?", options: ["Bundling data and methods together", "Creating new classes", "Deleting classes", "Printing classes"], answer: "Bundling data and methods together" },
+                { question: "What is polymorphism?", options: ["The ability to use a single interface for different types", "Creating multiple classes", "Deleting classes", "Printing classes"], answer: "The ability to use a single interface for different types" },
+                { question: "What is a method?", options: ["A function defined inside a class", "A variable", "A loop", "A condition"], answer: "A function defined inside a class" },
+                { question: "What is self in Python?", options: ["A reference to the instance of the class", "A variable", "A function", "A loop"], answer: "A reference to the instance of the class" },
+                { question: "What is a static method?", options: ["A method that belongs to the class, not the instance", "A method that creates instances", "A method that deletes instances", "A method that prints instances"], answer: "A method that belongs to the class, not the instance" },
+                { question: "What is a class method?", options: ["A method that takes the class as the first argument", "A method that creates classes", "A method that deletes classes", "A method that prints classes"], answer: "A method that takes the class as the first argument" },
+                { question: "What is the output of class A: x = 1; a = A(); print(a.x)?", options: ["1", "None", "Error", "None of these"], answer: "1" },
+                { question: "Which of these is a valid way to create a private attribute?", options: ["__attribute", "private attribute", "private(attribute)", "None of these"], answer: "__attribute" },
+                { question: "What is the output of class A: def __init__(self): self.x = 1; a = A(); print(a.x)?", options: ["1", "None", "Error", "None of these"], answer: "1" },
+                { question: "How do you create a class that inherits from multiple classes?", options: ["class A(B, C):", "class A(B and C):", "class A(B + C):", "None of these"], answer: "class A(B, C):" },
+                { question: "What is the output of class A: def __str__(self): return 'A'; print(A())?", options: ["A", "None", "Error", "None of these"], answer: "A" },
+                { question: "Which of these is a valid way to create a property?", options: ["@property", "@property()", "@property(property)", "None of these"], answer: "@property" },
+                { question: "What is the output of class A: def __del__(self): print('deleted'); a = A(); del a?", options: ["deleted", "None", "Error", "None of these"], answer: "deleted" },
+                { question: "How do you create an abstract method?", options: ["@abstractmethod", "@abstract", "@abstract()", "None of these"], answer: "@abstractmethod" },
+                { question: "What is the output of class A: def __repr__(self): return 'A'; print(repr(A()))?", options: ["A", "None", "Error", "None of these"], answer: "A" },
+                { question: "Which of these is a valid way to create a class method?", options: ["@classmethod", "@class", "@class()", "None of these"], answer: "@classmethod" },
+                { question: "What is the output of class A: def __call__(self): return 1; a = A(); print(a())?", options: ["1", "None", "Error", "None of these"], answer: "1" },
+                { question: "Which of these is a valid way to create a mixin?", options: ["class Mixin:", "class Mixin(mixin):", "class Mixin(mix):", "None of these"], answer: "class Mixin:" },
+                { question: "What is method resolution order (MRO)?", options: ["The order in which Python looks for methods in a class hierarchy", "A way to delete methods", "A way to create methods", "A way to print methods"], answer: "The order in which Python looks for methods in a class hierarchy" },
+                { question: "What is the output of class A: def __len__(self): return 5; a = A(); print(len(a))?", options: ["5", "None", "Error", "None of these"], answer: "5" },
+                { question: "Which of these is a valid way to create a class variable?", options: ["class A: x = 1", "class A: def __init__(self): self.x = 1", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of class A: def __getitem__(self, index): return index; a = A(); print(a[5])?", options: ["5", "None", "Error", "None of these"], answer: "5" },
+                { question: "How do you create a class that cannot be instantiated?", options: ["class A: def __new__(cls): raise TypeError", "class A: def __init__(self): raise TypeError", "class A: def __call__(self): raise TypeError", "None of these"], answer: "class A: def __new__(cls): raise TypeError" },
+                { question: "What is the output of class A: def __setitem__(self, key, value): self.dict = {key: value}; a = A(); a['x'] = 1; print(a.dict)?", options: ["{'x': 1}", "None", "Error", "None of these"], answer: "{'x': 1}" },
+                { question: "Which of these is a valid way to create a class decorator?", options: ["def decorator(cls):", "def decorator(cls()):", "def decorator(*cls):", "None of these"], answer: "def decorator(cls):" },
+                { question: "What is the output of class A: def __iter__(self): return iter([1, 2, 3]); a = A(); print(list(a))?", options: ["[1, 2, 3]", "None", "Error", "None of these"], answer: "[1, 2, 3]" },
+                { question: "How do you create a class that can be used as a context manager?", options: ["class with __enter__ and __exit__", "class with enter and exit", "class with start and stop", "None of these"], answer: "class with __enter__ and __exit__" },
+                { question: "What is the output of class A: def __contains__(self, item): return item in [1, 2, 3]; a = A(); print(2 in a)?", options: ["True", "False", "Error", "None of these"], answer: "True" },
+                { question: "Which of these is a valid way to create a class that can be pickled?", options: ["class A: def __getstate__(self): return self.__dict__", "class A: def __setstate__(self, state): self.__dict__.update(state)", "Both A and B", "None of these"], answer: "Both A and B" },
+                { question: "What is the output of class A: def __eq__(self, other): return True; a = A(); b = A(); print(a == b)?", options: ["True", "False", "Error", "None of these"], answer: "True" },
+                { question: "How do you create a class that can be used with the with statement?", options: ["class with __enter__ and __exit__", "class with enter and exit", "class with start and stop", "None of these"], answer: "class with __enter__ and __exit__" },
+                { question: "What is the output of class A: def __add__(self, other): return 10; a = A(); print(a + 5)?", options: ["10", "15", "Error", "None of these"], answer: "10" },
+                { question: "Which of these is a valid way to create a class that can be used as a dictionary key?", options: ["class with __hash__ and __eq__", "class with hash and equal", "class with key and value", "None of these"], answer: "class with __hash__ and __eq__" },
+                { question: "What is the output of class A: def __bool__(self): return False; a = A(); print(bool(a))?", options: ["False", "True", "Error", "None of these"], answer: "False" },
+                { question: "How do you create a class that can be used with the in operator?", options: ["class with __contains__", "class with contains", "class with in", "None of these"], answer: "class with __contains__" },
+                { question: "What is the output of class A: def __mul__(self, other): return 20; a = A(); print(a * 3)?", options: ["20", "60", "Error", "None of these"], answer: "20" },
+                { question: "Which of these is a valid way to create a class that can be used with the len() function?", options: ["class with __len__", "class with length", "class with size", "None of these"], answer: "class with __len__" },
+                { question: "What is the output of class A: def __lt__(self, other): return True; a = A(); b = A(); print(a < b)?", options: ["True", "False", "Error", "None of these"], answer: "True" },
+                { question: "How do you create a class that can be used with the str() function?", options: ["class with __str__", "class with string", "class with text", "None of these"], answer: "class with __str__" },
+                { question: "What is the output of class A: def __sub__(self, other): return 5; a = A(); print(a - 3)?", options: ["5", "2", "Error", "None of these"], answer: "5" },
+                { question: "Which of these is a valid way to create a class that can be used with the repr() function?", options: ["class with __repr__", "class with representation", "class with print", "None of these"], answer: "class with __repr__" }
+            ],
+            advanced: [
+                { question: "What is a decorator?", options: ["A function that modifies another function", "A variable", "A loop", "A condition"], answer: "A function that modifies another function" },
+                { question: "What is a generator?", options: ["A function that yields values", "A variable", "A loop", "A condition"], answer: "A function that yields values" },
+                { question: "What is an iterator?", options: ["An object that can be iterated over", "A variable", "A function", "A loop"], answer: "An object that can be iterated over" },
+                { question: "What is a context manager?", options: ["A way to manage resources", "A variable", "A function", "A loop"], answer: "A way to manage resources" },
+                { question: "What is the with statement used for?", options: ["To work with context managers", "To create variables", "To delete variables", "To print variables"], answer: "To work with context managers" },
+                { question: "What is a metaclass?", options: ["A class that creates classes", "A variable", "A function", "A loop"], answer: "A class that creates classes" },
+                { question: "What is a descriptor?", options: ["A way to customize attribute access", "A variable", "A function", "A loop"], answer: "A way to customize attribute access" },
+                { question: "What is a property?", options: ["A way to define getter and setter methods", "A variable", "A function", "A loop"], answer: "A way to define getter and setter methods" },
+                { question: "What is a mixin?", options: ["A way to reuse code across classes", "A variable", "A function", "A loop"], answer: "A way to reuse code across classes" },
+                { question: "What is a protocol?", options: ["A way to define interfaces", "A variable", "A function", "A loop"], answer: "A way to define interfaces" },
+                { question: "What is the output of def gen(): yield 1; yield 2; print(list(gen()))?", options: ["[1, 2]", "[1]", "[2]", "Error"], answer: "[1, 2]" },
+                { question: "Which of these is a valid way to create a context manager?", options: ["class with __enter__ and __exit__", "class with enter and exit", "class with start and stop", "None of these"], answer: "class with __enter__ and __exit__" },
+                { question: "What is the output of def decorator(func): def wrapper(): return func(); return wrapper; @decorator; def func(): return 1; print(func())?", options: ["1", "None", "Error", "None of these"], answer: "1" },
+                { question: "How do you create a custom iterator?", options: ["class with __iter__ and __next__", "class with iter and next", "class with start and stop", "None of these"], answer: "class with __iter__ and __next__" },
+                { question: "What is the output of def func(): return (yield 1); print(list(func()))?", options: ["[1]", "[None]", "Error", "None of these"], answer: "[1]" },
+                { question: "Which of these is a valid way to create a descriptor?", options: ["class with __get__", "class with get", "class with retrieve", "None of these"], answer: "class with __get__" },
+                { question: "What is the output of class A: def __getattr__(self, name): return name; a = A(); print(a.x)?", options: ["x", "None", "Error", "None of these"], answer: "x" },
+                { question: "How do you create a metaclass?", options: ["class Meta(type):", "class Meta(metaclass):", "class Meta(meta):", "None of these"], answer: "class Meta(type):" },
+                { question: "What is the output of class A: def __call__(self): return 1; a = A(); print(a())?", options: ["1", "None", "Error", "None of these"], answer: "1" },
+                { question: "Which of these is a valid way to create a mixin?", options: ["class Mixin:", "class Mixin(mixin):", "class Mixin(mix):", "None of these"], answer: "class Mixin:" },
+                { question: "What is a coroutine?", options: ["A function that can be paused and resumed", "A variable", "A loop", "A condition"], answer: "A function that can be paused and resumed" },
+                { question: "What is the purpose of the @asyncio.coroutine decorator?", options: ["To mark a function as a coroutine", "To create a loop", "To delete a function", "To print a function"], answer: "To mark a function as a coroutine" },
+                { question: "What is a dataclass?", options: ["A class decorator that adds generated special methods", "A variable", "A function", "A loop"], answer: "A class decorator that adds generated special methods" },
+                { question: "What is the purpose of the @dataclass decorator?", options: ["To automatically add special methods to a class", "To create a loop", "To delete a class", "To print a class"], answer: "To automatically add special methods to a class" },
+                { question: "What is a type hint?", options: ["A way to indicate the expected type of a variable", "A variable", "A function", "A loop"], answer: "A way to indicate the expected type of a variable" },
+                { question: "What is the purpose of the typing module?", options: ["To provide support for type hints", "To create loops", "To delete types", "To print types"], answer: "To provide support for type hints" },
+                { question: "What is a walrus operator?", options: ["An assignment expression operator", "A variable", "A function", "A loop"], answer: "An assignment expression operator" },
+                { question: "What is the purpose of the := operator?", options: ["To assign and return a value in an expression", "To create a loop", "To delete a value", "To print a value"], answer: "To assign and return a value in an expression" },
+                { question: "What is a f-string?", options: ["A string literal with embedded expressions", "A variable", "A function", "A loop"], answer: "A string literal with embedded expressions" },
+                { question: "What is the purpose of the f prefix in strings?", options: ["To enable string interpolation", "To create a loop", "To delete a string", "To print a string"], answer: "To enable string interpolation" }
+            ],
+            libraries: [
+                { question: "What is NumPy?", options: ["A library for numerical computing", "A database", "A web framework", "A game engine"], answer: "A library for numerical computing" },
+                { question: "What is Pandas?", options: ["A library for data manipulation and analysis", "A database", "A web framework", "A game engine"], answer: "A library for data manipulation and analysis" },
+                { question: "What is Matplotlib?", options: ["A library for creating visualizations", "A database", "A web framework", "A game engine"], answer: "A library for creating visualizations" },
+                { question: "What is Django?", options: ["A web framework", "A database", "A visualization library", "A game engine"], answer: "A web framework" },
+                { question: "What is Flask?", options: ["A lightweight web framework", "A database", "A visualization library", "A game engine"], answer: "A lightweight web framework" },
+                { question: "What is Requests?", options: ["A library for making HTTP requests", "A database", "A web framework", "A game engine"], answer: "A library for making HTTP requests" },
+                { question: "What is BeautifulSoup?", options: ["A library for web scraping", "A database", "A web framework", "A game engine"], answer: "A library for web scraping" },
+                { question: "What is SciPy?", options: ["A library for scientific computing", "A database", "A web framework", "A game engine"], answer: "A library for scientific computing" },
+                { question: "What is TensorFlow?", options: ["A library for machine learning", "A database", "A web framework", "A game engine"], answer: "A library for machine learning" },
+                { question: "What is PyTorch?", options: ["A library for deep learning", "A database", "A web framework", "A game engine"], answer: "A library for deep learning" },
+                { question: "What is the output of import numpy as np; print(np.array([1, 2, 3]).shape)?", options: ["(3,)", "(1, 3)", "(3, 1)", "Error"], answer: "(3,)" },
+                { question: "Which of these is a valid way to create a DataFrame in Pandas?", options: ["pd.DataFrame()", "pandas.DataFrame()", "df.DataFrame()", "None of these"], answer: "pd.DataFrame()" },
+                { question: "What is the output of import matplotlib.pyplot as plt; plt.plot([1, 2, 3])?", options: ["A line plot", "A bar plot", "A scatter plot", "Error"], answer: "A line plot" },
+                { question: "How do you create a route in Flask?", options: ["@app.route('/')", "@route('/')", "@flask.route('/')", "None of these"], answer: "@app.route('/')" },
+                { question: "What is the output of import requests; response = requests.get('https://api.github.com'); print(response.status_code)?", options: ["200", "404", "Error", "None of these"], answer: "200" },
+                { question: "Which of these is a valid way to parse HTML with BeautifulSoup?", options: ["BeautifulSoup(html, 'html.parser')", "BeautifulSoup.parse(html)", "BeautifulSoup.parse_html(html)", "None of these"], answer: "BeautifulSoup(html, 'html.parser')" },
+                { question: "What is the output of import scipy.stats; print(scipy.stats.norm.pdf(0))?", options: ["0.3989422804014327", "0", "1", "Error"], answer: "0.3989422804014327" },
+                { question: "How do you create a neural network in TensorFlow?", options: ["tf.keras.Sequential()", "tf.Sequential()", "tf.neural.Sequential()", "None of these"], answer: "tf.keras.Sequential()" },
+                { question: "What is the output of import torch; print(torch.tensor([1, 2, 3]).dtype)?", options: ["torch.int64", "torch.float32", "torch.float64", "Error"], answer: "torch.int64" },
+                { question: "Which of these is a valid way to create a scatter plot in Matplotlib?", options: ["plt.scatter(x, y)", "plt.plot(x, y, 'o')", "plt.scatter_plot(x, y)", "None of these"], answer: "plt.scatter(x, y)" },
+                { question: "What is Seaborn?", options: ["A statistical data visualization library", "A database", "A web framework", "A game engine"], answer: "A statistical data visualization library" },
+                { question: "What is OpenCV?", options: ["A computer vision library", "A database", "A web framework", "A game engine"], answer: "A computer vision library" },
+                { question: "What is SQLAlchemy?", options: ["A SQL toolkit and ORM", "A database", "A web framework", "A game engine"], answer: "A SQL toolkit and ORM" },
+                { question: "What is Pygame?", options: ["A game development library", "A database", "A web framework", "A visualization library"], answer: "A game development library" },
+                { question: "What is NLTK?", options: ["A natural language processing library", "A database", "A web framework", "A game engine"], answer: "A natural language processing library" },
+                { question: "What is the output of import seaborn as sns; sns.set_theme(); print(sns.__version__)?", options: ["A version number", "Error", "None", "True"], answer: "A version number" },
+                { question: "Which of these is a valid way to read an image with OpenCV?", options: ["cv2.imread('image.jpg')", "cv2.read('image.jpg')", "cv2.load('image.jpg')", "None of these"], answer: "cv2.imread('image.jpg')" },
+                { question: "How do you create a database connection with SQLAlchemy?", options: ["create_engine('sqlite:///database.db')", "connect('sqlite:///database.db')", "open('sqlite:///database.db')", "None of these"], answer: "create_engine('sqlite:///database.db')" },
+                { question: "What is the output of import pygame; pygame.init(); print(pygame.version.ver)?", options: ["A version number", "Error", "None", "True"], answer: "A version number" },
+                { question: "Which of these is a valid way to tokenize text with NLTK?", options: ["nltk.word_tokenize(text)", "nltk.tokenize(text)", "nltk.split(text)", "None of these"], answer: "nltk.word_tokenize(text)" }
+            ]
+        };
+
+        let quizData = []; // Stores selected topic questions
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let timeLeft;
+
+        // Function to format time
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;s
+        }
+
+        // Function to start timer
+        function startTimer() {
+            const timerDisplay = document.querySelector('.quiz-timer');
+            const timerSpan = document.getElementById('timer');
+            timeLeft = 20; // 10 minutes in seconds
+            
+            timerDisplay.style.display = 'block';
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerSpan.textContent = formatTime(timeLeft);
+                
+                // Warning when 1 minute remaining
+                if (timeLeft <= 60) {
+                    timerDisplay.classList.add('warning');
+                }
+                
+                // Auto-submit when time's up
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showTimeUpMessage();
+                    disableQuizOptions();
+                    updateQuestionGrid();
+                }
+            }, 1000);
+        }
+
+        // Add new function to show Time's Up message
+        function showTimeUpMessage() {
+            const quizQuestionsDiv = document.getElementById('quiz-questions');
+            const timeUpMessage = document.createElement('div');
+            timeUpMessage.style.textAlign = 'center';
+            timeUpMessage.style.padding = '20px';
+            timeUpMessage.style.marginTop = '20px';
+            timeUpMessage.style.backgroundColor = '#ff4444';
+            timeUpMessage.style.color = 'white';
+            timeUpMessage.style.borderRadius = '10px';
+            timeUpMessage.style.animation = 'fadeIn 0.5s ease';
+            timeUpMessage.innerHTML = '<h2>Time\'s Up!</h2><p>Please submit your quiz to see your score.</p>';
+            quizQuestionsDiv.insertBefore(timeUpMessage, quizQuestionsDiv.firstChild);
+            
+            // Show submit button
+            document.getElementById('submit-quiz').style.display = 'inline-block';
+            document.getElementById('next-question').style.display = 'none';
+        }
+
+        // Function to disable quiz options
+        function disableQuizOptions() {
+            const optionsDiv = document.querySelector('.quiz-options');
+            if (optionsDiv) {
+                optionsDiv.classList.add('disabled');
+                const inputs = optionsDiv.querySelectorAll('input[type="radio"]');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+            }
+        }
+
+        // Function to stop timer
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.querySelector('.quiz-timer').style.display = 'none';
+        }
+
+        // Function to start quiz with selected topic
+        function startQuiz(topic, isRestore = false) {
+            currentTopic = topic;
+            const quizIntro = document.querySelector('.quiz-intro');
+            const quizContainer = document.querySelector('.quiz-container');
+            const topicSelect = document.querySelector('.quiz-topics');
+
+            if (!topic) {
+                // Show intro, hide quiz container when no topic selected
+                quizIntro.style.display = 'block';
+                quizContainer.style.display = 'none';
+                stopTimer();
+                return;
+            }
+
+            // Hide intro and topic select with fade out effect
+            quizIntro.style.opacity = '0';
+            topicSelect.style.opacity = '0';
+            setTimeout(() => {
+                quizIntro.style.display = 'none';
+                topicSelect.style.display = 'none';
+            }, 300);
+
+            let allQuestions = topicQuestions[topic];
+            if (!allQuestions) {
+                console.error('No questions found for topic:', topic);
+                return;
+            }
+
+            // After setting quizData:
+            if (!isRestore) {
+                quizData = allQuestions.sort(() => Math.random() - 0.5).slice(0, 15);
+                currentQuestionIndex = 0;
+                userAnswers = new Array(quizData.length).fill(null);
+            }
+
+            // Reset quiz UI
+            document.getElementById('quiz-questions').style.display = 'block';
+            document.getElementById('quiz-questions').innerHTML = '';
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('retake-quiz').style.display = 'none';
+
+            // Update quiz heading
+            document.getElementById('quiz-title').innerText = `${formatTopic(topic)} Quiz`;
+
+            // Show quiz container with fade in effect
+            quizContainer.style.opacity = '0';
+            quizContainer.style.display = 'block';
+            setTimeout(() => {
+                quizContainer.style.opacity = '1';
+            }, 50);
+
+            // Reset navigation buttons
+            document.getElementById('prev-question').style.display = 'inline-block';
+            document.getElementById('next-question').style.display = 'inline-block';
+            document.getElementById('submit-quiz').style.display = 'none';
+
+            // Start the timer
+            startTimer();
+
+            displayQuestion();
+            updateQuestionGrid();
+        }
+
+        // Function to format topic names (e.g., "file_handling" → "File Handling")
+        function formatTopic(topic) {
+            return topic.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+        }
+
+
+        // Function to display questions
+        function displayQuestion() {
+            if (!quizData || quizData.length === 0) return;
+
+            const quizQuestionsDiv = document.getElementById('quiz-questions');
+            quizQuestionsDiv.innerHTML = '';
+
+            const question = quizData[currentQuestionIndex];
+            if (!question) return;
+
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('quiz-question');
+
+            const questionText = document.createElement('p');
+            questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
+            questionDiv.appendChild(questionText);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.classList.add('quiz-options');
+            
+            if (timeLeft <= 0) {
+                optionsDiv.classList.add('disabled');
+            }
+
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `question${currentQuestionIndex}`;
+                input.value = option;
+                input.checked = userAnswers[currentQuestionIndex] === option;
+                
+                if (timeLeft <= 0) {
+                    input.disabled = true;
+                }
+
+                input.onchange = () => {
+                    if (timeLeft > 0) {
+                        userAnswers[currentQuestionIndex] = option;
+                        // Immediate grid update when answer is selected
+                        setTimeout(() => {
+                            updateQuestionGrid();
+                        }, 50);
+                    }
+                };
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(option));
+                optionsDiv.appendChild(label);
+            });
+
+            questionDiv.appendChild(optionsDiv);
+            quizQuestionsDiv.appendChild(questionDiv);
+
+            document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+            document.getElementById('next-question').style.display = currentQuestionIndex === quizData.length - 1 ? 'none' : 'inline-block';
+            document.getElementById('submit-quiz').style.display = (currentQuestionIndex === quizData.length - 1 || timeLeft <= 0) ? 'inline-block' : 'none';
+            
+            updateQuestionGrid();
+        }
+
+        // Function to navigate questions
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                // Mark current question as skipped if no answer selected
+                if (userAnswers[currentQuestionIndex] === null) {
+                    userAnswers[currentQuestionIndex] = "skipped";
+                }
+                
+                currentQuestionIndex++;
+                displayQuestion();
+                updateQuestionGrid();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Function to submit quiz
+        function submitQuiz() {
+            stopTimer();
+            
+            // Mark all unanswered questions as incorrect
+            userAnswers.forEach((answer, index) => {
+                if (answer === null) {
+                    userAnswers[index] = "skipped";
+                }
+            });
+            updateQuestionGrid();
+            
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizData[index].answer) {
+                    score++;
+                }
+            });
+
+            document.getElementById('quiz-questions').style.display = 'none';
+            document.getElementById('prev-question').style.display = 'none';
+            document.getElementById('next-question').style.display = 'none';
+            document.getElementById('submit-quiz').style.display = 'none';
+
+            const quizResultDiv = document.getElementById('quiz-result');
+            const percentage = Math.round((score / quizData.length) * 100);
+            
+            let message = `<h3>🎉 Quiz Complete! 🎉</h3>`;
+            message += `<p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>`;
+            
+            if (percentage === 100) {
+                message += `<p>Perfect score! Excellent work! 🌟</p>`;
+            } else if (percentage >= 80) {
+                message += `<p>Great job! Keep up the good work! 👍</p>`;
+            } else if (percentage >= 60) {
+                message += `<p>Not bad! Keep practicing! 💪</p>`;
+            } else {
+                message += `<p>Keep practicing! You can do better! 📚</p>`;
+            }
+
+            // Add detailed summary in a scrollable container
+            message += `
+                <div class="quiz-summary" style="
+                    max-height: 400px;
+                    overflow-y: auto;
+                    margin-top: 20px;
+                    padding: 20px;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 10px;
+                    background: #f8f8f8;
+                ">
+                    <h4 style="margin-bottom: 20px; text-align: left;">Detailed Summary:</h4>
+            `;
+
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.answer;
+                const answerStatus = userAnswer === "skipped" ? "Skipped" : (isCorrect ? "Correct" : "Incorrect");
+                const statusColor = userAnswer === "skipped" ? "#ff4444" : (isCorrect ? "#4CAF50" : "#ff4444");
+
+                message += `
+                    <div style="
+                        margin-bottom: 20px;
+                        padding: 15px;
+                        background: white;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        text-align: left;
+                    ">
+                        <p style="font-weight: 600; margin-bottom: 10px;">
+                            Question ${index + 1}: ${question.question}
+                        </p>
+                        <p style="margin-bottom: 5px;">
+                            <span style="color: #666;">Your Answer:</span> 
+                            <span style="color: ${statusColor}; font-weight: 500;">
+                                ${userAnswer === "skipped" ? "Not attempted" : userAnswer}
+                            </span>
+                        </p>
+                        <p style="margin-bottom: 5px;">
+                            <span style="color: #666;">Correct Answer:</span> 
+                            <span style="color: #4CAF50; font-weight: 500;">${question.answer}</span>
+                        </p>
+                        <p style="
+                            margin-top: 10px;
+                            padding: 5px 10px;
+                            display: inline-block;
+                            border-radius: 4px;
+                            background: ${statusColor};
+                            color: white;
+                            font-size: 0.9rem;
+                        ">${answerStatus}</p>
+                    </div>
+                `;
+            });
+
+            message += `</div>`;
+            
+            quizResultDiv.innerHTML = message;
+            quizResultDiv.style.display = 'block';
+            quizResultDiv.style.animation = 'fadeIn 0.5s ease';
+
+            document.getElementById('retake-quiz').style.display = 'inline-block';
+            document.getElementById('retake-quiz').style.animation = 'fadeIn 0.5s ease';
+
+            // Scroll to top of the results
+            quizResultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Function to retake quiz
+        function retakeQuiz() {
+            stopTimer();
+            
+            // Show intro and topic select again
+            const quizIntro = document.querySelector('.quiz-intro');
+            const topicSelect = document.querySelector('.quiz-topics');
+            const quizContainer = document.querySelector('.quiz-container');
+
+            // Hide quiz container
+            quizContainer.style.opacity = '0';
+            setTimeout(() => {
+                quizContainer.style.display = 'none';
+                
+                // Show intro and topic select with fade in
+                quizIntro.style.display = 'block';
+                topicSelect.style.display = 'block';
+                setTimeout(() => {
+                    quizIntro.style.opacity = '1';
+                    topicSelect.style.opacity = '1';
+                }, 50);
+            }, 300);
+
+            // Reset all states
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizData = [];
+            
+            // Reset topic select
+            document.querySelector('.quiz-topic-select').value = '';
+        }
+
+        // Add these functions before the startQuiz function:
+        function updateQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < quizData.length; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.textContent = (i + 1).toString();
+                
+                // Check if question has been attempted (any answer selected)
+                if (userAnswers[i] && userAnswers[i] !== "skipped") {
+                    // Question attempted - Blue
+                    gridItem.style.backgroundColor = '#2196F3';
+                    gridItem.style.borderColor = '#2196F3';
+                    gridItem.style.color = '#ffffff';
+                } else if (userAnswers[i] === "skipped") {
+                    // Question skipped or not attempted - Red
+                    gridItem.style.backgroundColor = '#ff4444';
+                    gridItem.style.borderColor = '#ff4444';
+                    gridItem.style.color = '#ffffff';
+                }
+                
+                // Current question - Black
+                if (i === currentQuestionIndex) {
+                    gridItem.style.backgroundColor = '#000000';
+                    gridItem.style.borderColor = '#000000';
+                    gridItem.style.color = '#ffffff';
+                }
+                
+                // Disabled state when time's up
+                if (timeLeft <= 0) {
+                    gridItem.classList.add('disabled');
+                } else {
+                    gridItem.onclick = () => {
+                        currentQuestionIndex = i;
+                        displayQuestion();
+                        updateQuestionGrid();
+                    };
+                }
+                
+                grid.appendChild(gridItem);
+            }
+            
+            saveQuizState();
+        }
+
+        function saveQuizState() {
+            const quizState = {
+                topic: currentTopic,
+                answers: userAnswers,
+                timeLeft: timeLeft,
+                currentIndex: currentQuestionIndex,
+                quizData: quizData
+            };
+            localStorage.setItem('quizState', JSON.stringify(quizState));
+        }
+
+        function loadQuizState() {
+            const savedState = localStorage.getItem('quizState');
+            if (savedState) {
+                if (confirm('Would you like to continue your previous quiz?\nClick OK to continue or Cancel to start fresh.')) {
+                    const state = JSON.parse(savedState);
+                    currentTopic = state.topic;
+                    userAnswers = state.answers;
+                    timeLeft = state.timeLeft;
+                    currentQuestionIndex = state.currentIndex;
+                    quizData = state.quizData;
+                    
+                    if (currentTopic) {
+                        startQuiz(currentTopic, true);
+                    }
+                } else {
+                    // Clear saved state and show the starting page
+                    localStorage.removeItem('quizState');
+                    const quizIntro = document.querySelector('.quiz-intro');
+                    const topicSelect = document.querySelector('.quiz-topics');
+                    const quizContainer = document.querySelector('.quiz-container');
+                    
+                    // Reset all states
+                    currentQuestionIndex = 0;
+                    userAnswers = [];
+                    quizData = [];
+                    currentTopic = '';
+                    
+                    // Show intro and topic select
+                    quizContainer.style.display = 'none';
+                    quizIntro.style.display = 'block';
+                    topicSelect.style.display = 'block';
+                    quizIntro.style.opacity = '1';
+                    topicSelect.style.opacity = '1';
+                    
+                    // Reset topic select
+                    document.querySelector('.quiz-topic-select').value = '';
+                }
+            }
+        }
+
+        // Modify the startQuiz function:
+        let currentTopic = '';
+
+        // Add to the end of the script:
+        // Load saved state when page loads
+        window.addEventListener('load', loadQuizState);
+                // JavaScript to handle modal functionality
+                function openModal(videoUrl) {
+                    const modal = document.getElementById('videoModal');
+                    const iframe = document.getElementById('videoFrame');
+                    iframe.src = videoUrl;
+                    modal.style.display = 'flex';
+                }
+
+                function closeModal() {
+                    const modal = document.getElementById('videoModal');
+                    const iframe = document.getElementById('videoFrame');
+                    iframe.src = ''; // Stop the video when closing
+                    modal.style.display = 'none';
+                }
+
+                // JavaScript to handle redirection to home.html
+                function redirectToHome() {
+                    window.location.href = 'home.html';
+                }
     </script>
 </body>
 
